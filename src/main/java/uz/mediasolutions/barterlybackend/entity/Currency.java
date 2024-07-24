@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import uz.mediasolutions.barterlybackend.entity.template.AbsAudit;
 import uz.mediasolutions.barterlybackend.entity.template.AbsDate;
 
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.Map;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Builder
-public class Currency extends AbsDate {
+public class Currency extends AbsAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

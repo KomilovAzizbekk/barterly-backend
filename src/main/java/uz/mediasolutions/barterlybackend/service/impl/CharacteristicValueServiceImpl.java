@@ -30,7 +30,7 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
     @Override
     public ResponseEntity<Page<?>> getAllByCharacteristicId(Long characteristicId, String language, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<CharacteristicValueDTO> dtos = characteristicValueRepository.findAllByCharacteristicIdOrderByCreatedAtDesc(language, pageable);
+        Page<CharacteristicValueDTO> dtos = characteristicValueRepository.findAllByCharacteristicIdOrderByCreatedAtDesc(language, characteristicId, pageable);
         return ResponseEntity.ok(dtos);
     }
 

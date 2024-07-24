@@ -2,6 +2,7 @@ package uz.mediasolutions.barterlybackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import uz.mediasolutions.barterlybackend.entity.template.AbsAudit;
 
 /**
  * @author Azizbek Komilov
@@ -15,7 +16,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Language {
+public class Language extends AbsAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -19,9 +19,10 @@ public interface CharacteristicValueRepository extends JpaRepository<Characteris
             "WHERE\n" +
             "    characteristic_id = :characteristic_id AND\n" +
             "    translations ->> :language IS NOT NULL\n" +
-            "ORDER BY created_at DESC;\n", nativeQuery = true)
+            "ORDER BY created_at DESC;", nativeQuery = true)
     Page<CharacteristicValueDTO> findAllByCharacteristicIdOrderByCreatedAtDesc(
             @Param("language") String language,
+            @Param("characteristic_id") Long characteristicId,
             Pageable pageable);
 
 }

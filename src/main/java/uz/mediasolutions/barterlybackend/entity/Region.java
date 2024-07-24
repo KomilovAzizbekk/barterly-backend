@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import uz.mediasolutions.barterlybackend.entity.template.AbsAudit;
+import uz.mediasolutions.barterlybackend.entity.template.AbsDate;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +22,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Region {
+public class Region extends AbsAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

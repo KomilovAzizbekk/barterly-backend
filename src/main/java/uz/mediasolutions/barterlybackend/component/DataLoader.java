@@ -47,7 +47,7 @@ public class DataLoader implements CommandLineRunner {
 
     private void addLanguage() {
         Language language = Language.builder()
-                .code("Uz")
+                .code("uz")
                 .name("Uzbek")
                 .build();
         languageRepository.save(language);
