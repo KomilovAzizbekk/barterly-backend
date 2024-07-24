@@ -16,6 +16,7 @@ import uz.mediasolutions.barterlybackend.payload.response.CurrencyResDTO;
 import uz.mediasolutions.barterlybackend.repository.CurrencyRepository;
 import uz.mediasolutions.barterlybackend.service.abs.CurrencyService;
 import uz.mediasolutions.barterlybackend.service.abs.FileService;
+import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 import java.util.Objects;
 
@@ -48,10 +49,10 @@ public class CurrencyServiceImpl implements CurrencyService {
         try {
             Currency entity = currencyMapper.toEntity(dto);
             currencyRepository.save(entity);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Added successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
-            throw RestException.restThrow("Error with adding", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -70,10 +71,10 @@ public class CurrencyServiceImpl implements CurrencyService {
             currency.setTranslations(dto.getTranslations());
             currency.setImageUrl(dto.getImageUrl());
             currencyRepository.save(currency);
-            return ResponseEntity.ok("Edited successfully");
+            return ResponseEntity.ok(Rest.EDITED);
         } catch (Exception e) {
             e.printStackTrace();
-            throw RestException.restThrow("Error with editing", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -86,10 +87,10 @@ public class CurrencyServiceImpl implements CurrencyService {
             fileService.deleteFile(currency.getImageUrl());
 
             currencyRepository.deleteById(id);
-            return ResponseEntity.ok("Delete successfully");
+            return ResponseEntity.ok(Rest.DELETED);
         } catch (Exception e) {
             e.printStackTrace();
-            throw RestException.restThrow("Error with deleting", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

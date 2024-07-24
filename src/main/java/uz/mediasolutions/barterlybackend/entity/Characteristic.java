@@ -32,6 +32,10 @@ public class Characteristic extends AbsDate {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ManyToOne
+    @JoinColumn(name = "category_characteristic_id")
+    private CategoryCharacteristic categoryCharacteristic;
+
     @Column(nullable = false)
     private boolean required;
 
@@ -42,10 +46,6 @@ public class Characteristic extends AbsDate {
     @OneToMany(mappedBy = "characteristic", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<ItemCharacteristic> itemCharacteristics;
-
-    @OneToMany(mappedBy = "characteristic", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private List<CategoryCharacteristic> characteristics;
 
     @OneToMany(mappedBy = "characteristic", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude

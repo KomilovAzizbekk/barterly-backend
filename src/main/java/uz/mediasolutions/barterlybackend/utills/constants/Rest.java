@@ -15,6 +15,12 @@ public interface Rest {
             "/error"
     };
 
+    String CREATED = "CREATED";
+    String EDITED = "EDITED";
+    String DELETED = "DELETED";
+    String ERROR = "ERROR";
+
+
     String AUTHORIZATION_HEADER = "Authorization";
     String BASE_PATH = "/api/";
     String TYPE_TOKEN = "Bearer ";

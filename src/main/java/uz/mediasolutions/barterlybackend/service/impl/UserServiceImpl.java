@@ -22,6 +22,7 @@ import uz.mediasolutions.barterlybackend.payload.response.UserResDTO;
 import uz.mediasolutions.barterlybackend.repository.RoleRepository;
 import uz.mediasolutions.barterlybackend.repository.UserRepository;
 import uz.mediasolutions.barterlybackend.service.abs.UserService;
+import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 @Service
 @RequiredArgsConstructor
@@ -89,9 +90,9 @@ public class UserServiceImpl implements UserService {
                     .credentialsNonExpired(true)
                     .build();
             userRepository.save(admin);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Created successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body(  Rest.CREATED);
         } catch (Exception e) {
-            throw RestException.restThrow("Error with adding", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

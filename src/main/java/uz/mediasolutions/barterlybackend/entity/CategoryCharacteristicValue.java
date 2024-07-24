@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import uz.mediasolutions.barterlybackend.entity.template.AbsDate;
+import uz.mediasolutions.barterlybackend.entity.template.AbsLongDef;
 
 import java.util.Map;
 
@@ -14,25 +14,17 @@ import java.util.Map;
  */
 
 @Entity
-@Table(name = "category_characteristics")
+@Table(name = "category_characteristic_values")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class CategoryCharacteristic extends AbsDate {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class CategoryCharacteristicValue extends AbsLongDef {
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private CategoryCharacteristic parent;
+    @JoinColumn(name = "characteristic_id")
+    private CategoryCharacteristic characteristic;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")

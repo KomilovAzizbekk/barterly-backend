@@ -16,6 +16,7 @@ import uz.mediasolutions.barterlybackend.payload.request.CharacteristicReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CharacteristicResDTO;
 import uz.mediasolutions.barterlybackend.repository.*;
 import uz.mediasolutions.barterlybackend.service.abs.CharacteristicService;
+import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 @Service
 @AllArgsConstructor
@@ -45,10 +46,10 @@ public class CharacteristicServiceImpl implements CharacteristicService {
         try {
             Characteristic entity = characteristicMapper.toEntity(dto);
             characteristicRepository.save(entity);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Added successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
-            throw RestException.restThrow("Error with adding", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -67,10 +68,10 @@ public class CharacteristicServiceImpl implements CharacteristicService {
           characteristic.setRequired(dto.isRequired());
           characteristic.setCategory(category);
           characteristicRepository.save(characteristic);
-          return ResponseEntity.status(HttpStatus.ACCEPTED).body("Edited successfully");
+          return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
         } catch (Exception e) {
             e.printStackTrace();
-            throw RestException.restThrow("Error with editing", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -78,10 +79,10 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     public ResponseEntity<?> delete(Long id) {
         try {
             characteristicRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Deleted successfully");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
         } catch (Exception e) {
             e.printStackTrace();
-            throw RestException.restThrow("Error with deleting", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

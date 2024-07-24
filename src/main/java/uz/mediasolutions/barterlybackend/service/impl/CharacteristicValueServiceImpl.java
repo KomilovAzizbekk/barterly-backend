@@ -17,6 +17,7 @@ import uz.mediasolutions.barterlybackend.payload.response.CharacteristicValueRes
 import uz.mediasolutions.barterlybackend.repository.CharacteristicRepository;
 import uz.mediasolutions.barterlybackend.repository.CharacteristicValueRepository;
 import uz.mediasolutions.barterlybackend.service.abs.CharacteristicValueService;
+import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 @Service
 @RequiredArgsConstructor
@@ -47,10 +48,10 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
         try {
             CharacteristicValue entity = characteristicValueMapper.toEntity(dto);
             characteristicValueRepository.save(entity);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Added successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
-            throw RestException.restThrow("Error with adding", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -67,10 +68,10 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
             characteristicValue.setTranslations(dto.getTranslations());
             characteristicValue.setCharacteristic(characteristic);
             characteristicValueRepository.save(characteristicValue);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Edited successfully");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
         } catch (Exception e) {
             e.printStackTrace();
-            throw RestException.restThrow("Error with editing", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -78,10 +79,10 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
     public ResponseEntity<?> delete(Long id) {
         try {
             characteristicValueRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Deleted successfully");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
         } catch (Exception e) {
             e.printStackTrace();
-            throw RestException.restThrow("Error with deleting", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

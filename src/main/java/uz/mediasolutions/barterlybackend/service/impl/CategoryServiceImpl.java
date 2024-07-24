@@ -16,6 +16,7 @@ import uz.mediasolutions.barterlybackend.payload.response.CategoryResDTO;
 import uz.mediasolutions.barterlybackend.repository.CategoryRepository;
 import uz.mediasolutions.barterlybackend.service.abs.CategoryService;
 import uz.mediasolutions.barterlybackend.service.abs.FileService;
+import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 @Service
 @RequiredArgsConstructor
@@ -63,10 +64,10 @@ public class CategoryServiceImpl implements CategoryService {
                     .build();
 
             categoryRepository.save(category);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Saved successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RestException("Error with adding", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RestException(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -90,10 +91,10 @@ public class CategoryServiceImpl implements CategoryService {
             category.setTranslations(dto.getTranslations());
             categoryRepository.save(category);
 
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Edited successfully");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RestException("Error with editing", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RestException(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -105,10 +106,10 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             fileService.deleteFile(category.getImageUrl());
             categoryRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Deleted successfully");
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
         } catch (Exception e) {
             e.printStackTrace();
-            throw RestException.restThrow("Error with deleting", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
