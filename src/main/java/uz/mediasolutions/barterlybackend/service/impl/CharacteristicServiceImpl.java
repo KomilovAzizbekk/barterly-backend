@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.Category;
 import uz.mediasolutions.barterlybackend.entity.Characteristic;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
-import uz.mediasolutions.barterlybackend.mapper.CharacteristicMapper;
+import uz.mediasolutions.barterlybackend.mapper.abs.CharacteristicMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CharacteristicDTO;
 import uz.mediasolutions.barterlybackend.payload.request.CharacteristicReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CharacteristicResDTO;
@@ -43,8 +43,8 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 
     @Override
     public ResponseEntity<?> add(CharacteristicReqDTO dto) {
+        Characteristic entity = characteristicMapper.toEntity(dto);
         try {
-            Characteristic entity = characteristicMapper.toEntity(dto);
             characteristicRepository.save(entity);
             return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
         } catch (Exception e) {

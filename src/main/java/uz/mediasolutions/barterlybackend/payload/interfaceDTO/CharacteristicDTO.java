@@ -8,4 +8,13 @@ public interface CharacteristicDTO {
 
     String getName();
 
+    Long getCategoryId();
+
+    String getCategoryName();
+
+    Long getCategoryCharacteristicId();
+
+    String getCategoryCharacteristicName();
+
+
 }

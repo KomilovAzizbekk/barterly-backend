@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.Currency;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
-import uz.mediasolutions.barterlybackend.mapper.CurrencyMapper;
+import uz.mediasolutions.barterlybackend.mapper.abs.CurrencyMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CurrencyDTO;
 import uz.mediasolutions.barterlybackend.payload.request.CurrencyReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CurrencyResDTO;
@@ -46,8 +46,8 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     @Override
     public ResponseEntity<?> add(CurrencyReqDTO dto) {
+        Currency entity = currencyMapper.toEntity(dto);
         try {
-            Currency entity = currencyMapper.toEntity(dto);
             currencyRepository.save(entity);
             return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
         } catch (Exception e) {

@@ -106,6 +106,8 @@ public class AuthServiceImpl implements AuthService {
 
         if (!passwordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
             throw RestException.restThrow("Password is incorrect", HttpStatus.UNAUTHORIZED);
+        } else if (!user.getAuthorities().contains(roleRepository.findByName(RoleEnum.ROLE_USER))) {
+            throw RestException.restThrow("Role is incorrect", HttpStatus.UNAUTHORIZED);
         }
 
         String accessToken = jwtService.generateToken(user);

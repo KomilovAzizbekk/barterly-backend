@@ -14,4 +14,7 @@ public interface RoleController {
     @GetMapping("/get-all")
     ResponseEntity<List<RoleResDTO>> getAllRoles();
 
+    @GetMapping("/get-all-admin-roles")
+    ResponseEntity<List<RoleResDTO>> getAllAdminRoles();
+
 }

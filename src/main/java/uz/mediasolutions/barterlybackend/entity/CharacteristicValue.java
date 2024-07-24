@@ -20,6 +20,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@Builder
 public class CharacteristicValue extends AbsLongDef {
 
     @ManyToOne

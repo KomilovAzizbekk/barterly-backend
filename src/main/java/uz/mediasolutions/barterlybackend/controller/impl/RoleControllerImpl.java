@@ -19,4 +19,9 @@ public class RoleControllerImpl implements RoleController {
     public ResponseEntity<List<RoleResDTO>> getAllRoles() {
         return roleService.findAll();
     }
+
+    @Override
+    public ResponseEntity<List<RoleResDTO>> getAllAdminRoles() {
+        return roleService.getAllAdminRoles();
+    }
 }

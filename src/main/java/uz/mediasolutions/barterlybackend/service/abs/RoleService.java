@@ -8,4 +8,7 @@ import java.util.List;
 public interface RoleService {
 
     ResponseEntity<List<RoleResDTO>> findAll();
+
+    ResponseEntity<List<RoleResDTO>> getAllAdminRoles();
+
 }

@@ -1,11 +1,9 @@
-package uz.mediasolutions.barterlybackend.mapper;
+package uz.mediasolutions.barterlybackend.mapper.abs;
 
-import org.mapstruct.Mapper;
 import uz.mediasolutions.barterlybackend.entity.Currency;
 import uz.mediasolutions.barterlybackend.payload.request.CurrencyReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CurrencyResDTO;
 
-@Mapper(componentModel = "spring")
 public interface CurrencyMapper {
 
     CurrencyResDTO toResDTO(Currency currency);

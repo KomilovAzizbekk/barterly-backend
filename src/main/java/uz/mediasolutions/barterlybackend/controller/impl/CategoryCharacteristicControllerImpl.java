@@ -12,7 +12,7 @@ import uz.mediasolutions.barterlybackend.service.abs.CategoryCharacteristicServi
 @RequiredArgsConstructor
 public class CategoryCharacteristicControllerImpl implements CategoryCharacteristicController {
 
-    private CategoryCharacteristicService service;
+    private final CategoryCharacteristicService service;
 
     @Override
     public ResponseEntity<Page<?>> getAll(String language, int page, int size) {

@@ -14,7 +14,7 @@ import uz.mediasolutions.barterlybackend.entity.Role;
 import uz.mediasolutions.barterlybackend.entity.User;
 import uz.mediasolutions.barterlybackend.enums.RoleEnum;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
-import uz.mediasolutions.barterlybackend.mapper.UserMapper;
+import uz.mediasolutions.barterlybackend.mapper.abs.UserMapper;
 import uz.mediasolutions.barterlybackend.payload.UserDTO;
 import uz.mediasolutions.barterlybackend.payload.request.AdminReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.AdminResDTO;
@@ -66,19 +66,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<?> addAdmin(AdminReqDTO dto) {
+
+        Role role = roleRepository.findById(dto.getRoleId()).orElseThrow(
+                () -> new RestException("Role does not exist", HttpStatus.NOT_FOUND)
+        );
+
+        if (role.getName().equals(RoleEnum.ROLE_USER)) {
+            throw RestException.restThrow("Role type error (You chose user role)", HttpStatus.CONFLICT);
+        }
+
+        if (userRepository.existsByEmailOrUsername(dto.getEmail(), dto.getUsername())) {
+            throw RestException.restThrow("User already exists", HttpStatus.CONFLICT);
+        }
+
         try {
-            Role role = roleRepository.findById(dto.getRoleId()).orElseThrow(
-                    () -> new RestException("Role does not exist", HttpStatus.NOT_FOUND)
-            );
-
-            if (role.getName().equals(RoleEnum.ROLE_USER)) {
-                throw RestException.restThrow("Role type error (You chose user role)", HttpStatus.CONFLICT);
-            }
-
-            if (userRepository.existsByEmailOrUsername(dto.getEmail(), dto.getUsername())) {
-                throw RestException.restThrow("User already exists", HttpStatus.CONFLICT);
-            }
-
             User admin = User.builder()
                     .role(role)
                     .email(dto.getEmail())

@@ -7,13 +7,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import uz.mediasolutions.barterlybackend.entity.Category;
 import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristic;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
-import uz.mediasolutions.barterlybackend.mapper.CategoryCharacteristicMapper;
+import uz.mediasolutions.barterlybackend.mapper.abs.CategoryCharacteristicMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicDTO;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryCharacteristicReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CategoryCharacteristicResDTO;
 import uz.mediasolutions.barterlybackend.repository.CategoryCharacteristicRepository;
+import uz.mediasolutions.barterlybackend.repository.CategoryRepository;
 import uz.mediasolutions.barterlybackend.service.abs.CategoryCharacteristicService;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
@@ -23,6 +25,7 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
 
     private final CategoryCharacteristicRepository categoryCharacteristicRepository;
     private final CategoryCharacteristicMapper categoryCharacteristicMapper;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public ResponseEntity<Page<?>> getAll(String language, int page, int size) {
@@ -43,8 +46,8 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
 
     @Override
     public ResponseEntity<?> add(CategoryCharacteristicReqDTO dto) {
+        CategoryCharacteristic categoryCharacteristic = categoryCharacteristicMapper.toEntity(dto);
         try {
-            CategoryCharacteristic categoryCharacteristic = categoryCharacteristicMapper.toEntity(dto);
             categoryCharacteristicRepository.save(categoryCharacteristic);
             return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
         } catch (Exception e) {
@@ -56,11 +59,41 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
 
     @Override
     public ResponseEntity<?> edit(Long id, CategoryCharacteristicReqDTO dto) {
-        return null;
+        CategoryCharacteristic categoryCharacteristic = categoryCharacteristicRepository.findById(id).orElseThrow(
+                () -> RestException.restThrow("Category characteristic not found", HttpStatus.BAD_REQUEST)
+        );
+
+        Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow(
+                () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
+        );
+
+        CategoryCharacteristic parent = categoryCharacteristicRepository.findById(dto.getParentId()).orElseThrow(
+                () -> RestException.restThrow("Parent category characteristic not found", HttpStatus.BAD_REQUEST)
+        );
+        try {
+            categoryCharacteristic.setCategory(category);
+            categoryCharacteristic.setParent(parent);
+            categoryCharacteristic.setTranslations(dto.getTranslations());
+            categoryCharacteristicRepository.save(categoryCharacteristic);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Rest.ERROR);
+        }
     }
 
     @Override
     public ResponseEntity<?> delete(Long id) {
-        return null;
+        categoryCharacteristicRepository.findById(id).orElseThrow(
+                () -> RestException.restThrow("Category characteristic not found", HttpStatus.BAD_REQUEST)
+        );
+        try {
+            categoryCharacteristicRepository.deleteById(id);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Rest.ERROR);
+        }
     }
+
 }

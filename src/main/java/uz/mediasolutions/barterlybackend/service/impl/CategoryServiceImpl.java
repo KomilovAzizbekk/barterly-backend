@@ -51,19 +51,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity<?> add(CategoryReqDTO dto) {
+        Category entity = categoryMapper.toEntity(dto);
         try {
-            Category parentCategory = null;
-            if (dto.getParentCategoryId() != null) {
-                parentCategory = categoryRepository.findById(dto.getParentCategoryId()).orElse(null);
-            }
-
-            Category category = Category.builder()
-                    .translations(dto.getTranslations())
-                    .parentCategory(parentCategory)
-                    .imageUrl(dto.getImageUrl())
-                    .build();
-
-            categoryRepository.save(category);
+            categoryRepository.save(entity);
             return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
         } catch (Exception e) {
             e.printStackTrace();

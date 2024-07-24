@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.Characteristic;
 import uz.mediasolutions.barterlybackend.entity.CharacteristicValue;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
-import uz.mediasolutions.barterlybackend.mapper.CharacteristicValueMapper;
+import uz.mediasolutions.barterlybackend.mapper.abs.CharacteristicValueMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CharacteristicValueDTO;
 import uz.mediasolutions.barterlybackend.payload.request.CharacteristicValueReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CharacteristicValueResDTO;
@@ -45,8 +45,8 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
 
     @Override
     public ResponseEntity<?> add(CharacteristicValueReqDTO dto) {
+        CharacteristicValue entity = characteristicValueMapper.toEntity(dto);
         try {
-            CharacteristicValue entity = characteristicValueMapper.toEntity(dto);
             characteristicValueRepository.save(entity);
             return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
         } catch (Exception e) {
