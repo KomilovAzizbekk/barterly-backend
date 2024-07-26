@@ -11,12 +11,10 @@ import uz.mediasolutions.barterlybackend.payload.interfaceDTO.RegionDTO;
 public interface RegionRepository extends JpaRepository<Region, Long> {
 
     @Query(value = "SELECT r.id,\n" +
-            "       r.image_url,\n" +
-            "       json_build_object(\n" +
-            "               'id', c.id,\n" +
-            "               'name', c.translations ->> :language,\n" +
-            "               'currency_code', c.currency_code\n" +
-            "       )                            as currency,\n" +
+            "       r.image_url as imageUrl,\n" +
+            "       c.id as currencyId,\n" +
+            "       c.translations ->> :language as currencyName,\n" +
+            "       c.currency_code as currencyCode,\n" +
             "       r.translations ->> :language as name\n" +
             "FROM regions r\n" +
             "         LEFT JOIN currencies c on c.id = r.default_currency_id\n" +

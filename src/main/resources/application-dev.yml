@@ -3,10 +3,10 @@ server:
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
   sql:
     init:
-      mode: never
+      mode: always
   main:
     allow-bean-definition-overriding: true
     allow-circular-references: true

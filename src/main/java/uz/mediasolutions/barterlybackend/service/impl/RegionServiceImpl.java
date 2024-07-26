@@ -4,8 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import uz.mediasolutions.barterlybackend.entity.Region;
+import uz.mediasolutions.barterlybackend.exceptions.RestException;
+import uz.mediasolutions.barterlybackend.mapper.abs.RegionMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.RegionDTO;
 import uz.mediasolutions.barterlybackend.payload.request.RegionReqDTO;
 import uz.mediasolutions.barterlybackend.repository.RegionRepository;
@@ -16,6 +20,7 @@ import uz.mediasolutions.barterlybackend.service.abs.RegionService;
 public class RegionServiceImpl implements RegionService {
 
     private final RegionRepository regionRepository;
+//    private final RegionMapper regionMapper;
 
     @Override
     public ResponseEntity<Page<?>> getAll(String language, int page, int size) {
@@ -26,6 +31,10 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public ResponseEntity<?> getById(Long id) {
+        Region region = regionRepository.findById(id).orElseThrow(
+                () -> RestException.restThrow("Region not found", HttpStatus.BAD_REQUEST)
+        );
+
         return null;
     }
 

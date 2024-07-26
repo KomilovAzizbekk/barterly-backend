@@ -10,6 +10,9 @@ import uz.mediasolutions.barterlybackend.enums.RoleEnum;
 import uz.mediasolutions.barterlybackend.enums.UserTypeEnum;
 import uz.mediasolutions.barterlybackend.repository.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 @RequiredArgsConstructor
 public class DataLoader implements CommandLineRunner {
@@ -54,15 +57,21 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void addRegion() {
+        Map<String, String> translations = new HashMap<>();
+        translations.put("uz", "Uzbekistan");
         Region uzbekistan = Region.builder()
                 .currency(currencyRepository.getReferenceById(1L))
+                .translations(translations)
                 .build();
         regionRepository.save(uzbekistan);
     }
 
     private void addCurrency() {
+        Map<String, String> translations = new HashMap<>();
+        translations.put("uz", "Uzbekistan somi");
         Currency uz = Currency.builder()
                 .currencyCode("UZS")
+                .translations(translations)
                 .build();
         currencyRepository.save(uz);
     }

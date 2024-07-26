@@ -8,12 +8,10 @@ public interface RegionDTO {
 
     String getImageUrl();
 
-    CurrencyDTO getCurrency();
+    String getCurrencyName();
 
-    interface CurrencyDTO {
-        Long id();
-        String name();
-        String currency_code();
-    }
+    String getCurrencyCode();
+
+    Long getCurrencyId();
 
 }

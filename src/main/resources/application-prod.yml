@@ -1,0 +1,58 @@
+server:
+  port: 8080
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: always
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/barterly
+    username: postgres
+    password: root123
+    driver-class-name: org.postgresql.Driver
+  cache:
+    type: redis
+
+
+jwt:
+  secret: Ii0tOXc1ZS0yZmUtZjItd2Y0LWYuZjUtd2VmLnMuNjVmd2FhLjVmJV4mQCMkMiZnaCQi
+  expirationMs: 900 000
+  refresh:
+    expirationMs: 1 296 000 000
+#logging:
+#  level:
+#    org.springframework.security: TRACE
+
+cloud:
+  aws:
+    credentials:
+      access-key: AKIAW6WNUAVXDF6PQYHD
+      secret-key: 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
+    region:
+      static: us-east-1
+    stack:
+      auto: false
+
+application:
+  bucket:
+    name: barterly-files
+
+google:
+  cloud:
+    geocoding:
+      api-key: AIzaSyCzRZEXlXymdAlUelU0UI8J4XvJkUaKy0c
+
+
+#Oauth2 for Google
+
+#Oauth2 for Facebook
+
+#Oauth2 for GitHub
