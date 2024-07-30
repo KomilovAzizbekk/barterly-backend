@@ -22,9 +22,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException {
-        ApiResult<ErrorData> errorDataApiResult = ApiResult.error("Not allowed to enter", 403);
+        ApiResult<ErrorData> errorDataApiResult = ApiResult.error("Not allowed to enter", 401);
         httpServletResponse.getWriter().write(gson.toJson(errorDataApiResult));
-        httpServletResponse.setStatus(403);
+        httpServletResponse.setStatus(401);
         httpServletResponse.setContentType("application/json");
     }
 
