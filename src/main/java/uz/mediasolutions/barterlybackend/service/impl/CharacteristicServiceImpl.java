@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.Category;
+import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristic;
 import uz.mediasolutions.barterlybackend.entity.Characteristic;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CharacteristicMapper;
@@ -25,20 +26,21 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     private final CharacteristicRepository characteristicRepository;
     private final CategoryRepository categoryRepository;
     private final CharacteristicMapper characteristicMapper;
+    private final CategoryCharacteristicRepository categoryCharacteristicRepository;
 
     @Override
-    public ResponseEntity<Page<?>> getAll(String language, int page, int size) {
+    public ResponseEntity<Page<?>> getAll(String lang, String search, Long categoryId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<CharacteristicDTO> characteristics = characteristicRepository.findAllByOrderByCreatedAtDesc(language, pageable);
+        Page<CharacteristicDTO> characteristics = characteristicRepository.findAllByOrderByCreatedAtDesc(lang, search, categoryId, pageable);
         return ResponseEntity.ok(characteristics);
     }
 
     @Override
-    public ResponseEntity<CharacteristicResDTO> getById(Long id) {
-        Characteristic characteristic = characteristicRepository.findById(id).orElseThrow(
+    public ResponseEntity<?> getById(String lang, Long id) {
+        CharacteristicDTO characteristic = characteristicRepository.findByIdCustom(lang, id).orElseThrow(
                 () -> RestException.restThrow("Characteristic not found", HttpStatus.BAD_REQUEST)
         );
-        return ResponseEntity.ok(characteristicMapper.toResDTO(characteristic));
+        return ResponseEntity.ok(characteristic);
     }
 
     @Override
@@ -63,12 +65,16 @@ public class CharacteristicServiceImpl implements CharacteristicService {
                 () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
         );
 
+        CategoryCharacteristic categoryCharacteristic = categoryCharacteristicRepository.findById(dto.getCategoryCharacteristicId()).orElseThrow(
+                () -> RestException.restThrow("Category characteristic not found", HttpStatus.BAD_REQUEST)
+        );
+
         try {
-          characteristic.setTranslations(dto.getTranslations());
-          characteristic.setRequired(dto.isRequired());
-          characteristic.setCategory(category);
-          characteristicRepository.save(characteristic);
-          return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
+            characteristic.setTranslations(dto.getTranslations());
+            characteristic.setRequired(dto.isRequired());
+            characteristic.setCategory(category);
+            characteristicRepository.save(characteristic);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
         } catch (Exception e) {
             e.printStackTrace();
             throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);

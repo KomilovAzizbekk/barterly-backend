@@ -7,9 +7,9 @@ import uz.mediasolutions.barterlybackend.payload.response.CharacteristicValueRes
 
 public interface CharacteristicValueService {
 
-    ResponseEntity<Page<?>> getAllByCharacteristicId(Long characteristicId, String language, int page, int size);
+    ResponseEntity<Page<?>> getAll(String lang, String search, Long characteristicId, int page, int size);
 
-    ResponseEntity<CharacteristicValueResDTO> getById(Long id);
+    ResponseEntity<?> getById(String lang, Long id);
 
     ResponseEntity<?> add(CharacteristicValueReqDTO dto);
 

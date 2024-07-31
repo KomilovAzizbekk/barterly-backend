@@ -50,6 +50,9 @@ google:
     geocoding:
       api-key: AIzaSyCzRZEXlXymdAlUelU0UI8J4XvJkUaKy0c
 
+springdoc:
+  swagger-ui:
+    path: /barterly-api.html
 
 #Oauth2 for Google
 

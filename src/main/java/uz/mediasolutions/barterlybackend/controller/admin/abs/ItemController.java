@@ -1,4 +1,4 @@
-package uz.mediasolutions.barterlybackend.controller.abs;
+package uz.mediasolutions.barterlybackend.controller.admin.abs;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;

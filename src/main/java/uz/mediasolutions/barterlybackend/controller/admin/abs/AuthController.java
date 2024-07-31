@@ -1,4 +1,4 @@
-package uz.mediasolutions.barterlybackend.controller.abs;
+package uz.mediasolutions.barterlybackend.controller.admin.abs;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

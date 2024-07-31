@@ -29,9 +29,9 @@ public class CurrencyServiceImpl implements CurrencyService {
     private final FileService fileService;
 
     @Override
-    public ResponseEntity<Page<?>> getAll(String language, int page, int size) {
+    public ResponseEntity<Page<?>> getAll(String lang, String search, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<CurrencyDTO> currencyDTOS = currencyRepository.findAllByOrderByCreatedAtDesc(language, pageable);
+        Page<CurrencyDTO> currencyDTOS = currencyRepository.findAllCustom(lang, search, pageable);
         return ResponseEntity.ok(currencyDTOS);
     }
 

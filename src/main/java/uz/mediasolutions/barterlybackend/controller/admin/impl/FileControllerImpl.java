@@ -1,11 +1,11 @@
-package uz.mediasolutions.barterlybackend.controller.impl;
+package uz.mediasolutions.barterlybackend.controller.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import uz.mediasolutions.barterlybackend.controller.abs.FileController;
+import uz.mediasolutions.barterlybackend.controller.admin.abs.FileController;
 import uz.mediasolutions.barterlybackend.service.abs.FileService;
 
 @RestController

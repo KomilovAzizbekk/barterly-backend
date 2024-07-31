@@ -15,9 +15,9 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Your API Title")
+                        .title("Open API for Barterly Backend")
                         .version("1.0")
-                        .description("Your API Description"))
+                        .description("Barterly API Description"))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new io.swagger.v3.oas.models.Components()
                         .addSecuritySchemes("bearerAuth",
@@ -25,10 +25,18 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public GroupedOpenApi publicApi() {
+    public GroupedOpenApi userApi() {
         return GroupedOpenApi.builder()
-                .group("public")
-                .pathsToMatch("/**")
+                .group("user-side")
+                .packagesToScan("uz.mediasolutions.barterlybackend.controller.user")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi adminApi() {
+        return GroupedOpenApi.builder()
+                .group("admin-side")
+                .packagesToScan("uz.mediasolutions.barterlybackend.controller.admin")
                 .build();
     }
 }

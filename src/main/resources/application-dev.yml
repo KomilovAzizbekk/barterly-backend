@@ -3,10 +3,10 @@ server:
 spring:
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   sql:
     init:
-      mode: always
+      mode: never
   main:
     allow-bean-definition-overriding: true
     allow-circular-references: true
@@ -45,7 +45,9 @@ google:
   cloud:
     geocoding:
       api-key: AIzaSyCzRZEXlXymdAlUelU0UI8J4XvJkUaKy0c
-
+springdoc:
+  swagger-ui:
+    path: /barterly-api.html
 
 #Oauth2 for Google
 

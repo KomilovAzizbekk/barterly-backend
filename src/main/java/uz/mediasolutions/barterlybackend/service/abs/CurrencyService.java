@@ -7,7 +7,7 @@ import uz.mediasolutions.barterlybackend.payload.response.CurrencyResDTO;
 
 public interface CurrencyService {
 
-    ResponseEntity<Page<?>> getAll(String language, int page, int size);
+    ResponseEntity<Page<?>> getAll(String lang, String search, int page, int size);
 
     ResponseEntity<CurrencyResDTO> getById(Long id);
 

@@ -1,17 +1,15 @@
-package uz.mediasolutions.barterlybackend.controller.impl;
+package uz.mediasolutions.barterlybackend.controller.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import uz.mediasolutions.barterlybackend.controller.abs.UserController;
+import uz.mediasolutions.barterlybackend.controller.admin.abs.UserController;
 import uz.mediasolutions.barterlybackend.payload.UserDTO;
 import uz.mediasolutions.barterlybackend.payload.request.AdminReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.AdminResDTO;
 import uz.mediasolutions.barterlybackend.payload.response.UserResDTO;
 import uz.mediasolutions.barterlybackend.service.abs.UserService;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

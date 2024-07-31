@@ -1,12 +1,15 @@
 package uz.mediasolutions.barterlybackend.mapper.abs;
 
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import uz.mediasolutions.barterlybackend.entity.Region;
 import uz.mediasolutions.barterlybackend.payload.request.RegionReqDTO;
+import uz.mediasolutions.barterlybackend.payload.response.RegionResDTO;
 
+@Mapper(componentModel = "spring")
 public interface RegionMapper {
 
-    RegionResDTO toResDTO(Region region);
-
+    @Mapping(target = "currency.id", source = "currencyId")
     Region toEntity(RegionReqDTO dto);
 
 }

@@ -6,7 +6,7 @@ import uz.mediasolutions.barterlybackend.payload.request.RegionReqDTO;
 
 public interface RegionService {
 
-    ResponseEntity<Page<?>> getAll(String language, int page, int size);
+    ResponseEntity<Page<?>> getAll(String lang, String search, Long currencyId, int page, int size);
 
     ResponseEntity<?> getById(Long id);
 

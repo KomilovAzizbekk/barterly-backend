@@ -1,4 +1,4 @@
-package uz.mediasolutions.barterlybackend.controller.abs;
+package uz.mediasolutions.barterlybackend.controller.admin.abs;
 
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -9,25 +9,21 @@ import uz.mediasolutions.barterlybackend.payload.request.CategoryReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CategoryResDTO;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
-@RequestMapping(Rest.BASE_PATH + "category")
+@RequestMapping(Rest.BASE_PATH + "admin/category")
 public interface CategoryController {
 
-    @GetMapping("/get-all-parent")
+    @GetMapping("/get-all")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    ResponseEntity<Page<?>> getAllParents(@RequestHeader(name = "Accept-Language", required = false, defaultValue = "uz") String language,
-                                          @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
-                                          @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
-
-    @GetMapping("/get-all/{parentId}")
-    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    ResponseEntity<Page<?>> getAllByParentId(@PathVariable Long parentId,
-                                             @RequestHeader(name = "Accept-Language", required = false, defaultValue = "uz") String language,
-                                             @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
-                                             @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
+    ResponseEntity<Page<?>> getAll(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
+                                   @RequestParam(required = false, defaultValue = "") String search,
+                                   @RequestParam(required = false, defaultValue = "") Long parentId,
+                                   @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
+                                   @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
 
     @GetMapping("/get/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    ResponseEntity<CategoryResDTO> getById(@PathVariable Long id);
+    ResponseEntity<?> getById(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
+                                           @PathVariable Long id);
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")

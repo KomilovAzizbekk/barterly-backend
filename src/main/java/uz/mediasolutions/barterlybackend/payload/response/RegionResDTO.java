@@ -1,7 +1,6 @@
-package uz.mediasolutions.barterlybackend.mapper.abs;
+package uz.mediasolutions.barterlybackend.payload.response;
 
 import lombok.*;
-import uz.mediasolutions.barterlybackend.payload.response.CurrencyResDTO;
 
 import java.util.Map;
 

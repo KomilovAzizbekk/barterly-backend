@@ -1,10 +1,10 @@
-package uz.mediasolutions.barterlybackend.controller.impl;
+package uz.mediasolutions.barterlybackend.controller.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import uz.mediasolutions.barterlybackend.controller.abs.CategoryController;
+import uz.mediasolutions.barterlybackend.controller.admin.abs.CategoryController;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CategoryResDTO;
 import uz.mediasolutions.barterlybackend.service.abs.CategoryService;
@@ -16,18 +16,13 @@ public class CategoryControllerImpl implements CategoryController {
     private final CategoryService categoryService;
 
     @Override
-    public ResponseEntity<Page<?>> getAllParents(String language, int page, int size) {
-        return categoryService.getAllParents(language, page, size);
+    public ResponseEntity<Page<?>> getAll(String lang, String search, Long parentId, int page, int size) {
+        return categoryService.getAll(lang, search, parentId, page, size);
     }
 
     @Override
-    public ResponseEntity<Page<?>> getAllByParentId(Long parentId, String language, int page, int size) {
-        return categoryService.getAllByParentId(parentId, language, page, size);
-    }
-
-    @Override
-    public ResponseEntity<CategoryResDTO> getById(Long id) {
-        return categoryService.getById(id);
+    public ResponseEntity<?> getById(String lang, Long id) {
+        return categoryService.getById(lang, id);
     }
 
     @Override

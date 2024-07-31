@@ -12,8 +12,8 @@ import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristicValue;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CategoryCharacteristicValueMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicValueDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicValueDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryCharacteristicValueReqDTO;
-import uz.mediasolutions.barterlybackend.payload.response.CharacteristicValueResDTO;
 import uz.mediasolutions.barterlybackend.repository.CategoryCharacteristicRepository;
 import uz.mediasolutions.barterlybackend.repository.CategoryCharacteristicValueRepository;
 import uz.mediasolutions.barterlybackend.service.abs.CategoryCharacteristicValueService;
@@ -28,19 +28,18 @@ public class CategoryCharacteristicValueServiceImpl implements CategoryCharacter
     private final CategoryCharacteristicRepository categoryCharacteristicRepository;
 
     @Override
-    public ResponseEntity<Page<?>> getAllByCategoryCharacteristicId(Long categoryCharacteristicId, String language, int page, int size) {
+    public ResponseEntity<Page<?>> getAll(String lang, Long categoryCharacteristicId, String search, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<CategoryCharacteristicValueDTO> valueDTOS = categoryCharacteristicValueRepository.findAllByCategoryCharacteristic(language, categoryCharacteristicId, pageable);
+        Page<CategoryCharacteristicValueDTO> valueDTOS = categoryCharacteristicValueRepository.findAll(lang, categoryCharacteristicId, search, pageable);
         return ResponseEntity.ok(valueDTOS);
     }
 
     @Override
-    public ResponseEntity<CharacteristicValueResDTO> getById(Long id) {
-        CategoryCharacteristicValue categoryCharacteristicValue = categoryCharacteristicValueRepository.findById(id).orElseThrow(
+    public ResponseEntity<?> getById(String lang, Long id) {
+        CategoryCharacteristicValueDTO2 categoryCharacteristicValue = categoryCharacteristicValueRepository.findByIdCustom(lang, id).orElseThrow(
                 () -> RestException.restThrow("Category characteristic value not found", HttpStatus.BAD_REQUEST)
         );
-        CharacteristicValueResDTO resDTO = categoryCharacteristicValueMapper.toResDTO(categoryCharacteristicValue);
-        return ResponseEntity.ok(resDTO);
+        return ResponseEntity.ok(categoryCharacteristicValue);
     }
 
     @Override

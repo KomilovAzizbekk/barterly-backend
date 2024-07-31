@@ -7,11 +7,9 @@ import uz.mediasolutions.barterlybackend.payload.response.CategoryResDTO;
 
 public interface CategoryService {
 
-    ResponseEntity<Page<?>> getAllParents(String language, int page, int size);
+    ResponseEntity<Page<?>> getAll(String lang, String search, Long parentId, int page, int size);
 
-    ResponseEntity<Page<?>> getAllByParentId(Long parentId, String language, int page, int size);
-
-    ResponseEntity<CategoryResDTO> getById(Long id);
+    ResponseEntity<?> getById(String lang, Long id);
 
     ResponseEntity<?> add(CategoryReqDTO dto);
 

@@ -1,10 +1,10 @@
-package uz.mediasolutions.barterlybackend.controller.impl;
+package uz.mediasolutions.barterlybackend.controller.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import uz.mediasolutions.barterlybackend.controller.abs.CharacteristicController;
+import uz.mediasolutions.barterlybackend.controller.admin.abs.CharacteristicController;
 import uz.mediasolutions.barterlybackend.payload.request.CharacteristicReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CharacteristicResDTO;
 import uz.mediasolutions.barterlybackend.service.abs.CharacteristicService;
@@ -16,13 +16,13 @@ public class CharacteristicControllerImpl implements CharacteristicController {
     private final CharacteristicService characteristicService;
 
     @Override
-    public ResponseEntity<Page<?>> getAll(String language, int page, int size) {
-        return characteristicService.getAll(language, page, size);
+    public ResponseEntity<Page<?>> getAll(String lang, String search, Long categoryId, int page, int size) {
+        return characteristicService.getAll(lang, search, categoryId, page, size);
     }
 
     @Override
-    public ResponseEntity<CharacteristicResDTO> getById(Long id) {
-        return characteristicService.getById(id);
+    public ResponseEntity<?> getById(String lang, Long id) {
+        return characteristicService.getById(lang, id);
     }
 
     @Override

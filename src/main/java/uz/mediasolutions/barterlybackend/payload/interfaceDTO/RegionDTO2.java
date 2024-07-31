@@ -1,10 +1,12 @@
 package uz.mediasolutions.barterlybackend.payload.interfaceDTO;
 
-public interface RegionDTO {
+import java.util.Map;
+
+public interface RegionDTO2 {
 
     Long getId();
 
-    String getName();
+    Map<String, String> getNames();
 
     String getImageUrl();
 

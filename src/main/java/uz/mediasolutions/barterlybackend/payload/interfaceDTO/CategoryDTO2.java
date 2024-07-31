@@ -1,12 +1,14 @@
 package uz.mediasolutions.barterlybackend.payload.interfaceDTO;
 
-public interface CategoryDTO {
+import java.util.Map;
+
+public interface CategoryDTO2 {
 
     Long getId();
 
     String getImageUrl();
 
-    String getName();
+    Map<String, String> getNames();
 
     Long getParentId();
 

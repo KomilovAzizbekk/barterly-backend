@@ -1,6 +1,7 @@
 package uz.mediasolutions.barterlybackend.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.language.bm.Lang;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,26 +28,16 @@ public class CategoryServiceImpl implements CategoryService {
     private final FileService fileService;
 
     @Override
-    public ResponseEntity<Page<?>> getAllParents(String language, int page, int size) {
+    public ResponseEntity<Page<?>> getAll(String lang, String search, Long parentId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<CategoryDTO> categoryPage = categoryRepository.findAllByParentCategoryIsNullOrderByCreatedAtDescAndLanguage(language, pageable);
+        Page<CategoryDTO> categoryPage = categoryRepository.findAllCustom(lang, search, parentId, pageable);
         return ResponseEntity.ok(categoryPage);
     }
 
-    @Override
-    public ResponseEntity<Page<?>> getAllByParentId(Long parentId, String language, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<CategoryDTO> categoryPage = categoryRepository.findAllByParentCategoryIdOrderByCreatedAtDescAndLanguage(parentId, language, pageable);
-        return ResponseEntity.ok(categoryPage);
-    }
 
     @Override
-    public ResponseEntity<CategoryResDTO> getById(Long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
-        );
-        CategoryResDTO resDTO = categoryMapper.toResDTO(category);
-        return ResponseEntity.ok(resDTO);
+    public ResponseEntity<?> getById(String lang, Long id) {
+        return ResponseEntity.ok(categoryRepository.findByIdCustom(lang, id));
     }
 
     @Override

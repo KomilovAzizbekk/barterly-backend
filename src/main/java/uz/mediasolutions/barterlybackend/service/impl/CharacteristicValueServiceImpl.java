@@ -12,6 +12,7 @@ import uz.mediasolutions.barterlybackend.entity.CharacteristicValue;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CharacteristicValueMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CharacteristicValueDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CharacteristicValueDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CharacteristicValueReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CharacteristicValueResDTO;
 import uz.mediasolutions.barterlybackend.repository.CharacteristicRepository;
@@ -28,19 +29,18 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
     private final CharacteristicValueMapper characteristicValueMapper;
 
     @Override
-    public ResponseEntity<Page<?>> getAllByCharacteristicId(Long characteristicId, String language, int page, int size) {
+    public ResponseEntity<Page<?>> getAll(String lang, String search, Long characteristicId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<CharacteristicValueDTO> dtos = characteristicValueRepository.findAllByCharacteristicIdOrderByCreatedAtDesc(language, characteristicId, pageable);
+        Page<CharacteristicValueDTO> dtos = characteristicValueRepository.findAllCustom(lang, search, characteristicId, pageable);
         return ResponseEntity.ok(dtos);
     }
 
     @Override
-    public ResponseEntity<CharacteristicValueResDTO> getById(Long id) {
-        CharacteristicValue characteristicValue = characteristicValueRepository.findById(id).orElseThrow(
+    public ResponseEntity<?> getById(String lang, Long id) {
+        CharacteristicValueDTO2 characteristicValue = characteristicValueRepository.findByIdCustom(lang, id).orElseThrow(
                 () -> RestException.restThrow("Characteristic value not found", HttpStatus.BAD_REQUEST)
         );
-        CharacteristicValueResDTO resDTO = characteristicValueMapper.toResDTO(characteristicValue);
-        return ResponseEntity.ok(resDTO);
+        return ResponseEntity.ok(characteristicValue);
     }
 
     @Override

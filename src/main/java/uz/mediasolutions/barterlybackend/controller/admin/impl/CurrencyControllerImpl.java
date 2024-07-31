@@ -1,10 +1,10 @@
-package uz.mediasolutions.barterlybackend.controller.impl;
+package uz.mediasolutions.barterlybackend.controller.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import uz.mediasolutions.barterlybackend.controller.abs.CurrencyController;
+import uz.mediasolutions.barterlybackend.controller.admin.abs.CurrencyController;
 import uz.mediasolutions.barterlybackend.payload.request.CurrencyReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CurrencyResDTO;
 import uz.mediasolutions.barterlybackend.service.abs.CurrencyService;
@@ -16,8 +16,8 @@ public class CurrencyControllerImpl implements CurrencyController {
     private final CurrencyService currencyService;
 
     @Override
-    public ResponseEntity<Page<?>> getAll(String language, int page, int size) {
-        return currencyService.getAll(language, page, size);
+    public ResponseEntity<Page<?>> getAll(String lang, String search, int page, int size) {
+        return currencyService.getAll(lang, search, page, size);
     }
 
     @Override

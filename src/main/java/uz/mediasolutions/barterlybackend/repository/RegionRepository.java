@@ -7,22 +7,37 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uz.mediasolutions.barterlybackend.entity.Region;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.RegionDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.RegionDTO2;
+
+import java.util.Optional;
 
 public interface RegionRepository extends JpaRepository<Region, Long> {
 
     @Query(value = "SELECT r.id,\n" +
-            "       r.image_url as imageUrl,\n" +
-            "       c.id as currencyId,\n" +
-            "       c.translations ->> :language as currencyName,\n" +
-            "       c.currency_code as currencyCode,\n" +
+            "       r.image_url                  as imageUrl,\n" +
+            "       c.id                         as currencyId,\n" +
+            "       c.currency_code              as currencyCode,\n" +
             "       r.translations ->> :language as name\n" +
             "FROM regions r\n" +
             "         LEFT JOIN currencies c on c.id = r.default_currency_id\n" +
-            "WHERE r.translations ->> :language IS NOT NULL\n" +
-            "  AND (c.translations ->> :language IS NOT NULL OR c.id IS NULL)\n" +
+            "WHERE (:search IS NULL OR r.translations ->> :lang ILIKE '%' || :search || '%')\n" +
+            "  AND (:currencyId IS NULL OR r.default_currency_id = :currencyId)\n" +
+            "  AND r.translations ->> :language IS NOT NULL\n" +
             "ORDER BY name;",
             nativeQuery = true)
-    Page<RegionDTO> findAllByOrderByNameAsc(@Param("language") String language,
+    Page<RegionDTO> findAllCustom(@Param("lang") String lang,
+                                            @Param("search") String search,
+                                            @Param("currencyId") Long currencyId,
                                             Pageable pageable);
+
+    @Query(value = "SELECT r.id,\n" +
+            "       r.image_url     as imageUrl,\n" +
+            "       c.id            as currencyId,\n" +
+            "       c.currency_code as currencyCode,\n" +
+            "       r.translations  as names\n" +
+            "FROM regions r\n" +
+            "         LEFT JOIN currencies c on c.id = r.default_currency_id\n" +
+            "WHERE r.id=:id;", nativeQuery = true)
+    Optional<RegionDTO2> findByIdCustom(@Param("id") Long id);
 
 }

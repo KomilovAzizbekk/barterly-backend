@@ -1,10 +1,12 @@
 package uz.mediasolutions.barterlybackend.payload.interfaceDTO;
 
-public interface CharacteristicValueDTO {
+import java.util.Map;
+
+public interface CharacteristicValueDTO2 {
 
     Long getId();
 
-    String getName();
+    Map<String, String> getNames();
 
     Long getCharacteristicId();
 

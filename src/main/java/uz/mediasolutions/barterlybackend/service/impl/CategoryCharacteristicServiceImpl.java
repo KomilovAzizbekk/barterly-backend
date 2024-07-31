@@ -12,6 +12,7 @@ import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristic;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CategoryCharacteristicMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryCharacteristicReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CategoryCharacteristicResDTO;
 import uz.mediasolutions.barterlybackend.repository.CategoryCharacteristicRepository;
@@ -28,20 +29,20 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
     private final CategoryRepository categoryRepository;
 
     @Override
-    public ResponseEntity<Page<?>> getAll(String language, int page, int size) {
+    public ResponseEntity<Page<?>> getAll(String lang, String search, Long categoryId,
+                                          Long parentCharacteristicId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<CategoryCharacteristicDTO> dtos = categoryCharacteristicRepository.findByByLang(language, pageable);
+        Page<CategoryCharacteristicDTO> dtos = categoryCharacteristicRepository.findAllCustom(lang, search, categoryId,
+                parentCharacteristicId, pageable);
         return ResponseEntity.ok(dtos);
     }
 
     @Override
-    public ResponseEntity<?> getById(Long id) {
-        CategoryCharacteristic categoryCharacteristic = categoryCharacteristicRepository.findById(id).orElseThrow(
+    public ResponseEntity<?> getById(String lang, Long id) {
+        CategoryCharacteristicDTO2 categoryCharacteristic = categoryCharacteristicRepository.findByIdCustom(lang, id).orElseThrow(
                 () -> RestException.restThrow("Category characteristic not found", HttpStatus.BAD_REQUEST)
         );
-
-        CategoryCharacteristicResDTO resDTO = categoryCharacteristicMapper.toResDTO(categoryCharacteristic);
-        return ResponseEntity.ok(resDTO);
+        return ResponseEntity.ok(categoryCharacteristic);
     }
 
     @Override

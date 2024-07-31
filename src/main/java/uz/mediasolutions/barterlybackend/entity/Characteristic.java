@@ -32,10 +32,6 @@ public class Characteristic extends AbsDate {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "category_characteristic_id")
-    private CategoryCharacteristic categoryCharacteristic;
-
     @Column(nullable = false)
     private boolean required;
 

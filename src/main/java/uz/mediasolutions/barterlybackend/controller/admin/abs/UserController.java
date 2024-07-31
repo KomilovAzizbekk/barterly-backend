@@ -1,4 +1,4 @@
-package uz.mediasolutions.barterlybackend.controller.abs;
+package uz.mediasolutions.barterlybackend.controller.admin.abs;
 
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,7 @@ import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 import java.util.List;
 
-@RequestMapping(Rest.BASE_PATH + "user")
+@RequestMapping(Rest.BASE_PATH + "admin/users")
 public interface UserController {
 
     @GetMapping("/me")

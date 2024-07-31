@@ -6,9 +6,10 @@ import uz.mediasolutions.barterlybackend.payload.request.CategoryCharacteristicR
 
 public interface CategoryCharacteristicService {
 
-    ResponseEntity<Page<?>> getAll(String language, int page, int size);
+    ResponseEntity<Page<?>> getAll(String lang, String search, Long categoryId,
+                                   Long parentCharacteristicId, int page, int size);
 
-    ResponseEntity<?> getById(Long id);
+    ResponseEntity<?> getById(String lang, Long id);
 
     ResponseEntity<?> add(CategoryCharacteristicReqDTO dto);
 
