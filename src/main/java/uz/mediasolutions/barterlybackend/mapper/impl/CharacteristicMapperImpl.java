@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import uz.mediasolutions.barterlybackend.entity.Category;
-import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristic;
 import uz.mediasolutions.barterlybackend.entity.Characteristic;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CharacteristicMapper;
@@ -43,15 +42,10 @@ public class CharacteristicMapperImpl implements CharacteristicMapper {
                 () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
         );
 
-        CategoryCharacteristic categoryCharacteristic = categoryCharacteristicRepository.findById(dto.getCategoryCharacteristicId()).orElseThrow(
-                () -> RestException.restThrow("Category characteristic not found", HttpStatus.BAD_REQUEST)
-        );
-
         return Characteristic.builder()
                 .required(dto.isRequired())
                 .translations(dto.getTranslations())
                 .category(category)
-                .categoryCharacteristic(categoryCharacteristic)
                 .build();
     }
 }

@@ -16,9 +16,6 @@ public class CharacteristicReqDTO {
     private Long categoryId;
 
     @NotNull
-    private Long categoryCharacteristicId;
-
-    @NotNull
     private boolean required;
 
     @NotNull

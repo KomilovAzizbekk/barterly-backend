@@ -8,13 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.Category;
-import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristic;
 import uz.mediasolutions.barterlybackend.entity.Characteristic;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CharacteristicMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CharacteristicDTO;
 import uz.mediasolutions.barterlybackend.payload.request.CharacteristicReqDTO;
-import uz.mediasolutions.barterlybackend.payload.response.CharacteristicResDTO;
 import uz.mediasolutions.barterlybackend.repository.*;
 import uz.mediasolutions.barterlybackend.service.abs.CharacteristicService;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
@@ -26,7 +24,6 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     private final CharacteristicRepository characteristicRepository;
     private final CategoryRepository categoryRepository;
     private final CharacteristicMapper characteristicMapper;
-    private final CategoryCharacteristicRepository categoryCharacteristicRepository;
 
     @Override
     public ResponseEntity<Page<?>> getAll(String lang, String search, Long categoryId, int page, int size) {
@@ -63,10 +60,6 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 
         Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow(
                 () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
-        );
-
-        CategoryCharacteristic categoryCharacteristic = categoryCharacteristicRepository.findById(dto.getCategoryCharacteristicId()).orElseThrow(
-                () -> RestException.restThrow("Category characteristic not found", HttpStatus.BAD_REQUEST)
         );
 
         try {

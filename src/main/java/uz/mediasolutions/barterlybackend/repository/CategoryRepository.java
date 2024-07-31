@@ -26,7 +26,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "ORDER BY created_at DESC;", nativeQuery = true)
     Page<CategoryDTO> findAllCustom(@Param("lang") String lang,
                                     @Param("search") String search,
-                                    @Param("parent_id") Long parentId,
+                                    @Param("parentId") Long parentId,
                                     Pageable pageable);
 
 
