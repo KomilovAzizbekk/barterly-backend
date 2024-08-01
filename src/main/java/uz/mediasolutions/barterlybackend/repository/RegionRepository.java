@@ -17,12 +17,12 @@ public interface RegionRepository extends JpaRepository<Region, Long> {
             "       r.image_url                  as imageUrl,\n" +
             "       c.id                         as currencyId,\n" +
             "       c.currency_code              as currencyCode,\n" +
-            "       r.translations ->> :language as name\n" +
+            "       r.translations ->> :lang as name\n" +
             "FROM regions r\n" +
             "         LEFT JOIN currencies c on c.id = r.default_currency_id\n" +
             "WHERE (:search IS NULL OR r.translations ->> :lang ILIKE '%' || :search || '%')\n" +
             "  AND (:currencyId IS NULL OR r.default_currency_id = :currencyId)\n" +
-            "  AND r.translations ->> :language IS NOT NULL\n" +
+            "  AND r.translations ->> :lang IS NOT NULL\n" +
             "ORDER BY r.id DESC;",
             nativeQuery = true)
     Page<RegionDTO> findAllCustom(@Param("lang") String lang,
