@@ -14,7 +14,6 @@ import uz.mediasolutions.barterlybackend.mapper.abs.CategoryCharacteristicMapper
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicDTO;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryCharacteristicReqDTO;
-import uz.mediasolutions.barterlybackend.payload.response.CategoryCharacteristicResDTO;
 import uz.mediasolutions.barterlybackend.repository.CategoryCharacteristicRepository;
 import uz.mediasolutions.barterlybackend.repository.CategoryRepository;
 import uz.mediasolutions.barterlybackend.service.abs.CategoryCharacteristicService;
@@ -48,13 +47,8 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
     @Override
     public ResponseEntity<?> add(CategoryCharacteristicReqDTO dto) {
         CategoryCharacteristic categoryCharacteristic = categoryCharacteristicMapper.toEntity(dto);
-        try {
-            categoryCharacteristicRepository.save(categoryCharacteristic);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Rest.ERROR);
-        }
+        categoryCharacteristicRepository.save(categoryCharacteristic);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
 
 
@@ -71,16 +65,11 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
         CategoryCharacteristic parent = categoryCharacteristicRepository.findById(dto.getParentId()).orElseThrow(
                 () -> RestException.restThrow("Parent category characteristic not found", HttpStatus.BAD_REQUEST)
         );
-        try {
-            categoryCharacteristic.setCategory(category);
-            categoryCharacteristic.setParent(parent);
-            categoryCharacteristic.setTranslations(dto.getTranslations());
-            categoryCharacteristicRepository.save(categoryCharacteristic);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Rest.ERROR);
-        }
+        categoryCharacteristic.setCategory(category);
+        categoryCharacteristic.setParent(parent);
+        categoryCharacteristic.setTranslations(dto.getTranslations());
+        categoryCharacteristicRepository.save(categoryCharacteristic);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
 
     @Override

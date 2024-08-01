@@ -43,13 +43,8 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     @Override
     public ResponseEntity<?> add(CharacteristicReqDTO dto) {
         Characteristic entity = characteristicMapper.toEntity(dto);
-        try {
-            characteristicRepository.save(entity);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        characteristicRepository.save(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
 
     @Override
@@ -62,16 +57,11 @@ public class CharacteristicServiceImpl implements CharacteristicService {
                 () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
         );
 
-        try {
-            characteristic.setTranslations(dto.getTranslations());
-            characteristic.setRequired(dto.isRequired());
-            characteristic.setCategory(category);
-            characteristicRepository.save(characteristic);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        characteristic.setTranslations(dto.getTranslations());
+        characteristic.setRequired(dto.isRequired());
+        characteristic.setCategory(category);
+        characteristicRepository.save(characteristic);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
 
     @Override

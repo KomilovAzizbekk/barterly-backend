@@ -46,13 +46,8 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
     @Override
     public ResponseEntity<?> add(CharacteristicValueReqDTO dto) {
         CharacteristicValue entity = characteristicValueMapper.toEntity(dto);
-        try {
-            characteristicValueRepository.save(entity);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        characteristicValueRepository.save(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
 
     @Override
@@ -64,15 +59,10 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
                 () -> RestException.restThrow("Characteristic not found", HttpStatus.BAD_REQUEST)
         );
 
-        try {
-            characteristicValue.setTranslations(dto.getTranslations());
-            characteristicValue.setCharacteristic(characteristic);
-            characteristicValueRepository.save(characteristicValue);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        characteristicValue.setTranslations(dto.getTranslations());
+        characteristicValue.setCharacteristic(characteristic);
+        characteristicValueRepository.save(characteristicValue);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
 
     @Override

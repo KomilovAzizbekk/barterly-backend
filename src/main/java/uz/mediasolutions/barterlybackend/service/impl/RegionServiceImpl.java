@@ -45,13 +45,8 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public ResponseEntity<?> add(RegionReqDTO dto) {
         Region region = regionMapper.toEntity(dto);
-        try {
-            regionRepository.save(region);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Rest.ERROR);
-        }
+        regionRepository.save(region);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
 
     @Override
@@ -63,16 +58,11 @@ public class RegionServiceImpl implements RegionService {
         Currency currency = currencyRepository.findById(dto.getCurrencyId()).orElseThrow(
                 () -> RestException.restThrow("Currency not found", HttpStatus.BAD_REQUEST)
         );
-        try {
-            region.setTranslations(dto.getTranslations());
-            region.setCurrency(currency);
-            region.setImageUrl(dto.getImageUrl());
-            regionRepository.save(region);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Rest.ERROR);
-        }
+        region.setTranslations(dto.getTranslations());
+        region.setCurrency(currency);
+        region.setImageUrl(dto.getImageUrl());
+        regionRepository.save(region);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
 
     @Override

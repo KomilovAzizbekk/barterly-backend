@@ -79,22 +79,18 @@ public class UserServiceImpl implements UserService {
             throw RestException.restThrow("User already exists", HttpStatus.CONFLICT);
         }
 
-        try {
-            User admin = User.builder()
-                    .role(role)
-                    .email(dto.getEmail())
-                    .username(dto.getUsername())
-                    .password(passwordEncoder.encode(dto.getPassword()))
-                    .accountNonExpired(true)
-                    .accountNonLocked(true)
-                    .enabled(true)
-                    .credentialsNonExpired(true)
-                    .build();
-            userRepository.save(admin);
-            return ResponseEntity.status(HttpStatus.CREATED).body(  Rest.CREATED);
-        } catch (Exception e) {
-            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        User admin = User.builder()
+                .role(role)
+                .email(dto.getEmail())
+                .username(dto.getUsername())
+                .password(passwordEncoder.encode(dto.getPassword()))
+                .accountNonExpired(true)
+                .accountNonLocked(true)
+                .enabled(true)
+                .credentialsNonExpired(true)
+                .build();
+        userRepository.save(admin);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
 
 }

@@ -45,13 +45,8 @@ public class CategoryCharacteristicValueServiceImpl implements CategoryCharacter
     @Override
     public ResponseEntity<?> add(CategoryCharacteristicValueReqDTO dto) {
         CategoryCharacteristicValue entity = categoryCharacteristicValueMapper.toEntity(dto);
-        try {
-            categoryCharacteristicValueRepository.save(entity);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Rest.ERROR);
-        }
+        categoryCharacteristicValueRepository.save(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
 
     @Override
@@ -64,15 +59,10 @@ public class CategoryCharacteristicValueServiceImpl implements CategoryCharacter
                 () -> RestException.restThrow("Category characteristic not found", HttpStatus.BAD_REQUEST)
         );
 
-        try {
-            entity.setCharacteristic(categoryCharacteristic);
-            entity.setTranslations(dto.getTranslations());
-            categoryCharacteristicValueRepository.save(entity);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Rest.ERROR);
-        }
+        entity.setCharacteristic(categoryCharacteristic);
+        entity.setTranslations(dto.getTranslations());
+        categoryCharacteristicValueRepository.save(entity);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
 
     @Override

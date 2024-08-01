@@ -43,13 +43,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity<?> add(CategoryReqDTO dto) {
         Category entity = categoryMapper.toEntity(dto);
-        try {
-            categoryRepository.save(entity);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RestException(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        categoryRepository.save(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
 
 
@@ -58,25 +53,20 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
         );
-        try {
-            if (dto.getParentCategoryId() != null) {
-                category.setParentCategory(categoryRepository.findById(dto.getParentCategoryId()).orElse(null));
-            }
-
-            if (!category.getImageUrl().equals(dto.getImageUrl())) {
-                //Deleting previous file
-                fileService.deleteFile(category.getImageUrl());
-            }
-
-            category.setImageUrl(dto.getImageUrl());
-            category.setTranslations(dto.getTranslations());
-            categoryRepository.save(category);
-
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RestException(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
+        if (dto.getParentCategoryId() != null) {
+            category.setParentCategory(categoryRepository.findById(dto.getParentCategoryId()).orElse(null));
         }
+
+        if (!category.getImageUrl().equals(dto.getImageUrl())) {
+            //Deleting previous file
+            fileService.deleteFile(category.getImageUrl());
+        }
+
+        category.setImageUrl(dto.getImageUrl());
+        category.setTranslations(dto.getTranslations());
+        categoryRepository.save(category);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
 
     @Override

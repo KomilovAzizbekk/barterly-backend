@@ -47,13 +47,8 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     public ResponseEntity<?> add(CurrencyReqDTO dto) {
         Currency entity = currencyMapper.toEntity(dto);
-        try {
-            currencyRepository.save(entity);
-            return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        currencyRepository.save(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
 
     @Override
@@ -66,16 +61,11 @@ public class CurrencyServiceImpl implements CurrencyService {
             fileService.deleteFile(currency.getImageUrl());
         }
 
-        try {
-            currency.setCurrencyCode(dto.getCurrencyCode());
-            currency.setTranslations(dto.getTranslations());
-            currency.setImageUrl(dto.getImageUrl());
-            currencyRepository.save(currency);
-            return ResponseEntity.ok(Rest.EDITED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        currency.setCurrencyCode(dto.getCurrencyCode());
+        currency.setTranslations(dto.getTranslations());
+        currency.setImageUrl(dto.getImageUrl());
+        currencyRepository.save(currency);
+        return ResponseEntity.ok(Rest.EDITED);
     }
 
     @Override
