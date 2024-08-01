@@ -23,7 +23,7 @@ public interface CityRepository extends JpaRepository<City, Long> {
             "  AND (:regionId IS NULL OR r.id = :regionId)\n" +
             "  AND c.translations ->> :lang IS NOT NULL\n" +
             "  AND r.translations ->> :lang IS NOT NULL\n" +
-            "ORDER BY regionName AND name;", nativeQuery = true)
+            "ORDER BY c.id DESC;", nativeQuery = true)
     Page<CityDTO> findAllCustom(
             @Param("lang") String lang,
             @Param("search") String search,

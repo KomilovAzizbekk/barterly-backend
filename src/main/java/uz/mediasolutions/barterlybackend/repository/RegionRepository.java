@@ -23,7 +23,7 @@ public interface RegionRepository extends JpaRepository<Region, Long> {
             "WHERE (:search IS NULL OR r.translations ->> :lang ILIKE '%' || :search || '%')\n" +
             "  AND (:currencyId IS NULL OR r.default_currency_id = :currencyId)\n" +
             "  AND r.translations ->> :language IS NOT NULL\n" +
-            "ORDER BY name;",
+            "ORDER BY r.id DESC;",
             nativeQuery = true)
     Page<RegionDTO> findAllCustom(@Param("lang") String lang,
                                             @Param("search") String search,

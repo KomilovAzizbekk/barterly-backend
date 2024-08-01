@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import uz.mediasolutions.barterlybackend.secret.JwtAuthFilter;
 import uz.mediasolutions.barterlybackend.secret.JwtAuthenticationEntryPoint;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
@@ -57,5 +60,16 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
+//    @Bean
+//    public CorsFilter corsFilter() {
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowCredentials(true); // Cookie'larni qo'llab-quvvatlash
+//        config.addAllowedOrigin("*"); // Ruxsat berilgan domain
+//        config.addAllowedHeader("*"); // Barcha HTTP headerlarini ruxsat berish
+//        config.addAllowedMethod("*"); // Barcha HTTP metodlarini ruxsat berish
+//        source.registerCorsConfiguration("/**", config);
+//        return new CorsFilter(source);
+//    }
 
 }

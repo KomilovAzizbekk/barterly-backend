@@ -12,7 +12,7 @@ import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 public interface NeighborhoodController {
 
     @GetMapping("/get-all")
-    ResponseEntity<Page<?>> getAll(@RequestHeader(name = "Accept-Language") String lang,
+    ResponseEntity<Page<?>> getAll(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
                                    @RequestParam(required = false, defaultValue = "") String search,
                                    @RequestParam(required = false, defaultValue = "") Long regionId,
                                    @RequestParam(required = false, defaultValue = "") Long cityId,
