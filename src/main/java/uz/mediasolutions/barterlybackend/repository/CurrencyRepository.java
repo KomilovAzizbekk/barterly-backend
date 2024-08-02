@@ -17,7 +17,7 @@ public interface CurrencyRepository extends JpaRepository<Currency, Long> {
             "FROM currencies\n" +
             "WHERE translations ->> :lang IS NOT NULL\n" +
             "  AND (:search IS NULL OR translations ->> :lang ILIKE '%' || :search || '%')\n" +
-            "ORDER BY created_at DESC;", nativeQuery = true)
+            "ORDER BY created_at DESC", nativeQuery = true)
     Page<CurrencyDTO> findAllCustom(@Param("lang") String lang,
                                     @Param("search") String search,
                                     Pageable pageable);

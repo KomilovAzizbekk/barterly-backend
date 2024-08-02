@@ -23,7 +23,7 @@ public interface CharacteristicValueRepository extends JpaRepository<Characteris
             "  AND (:characteristic_id IS NULL OR cv.characteristic_id=:characteristic_id)\n" +
             "  AND cv.translations ->> :lang IS NOT NULL\n" +
             "  AND ch.translations ->> :lang IS NOT NULL\n" +
-            "ORDER BY cv.created_at DESC;", nativeQuery = true)
+            "ORDER BY cv.created_at DESC", nativeQuery = true)
     Page<CharacteristicValueDTO> findAllCustom(
             @Param("lang") String lang,
             @Param("search") String search,
@@ -37,7 +37,7 @@ public interface CharacteristicValueRepository extends JpaRepository<Characteris
             "FROM characteristic_values cv\n" +
             "         LEFT JOIN characteristics ch on ch.id = cv.characteristic_id\n" +
             "WHERE cv.id = :id\n" +
-            "  AND ch.translations ->> :lang IS NOT NULL;", nativeQuery = true)
+            "  AND ch.translations ->> :lang IS NOT NULL", nativeQuery = true)
     Optional<CharacteristicValueDTO2> findByIdCustom(
             @Param("lang") String lang,
             @Param("id") Long id);

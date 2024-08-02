@@ -10,6 +10,8 @@ import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryDTO;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryDTO2;
 import uz.mediasolutions.barterlybackend.payload.response.CategoryResDTO;
 
+import java.util.Optional;
+
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Query(value = "SELECT c.id,\n" +
@@ -23,7 +25,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "  AND (:parentId IS NULL OR c.parent_id = :parentId)\n" +
             "  AND c.translations ->> :lang IS NOT NULL\n" +
             "  AND c2.translations ->> :lang IS NOT NULL\n" +
-            "ORDER BY created_at DESC;", nativeQuery = true)
+            "ORDER BY c.created_at DESC", nativeQuery = true)
     Page<CategoryDTO> findAllCustom(@Param("lang") String lang,
                                     @Param("search") String search,
                                     @Param("parentId") Long parentId,
@@ -38,7 +40,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "FROM categories c\n" +
             "         LEFT JOIN categories c2 on c2.id = c.parent_id\n" +
             "WHERE c2.translations ->> :lang IS NOT NULL\n" +
-            "AND c.id=:id;", nativeQuery = true)
-    CategoryDTO2 findByIdCustom(@Param("lang") String lang,
-                                @Param("id") Long id);
+            "AND c.id=:id", nativeQuery = true)
+    Optional<CategoryDTO2> findByIdCustom(@Param("lang") String lang,
+                                         @Param("id") Long id);
 }

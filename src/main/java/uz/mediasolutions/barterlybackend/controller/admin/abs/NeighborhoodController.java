@@ -39,7 +39,7 @@ public interface NeighborhoodController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = NeighborhoodDTO2.class))})
     })
-    ResponseEntity<?> getById(@RequestHeader(name = "Accept-Language") String lang,
+    ResponseEntity<?> getById(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
                               @PathVariable Long id);
 
     @PostMapping("/add")

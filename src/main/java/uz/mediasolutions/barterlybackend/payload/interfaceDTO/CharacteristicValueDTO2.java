@@ -6,7 +6,7 @@ public interface CharacteristicValueDTO2 {
 
     Long getId();
 
-    Map<String, String> getNames();
+    String getNames();
 
     Long getCharacteristicId();
 

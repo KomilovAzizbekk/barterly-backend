@@ -6,7 +6,7 @@ public interface NeighborhoodDTO2 {
 
     Long getId();
 
-    Map<String, String> getNames();
+    String getNames();
 
     Long getRegionId();
 

@@ -12,6 +12,7 @@ import uz.mediasolutions.barterlybackend.entity.Category;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CategoryMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CategoryResDTO;
 import uz.mediasolutions.barterlybackend.repository.CategoryRepository;
@@ -37,7 +38,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
-        return ResponseEntity.ok(categoryRepository.findByIdCustom(lang, id));
+        CategoryDTO2 categoryDTO2 = categoryRepository.findByIdCustom(lang, id).orElseThrow(
+                () -> RestException.restThrow("Category not found", HttpStatus.NOT_FOUND)
+        );
+        return ResponseEntity.ok(categoryDTO2);
     }
 
     @Override

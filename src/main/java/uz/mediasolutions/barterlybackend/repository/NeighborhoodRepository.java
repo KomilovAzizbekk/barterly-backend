@@ -28,7 +28,7 @@ public interface NeighborhoodRepository extends JpaRepository<Neighborhood, Long
             "  AND n.translations ->> :lang IS NOT NULL\n" +
             "  AND r.translations ->> :lang IS NOT NULL\n" +
             "  AND c.translations ->> :lang IS NOT NULL\n" +
-            "ORDER BY n.id DESC;", nativeQuery = true)
+            "ORDER BY n.id DESC", nativeQuery = true)
     Page<NeighborhoodDTO> findAllCustom(
             @Param("lang") String lang,
             @Param("search") String search,
@@ -47,7 +47,7 @@ public interface NeighborhoodRepository extends JpaRepository<Neighborhood, Long
             "         LEFT JOIN cities c on c.id = n.city_id\n" +
             "WHERE n.id = :id\n" +
             "  AND r.translations ->> :lang IS NOT NULL\n" +
-            "  AND c.translations ->> :lang IS NOT NULL;", nativeQuery = true)
+            "  AND c.translations ->> :lang IS NOT NULL", nativeQuery = true)
     Optional<NeighborhoodDTO2> findByIdCustom(@Param("lang") String lang,
                                               @Param("id") Long id);
 

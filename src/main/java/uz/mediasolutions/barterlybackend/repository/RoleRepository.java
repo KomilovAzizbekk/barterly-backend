@@ -5,8 +5,9 @@ import uz.mediasolutions.barterlybackend.entity.Role;
 import uz.mediasolutions.barterlybackend.enums.RoleEnum;
 
 import java.util.List;
+import java.util.UUID;
 
-public interface RoleRepository extends JpaRepository<Role, Long> {
+public interface RoleRepository extends JpaRepository<Role, UUID> {
 
     Role findByName(RoleEnum name);
 

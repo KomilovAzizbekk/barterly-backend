@@ -6,7 +6,7 @@ public interface CategoryCharacteristicDTO2 {
 
     Long getId();
 
-    Map<String, String> getNames();
+    String getNames();
 
     Long getCategoryId();
 

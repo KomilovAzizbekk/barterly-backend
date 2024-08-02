@@ -23,7 +23,7 @@ public interface CityRepository extends JpaRepository<City, Long> {
             "  AND (:regionId IS NULL OR r.id = :regionId)\n" +
             "  AND c.translations ->> :lang IS NOT NULL\n" +
             "  AND r.translations ->> :lang IS NOT NULL\n" +
-            "ORDER BY c.id DESC;", nativeQuery = true)
+            "ORDER BY c.id DESC", nativeQuery = true)
     Page<CityDTO> findAllCustom(
             @Param("lang") String lang,
             @Param("search") String search,
@@ -37,7 +37,7 @@ public interface CityRepository extends JpaRepository<City, Long> {
             "FROM cities c\n" +
             "         LEFT JOIN regions r on r.id = c.region_id\n" +
             "WHERE c.id = :id\n" +
-            "  AND r.translations ->> :lang IS NOT NULL;", nativeQuery = true)
+            "  AND r.translations ->> :lang IS NOT NULL", nativeQuery = true)
     Optional<CityDTO2> findByIdCustom(@Param("lang") String lang,
                                       @Param("id") Long id);
 

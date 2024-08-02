@@ -8,7 +8,7 @@ public interface CategoryDTO2 {
 
     String getImageUrl();
 
-    Map<String, String> getNames();
+    String getNames();
 
     Long getParentId();
 

@@ -24,7 +24,7 @@ public interface CategoryCharacteristicValueRepository extends JpaRepository<Cat
             "  AND (:category_characteristic_id IS NULL OR cc.id = :category_characteristic_id)\n" +
             "  AND cc.translations ->> :lang IS NOT NULL\n" +
             "  AND ccv.translations ->> :lang IS NOT NULL\n" +
-            "ORDER BY ccv.created_at DESC;",
+            "ORDER BY ccv.created_at DESC",
             nativeQuery = true)
     Page<CategoryCharacteristicValueDTO> findAll(@Param("lang") String lang,
                                                  @Param("category_characteristic_id") Long categoryCharacteristicId,
@@ -38,7 +38,7 @@ public interface CategoryCharacteristicValueRepository extends JpaRepository<Cat
             "FROM category_characteristic_values ccv\n" +
             "         LEFT JOIN category_characteristics cc on cc.id = ccv.characteristic_id\n" +
             "WHERE cc.translations ->> :lang IS NOT NULL\n" +
-            "  AND ccv.id = :id;", nativeQuery = true)
+            "  AND ccv.id = :id", nativeQuery = true)
     Optional<CategoryCharacteristicValueDTO2> findByIdCustom(@Param("lang") String lang,
                                                              @Param("id") Long id);
 

@@ -8,7 +8,7 @@ public interface CharacteristicDTO2 {
 
     boolean isRequired();
 
-    Map<String, String> getNames();
+    String getNames();
 
     Long getCategoryId();
 

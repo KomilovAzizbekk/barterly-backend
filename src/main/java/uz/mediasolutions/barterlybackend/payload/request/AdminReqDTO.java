@@ -19,6 +19,6 @@ public class AdminReqDTO {
 
     private String password;
 
-    private Long roleId;
+    private UUID roleId;
 
 }

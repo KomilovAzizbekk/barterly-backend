@@ -6,7 +6,7 @@ public interface RegionDTO2 {
 
     Long getId();
 
-    Map<String, String> getNames();
+    String getNames();
 
     String getImageUrl();
 

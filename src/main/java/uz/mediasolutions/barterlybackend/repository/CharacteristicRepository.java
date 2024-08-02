@@ -24,7 +24,7 @@ public interface CharacteristicRepository extends JpaRepository<Characteristic, 
             "  AND (:category_id IS NULL OR c.id = :category_id)\n" +
             "  AND ch.translations ->> :lang IS NOT NULL\n" +
             "  AND c.translations ->> :lang IS NOT NULL\n" +
-            "ORDER BY ch.created_at DESC;", nativeQuery = true)
+            "ORDER BY ch.created_at DESC", nativeQuery = true)
     Page<CharacteristicDTO> findAllByOrderByCreatedAtDesc(@Param("lang") String lang,
                                                           @Param("search") String search,
                                                           @Param("category_id") Long categoryId,
@@ -38,7 +38,7 @@ public interface CharacteristicRepository extends JpaRepository<Characteristic, 
             "FROM characteristics ch\n" +
             "         LEFT JOIN categories c on c.id = ch.category_id\n" +
             "WHERE ch.id = :id\n" +
-            "  AND c.translations ->> :lang IS NOT NULL;", nativeQuery = true)
+            "  AND c.translations ->> :lang IS NOT NULL", nativeQuery = true)
     Optional<CharacteristicDTO2> findByIdCustom(@Param("lang") String lang,
                                                 @Param("id") Long id);
 
