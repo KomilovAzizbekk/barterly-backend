@@ -3,12 +3,12 @@ pipeline {
 
     tools {
         // Maven va JDK o'rnatilganligini bildiradi
-        maven 'Maven 3.8.1'
-        jdk 'jdk-21'
+        maven 'Maven 3.6.3'
+        jdk 'java-21-openjdk-amd64'
     }
 
     environment {
-        JAVA_HOME = "${tool 'jdk-21'}"
+        JAVA_HOME = "${tool 'java-21-openjdk-amd64'}"
         PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
     }
 
