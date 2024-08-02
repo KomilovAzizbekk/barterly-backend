@@ -12,6 +12,7 @@ import uz.mediasolutions.barterlybackend.entity.Characteristic;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CharacteristicMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CharacteristicDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CharacteristicDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CharacteristicReqDTO;
 import uz.mediasolutions.barterlybackend.repository.*;
 import uz.mediasolutions.barterlybackend.service.abs.CharacteristicService;
@@ -34,7 +35,7 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
-        CharacteristicDTO characteristic = characteristicRepository.findByIdCustom(lang, id).orElseThrow(
+        CharacteristicDTO2 characteristic = characteristicRepository.findByIdCustom(lang, id).orElseThrow(
                 () -> RestException.restThrow("Characteristic not found", HttpStatus.BAD_REQUEST)
         );
         return ResponseEntity.ok(characteristic);
