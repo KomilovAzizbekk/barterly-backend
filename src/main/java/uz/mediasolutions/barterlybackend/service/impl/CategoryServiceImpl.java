@@ -78,8 +78,9 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
         );
+
         try {
-            fileService.deleteFile(category.getImageUrl());
+//            fileService.deleteFile(category.getImageUrl());
             categoryRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
         } catch (Exception e) {

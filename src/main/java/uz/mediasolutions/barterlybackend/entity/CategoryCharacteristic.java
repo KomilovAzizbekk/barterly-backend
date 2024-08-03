@@ -6,6 +6,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import uz.mediasolutions.barterlybackend.entity.template.AbsDate;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,5 +38,8 @@ public class CategoryCharacteristic extends AbsDate {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private Map<String, String> translations;
+
+    @OneToMany(mappedBy = "characteristic", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CategoryCharacteristicValue> categoryCharacteristicValues;
 
 }

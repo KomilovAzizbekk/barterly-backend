@@ -24,7 +24,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "WHERE (:search IS NULL OR c.translations ->> :lang ILIKE '%' || :search || '%')\n" +
             "  AND (:parentId IS NULL OR c.parent_id = :parentId)\n" +
             "  AND c.translations ->> :lang IS NOT NULL\n" +
-            "  AND c2.translations ->> :lang IS NOT NULL\n" +
             "ORDER BY c.created_at DESC", nativeQuery = true)
     Page<CategoryDTO> findAllCustom(@Param("lang") String lang,
                                     @Param("search") String search,

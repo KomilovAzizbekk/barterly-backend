@@ -80,8 +80,12 @@ public class FileServiceImpl implements FileService {
     public ResponseEntity<String> deleteFile(String url) {
         String fileName = extractFilenameFromUrl(url);
         try {
-            s3Client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
-            return ResponseEntity.ok("File deleted: " + fileName);
+            if (fileName != null) {
+                s3Client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
+                return ResponseEntity.ok("File deleted: " + fileName);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found");
+            }
         } catch (AmazonS3Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(e.getStatusCode()).body("Error deleting file: " + fileName);
@@ -106,7 +110,12 @@ public class FileServiceImpl implements FileService {
             return Paths.get(path).getFileName().toString();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Failed to extract filename from URL", e);
+            return null;
+//            throw new RuntimeException("Failed to extract filename from URL", e);
         }
+    }
+
+    public boolean exists(AmazonS3 s3Client, String bucketName, String fileName) {
+        return s3Client.doesObjectExist(bucketName, fileName);
     }
 }
