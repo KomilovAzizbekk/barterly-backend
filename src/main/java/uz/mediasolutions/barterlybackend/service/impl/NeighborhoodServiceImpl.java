@@ -40,7 +40,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
         NeighborhoodDTO2 neighborhoodDTO2 = neighborhoodRepository.findByIdCustom(lang, id).orElseThrow(
-                () -> RestException.restThrow("Neighborhood not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Neighborhood not found", HttpStatus.NOT_FOUND)
         );
         return ResponseEntity.ok(neighborhoodDTO2);
     }
@@ -55,15 +55,15 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     @Override
     public ResponseEntity<?> edit(Long id, NeighborhoodReqDTO dto) {
         Neighborhood neighborhood = neighborhoodRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Neighborhood not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Neighborhood not found", HttpStatus.NOT_FOUND)
         );
 
         Region region = regionRepository.findById(dto.getRegionId()).orElseThrow(
-                () -> RestException.restThrow("Region not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Region not found", HttpStatus.NOT_FOUND)
         );
 
         City city = cityRepository.findById(dto.getCityId()).orElseThrow(
-                () -> RestException.restThrow("City not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("City not found", HttpStatus.NOT_FOUND)
         );
 
         neighborhood.setTranslations(dto.getTranslations());
@@ -76,7 +76,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     @Override
     public ResponseEntity<?> delete(Long id) {
         neighborhoodRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Neighborhood not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Neighborhood not found", HttpStatus.NOT_FOUND)
         );
         try {
             neighborhoodRepository.deleteById(id);

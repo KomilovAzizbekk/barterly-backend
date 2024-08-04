@@ -39,7 +39,7 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
         CategoryCharacteristicDTO2 categoryCharacteristic = categoryCharacteristicRepository.findByIdCustom(lang, id).orElseThrow(
-                () -> RestException.restThrow("Category characteristic not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Category characteristic not found", HttpStatus.NOT_FOUND)
         );
         return ResponseEntity.ok(categoryCharacteristic);
     }
@@ -55,18 +55,18 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
     @Override
     public ResponseEntity<?> edit(Long id, CategoryCharacteristicReqDTO dto) {
         CategoryCharacteristic categoryCharacteristic = categoryCharacteristicRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Category characteristic not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Category characteristic not found", HttpStatus.NOT_FOUND)
         );
 
         Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow(
-                () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Category not found", HttpStatus.NOT_FOUND)
         );
 
-        CategoryCharacteristic parent = categoryCharacteristicRepository.findById(dto.getParentId()).orElseThrow(
-                () -> RestException.restThrow("Parent category characteristic not found", HttpStatus.BAD_REQUEST)
-        );
+        if (dto.getParentId() != null) {
+            categoryCharacteristic.setParent(categoryCharacteristicRepository.findById(dto.getParentId()).orElse(null));
+        }
+
         categoryCharacteristic.setCategory(category);
-        categoryCharacteristic.setParent(parent);
         categoryCharacteristic.setTranslations(dto.getTranslations());
         categoryCharacteristicRepository.save(categoryCharacteristic);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
@@ -75,7 +75,7 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
     @Override
     public ResponseEntity<?> delete(Long id) {
         categoryCharacteristicRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Category characteristic not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Category characteristic not found", HttpStatus.NOT_FOUND)
         );
         try {
             categoryCharacteristicRepository.deleteById(id);

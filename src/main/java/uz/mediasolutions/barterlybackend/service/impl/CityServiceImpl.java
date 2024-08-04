@@ -38,7 +38,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
         CityDTO2 city = cityRepository.findByIdCustom(lang, id).orElseThrow(
-                () -> RestException.restThrow("City not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("City not found", HttpStatus.NOT_FOUND)
         );
         return ResponseEntity.ok(city);
     }
@@ -53,11 +53,11 @@ public class CityServiceImpl implements CityService {
     @Override
     public ResponseEntity<?> edit(CityReqDTO dto, Long id) {
         City city = cityRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("City not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("City not found", HttpStatus.NOT_FOUND)
         );
 
         Region region = regionRepository.findById(dto.getRegionId()).orElseThrow(
-                () -> RestException.restThrow("Region not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Region not found", HttpStatus.NOT_FOUND)
         );
         city.setTranslations(dto.getTranslations());
         city.setRegion(region);
@@ -68,7 +68,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public ResponseEntity<?> delete(Long id) {
         cityRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("City not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("City not found", HttpStatus.NOT_FOUND)
         );
         try {
             cityRepository.deleteById(id);

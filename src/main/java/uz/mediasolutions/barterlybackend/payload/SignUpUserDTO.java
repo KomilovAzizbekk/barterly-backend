@@ -20,17 +20,14 @@ public class SignUpUserDTO {
     @NotBlank(message = "enter phone number")
     private String phoneNumber;
 
-    @NotBlank(message = "enter email")
-    private String email;
-
     @NotBlank(message = "enter username")
     private String username;
 
     @NotBlank(message = "enter password")
     private String password;
 
-    @NotBlank(message = "enter user type")
-    private Long userTypeId;  //Business or individual
+//    @NotBlank(message = "enter user type")
+//    private Long userTypeId;  //Business or individual
 
     @NotBlank(message = "enter lon")
     private Double lon;

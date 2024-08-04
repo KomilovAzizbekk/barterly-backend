@@ -18,8 +18,7 @@ public class UserMapperImpl implements UserMapper {
         return UserDTO.builder()
                 .id(user.getId())
                 .name(user.getName())
-                .email(user.getEmail())
-                .phoneNumber(user.getPassword())
+                .password(user.getPassword())
                 .username(user.getUsername())
                 .build();
     }
@@ -32,10 +31,8 @@ public class UserMapperImpl implements UserMapper {
         return UserResDTO.builder()
                 .id(user.getId())
                 .name(user.getName())
-                .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .username(user.getUsername())
-                .userType(user.getUserType().getName().name())
                 .build();
     }
 
@@ -46,7 +43,6 @@ public class UserMapperImpl implements UserMapper {
         }
         return AdminResDTO.builder()
                 .id(user.getId())
-                .email(user.getEmail())
                 .username(user.getUsername())
                 .role(user.getRole().getName().name())
                 .build();

@@ -46,6 +46,11 @@ public class Category extends AbsDate {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<CategoryCharacteristic> characteristics;
+    private List<CategoryCharacteristic> categoryCharacteristics;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Characteristic> characteristics;
+
 
 }

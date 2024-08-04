@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<TokenDTO> signInAdmin(SignInAdminDTO adminDTO) {
-        Optional<User> optionalUser = userRepository.findFirstByEmailAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(adminDTO.getEmail());
+        Optional<User> optionalUser = userRepository.findFirstByUsernameAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(adminDTO.getUsername());
 
         if (optionalUser.isEmpty()) {
             throw RestException.restThrow("Admin not found", HttpStatus.UNAUTHORIZED);
@@ -63,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(adminDTO.getEmail(), adminDTO.getPassword())
+                new UsernamePasswordAuthenticationToken(adminDTO.getUsername(), adminDTO.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -97,7 +97,7 @@ public class AuthServiceImpl implements AuthService {
 //        }
 
         //First way to sign-in (email and password)
-        Optional<User> userOptional = userRepository.findFirstByEmailAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(userDTO.getEmail());
+        Optional<User> userOptional = userRepository.findFirstByUsernameAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(userDTO.getUsername());
         if (userOptional.isEmpty()) {
             throw RestException.restThrow("User not found", HttpStatus.UNAUTHORIZED);
         }
@@ -129,7 +129,7 @@ public class AuthServiceImpl implements AuthService {
         refreshTokenRepository.save(token);
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword())
+                new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -144,10 +144,6 @@ public class AuthServiceImpl implements AuthService {
             throw RestException.restThrow("Phone number is not valid", HttpStatus.BAD_REQUEST);
         }
 
-        if (!dto.getEmail().matches(Rest.EMAIL_REGEX)) {
-            throw RestException.restThrow("Email is not valid", HttpStatus.BAD_REQUEST);
-        }
-
         Optional<User> optional = userRepository.findByPhoneNumber(dto.getPhoneNumber());
         if (optional.isPresent()) {
             throw RestException.restThrow("User already existed", HttpStatus.BAD_REQUEST);
@@ -158,11 +154,9 @@ public class AuthServiceImpl implements AuthService {
         User user = User.builder()
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .name(dto.getName())
-                .email(dto.getEmail())
                 .phoneNumber(dto.getPhoneNumber())
                 .username(dto.getUsername())
                 .balance(BigDecimal.valueOf(0))
-                .userType(userTypeRepository.getReferenceById(dto.getUserTypeId()))
                 .role(roleRepository.findByName(RoleEnum.ROLE_USER))
                 .accountNonExpired(true)
                 .accountNonLocked(true)

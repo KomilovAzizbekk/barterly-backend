@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SignInAdminDTO {
 
-    @NotBlank(message = "enter email")
-    private String email;
+    @NotBlank(message = "enter username")
+    private String username;
 
     @NotBlank(message = "enter password")
     private String password;

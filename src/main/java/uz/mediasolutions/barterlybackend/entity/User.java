@@ -34,9 +34,6 @@ public class User extends AbsUUID implements UserDetails {
     private String phoneNumber;
 
     @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
@@ -140,7 +137,7 @@ public class User extends AbsUUID implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.username;
     }
 
     @Override

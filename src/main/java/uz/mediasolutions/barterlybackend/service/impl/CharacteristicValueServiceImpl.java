@@ -38,7 +38,7 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
         CharacteristicValueDTO2 characteristicValue = characteristicValueRepository.findByIdCustom(lang, id).orElseThrow(
-                () -> RestException.restThrow("Characteristic value not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Characteristic value not found", HttpStatus.NOT_FOUND)
         );
         return ResponseEntity.ok(characteristicValue);
     }
@@ -53,10 +53,10 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
     @Override
     public ResponseEntity<?> edit(Long id, CharacteristicValueReqDTO dto) {
         CharacteristicValue characteristicValue = characteristicValueRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Characteristic value not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Characteristic value not found", HttpStatus.NOT_FOUND)
         );
         Characteristic characteristic = characteristicRepository.findById(dto.getCharacteristicId()).orElseThrow(
-                () -> RestException.restThrow("Characteristic not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Characteristic not found", HttpStatus.NOT_FOUND)
         );
 
         characteristicValue.setTranslations(dto.getTranslations());
@@ -67,6 +67,9 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
 
     @Override
     public ResponseEntity<?> delete(Long id) {
+        characteristicValueRepository.findById(id).orElseThrow(
+                () -> RestException.restThrow("Characteristic value not found", HttpStatus.NOT_FOUND)
+        );
         try {
             characteristicValueRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);

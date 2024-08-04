@@ -37,14 +37,19 @@ public class CategoryCharacteristicMapperImpl implements CategoryCharacteristicM
             return null;
         }
         CategoryCharacteristic categoryCharacteristic = new CategoryCharacteristic();
+
+        if (dto.getParentId() != null) {
+            categoryCharacteristic.setParent(categoryCharacteristicRepository.findById(dto.getParentId()).orElse(null));
+        }
+
         if (dto.getCategoryId() == null) {
             throw RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST);
         }
+
         categoryCharacteristic.setCategory(categoryRepository.findById(dto.getCategoryId()).orElseThrow(
                 () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
         ));
         categoryCharacteristic.setTranslations(dto.getTranslations());
-        categoryCharacteristic.setParent(categoryCharacteristicRepository.findById(dto.getParentId()).orElse(null));
         return categoryCharacteristic;
     }
 }

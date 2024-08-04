@@ -38,7 +38,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     public ResponseEntity<CurrencyResDTO> getById(Long id) {
         Currency currency = currencyRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Currency not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Currency not found", HttpStatus.NOT_FOUND)
         );
         CurrencyResDTO resDTO = currencyMapper.toResDTO(currency);
         return ResponseEntity.ok(resDTO);
@@ -54,7 +54,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     public ResponseEntity<?> edit(Long id, CurrencyReqDTO dto) {
         Currency currency = currencyRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Currency not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Currency not found", HttpStatus.NOT_FOUND)
         );
 
         if (!Objects.equals(currency.getImageUrl(), dto.getImageUrl())) {
@@ -71,11 +71,10 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     public ResponseEntity<?> delete(Long id) {
         Currency currency = currencyRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Currency not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Currency not found", HttpStatus.NOT_FOUND)
         );
+        fileService.deleteFile(currency.getImageUrl());
         try {
-            fileService.deleteFile(currency.getImageUrl());
-
             currencyRepository.deleteById(id);
             return ResponseEntity.ok(Rest.DELETED);
         } catch (Exception e) {

@@ -16,13 +16,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findByPhoneNumber(String phoneNumber);
 
-    Optional<User> findFirstByEmailAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(String email);
-
-    Optional<User> findFirstByPhoneNumberAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(String phoneNumber);
-
     Optional<User> findFirstByUsernameAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(String username);
-
-    Optional<User> findByIdAndEnabledIsTrueAndAccountNonExpiredIsTrueAndCredentialsNonExpiredIsTrueAndAccountNonLockedIsTrue(UUID userId);
 
     List<User> findAllBySocketStatus(UserSocketStatusEnum socketStatus);
 
@@ -30,5 +24,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Page<User> findAllByRoleNameIsNotOrderByCreatedAtDesc(RoleEnum role, Pageable pageable);
 
-    boolean existsByEmailOrUsername(String email, String username);
+    boolean existsByUsername(String username);
 }

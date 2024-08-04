@@ -38,7 +38,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "       c2.translations ->> :lang as parentName\n" +
             "FROM categories c\n" +
             "         LEFT JOIN categories c2 on c2.id = c.parent_id\n" +
-            "WHERE c2.translations ->> :lang IS NOT NULL\n" +
             "AND c.id=:id", nativeQuery = true)
     Optional<CategoryDTO2> findByIdCustom(@Param("lang") String lang,
                                          @Param("id") Long id);

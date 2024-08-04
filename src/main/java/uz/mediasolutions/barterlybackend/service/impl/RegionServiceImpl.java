@@ -37,7 +37,7 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public ResponseEntity<?> getById(Long id) {
         RegionDTO2 region = regionRepository.findByIdCustom(id).orElseThrow(
-                () -> RestException.restThrow("Region not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Region not found", HttpStatus.NOT_FOUND)
         );
         return ResponseEntity.ok(region);
     }
@@ -52,11 +52,11 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public ResponseEntity<?> edit(Long id, RegionReqDTO dto) {
         Region region = regionRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Region not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Region not found", HttpStatus.NOT_FOUND)
         );
 
         Currency currency = currencyRepository.findById(dto.getCurrencyId()).orElseThrow(
-                () -> RestException.restThrow("Currency not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Currency not found", HttpStatus.NOT_FOUND)
         );
         region.setTranslations(dto.getTranslations());
         region.setCurrency(currency);
@@ -68,7 +68,7 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public ResponseEntity<?> delete(Long id) {
         regionRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Region not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Region not found", HttpStatus.NOT_FOUND)
         );
         try {
             regionRepository.deleteById(id);

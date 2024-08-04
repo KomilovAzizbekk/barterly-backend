@@ -87,8 +87,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             token = token.substring("Bearer".length()).trim();
             if (jwtService.validToken(token)) {
-                String email = jwtService.extractUsername(token);
-                Optional<User> optionalUser = userRepository.findFirstByEmailAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(email);
+                String username = jwtService.extractUsername(token);
+                Optional<User> optionalUser = userRepository.findFirstByUsernameAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(username);
                 return optionalUser.orElse(null);
             }
         } catch (Exception e) {

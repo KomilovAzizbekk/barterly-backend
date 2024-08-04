@@ -72,16 +72,15 @@ public class UserServiceImpl implements UserService {
         );
 
         if (role.getName().equals(RoleEnum.ROLE_USER)) {
-            throw RestException.restThrow("Role type error (You chose user role)", HttpStatus.CONFLICT);
+            throw RestException.restThrow("Role type error (You chose user role)", HttpStatus.BAD_REQUEST);
         }
 
-        if (userRepository.existsByEmailOrUsername(dto.getEmail(), dto.getUsername())) {
+        if (userRepository.existsByUsername(dto.getUsername())) {
             throw RestException.restThrow("User already exists", HttpStatus.CONFLICT);
         }
 
         User admin = User.builder()
                 .role(role)
-                .email(dto.getEmail())
                 .username(dto.getUsername())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .accountNonExpired(true)

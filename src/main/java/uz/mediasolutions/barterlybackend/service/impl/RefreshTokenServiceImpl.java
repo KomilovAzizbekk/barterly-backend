@@ -42,7 +42,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
             throw RestException.restThrow("Invalid refresh token", HttpStatus.UNAUTHORIZED);
         }
 
-        Optional<User> optionalUser = userRepository.findFirstByEmailAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(username);
+        Optional<User> optionalUser = userRepository.findFirstByUsernameAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(username);
         if (optionalUser.isEmpty() || !refreshTokenRepository.existsByUserId(optionalUser.get().getId())) {
             throw RestException.restThrow("User not found with this token", HttpStatus.UNAUTHORIZED);
         }

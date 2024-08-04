@@ -86,8 +86,7 @@ public class DataLoader implements CommandLineRunner {
     private void addAdmin() {
         User superAdmin = User.builder()
                 .role(roleRepository.findByName(RoleEnum.ROLE_SUPER_ADMIN))
-                .email("superadmin@gmail.com")
-                .username("superadmin")
+                .username("barterly")
                 .password(passwordEncoder.encode("Qwerty123@"))
                 .accountNonExpired(true)
                 .credentialsNonExpired(true)

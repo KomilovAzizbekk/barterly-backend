@@ -37,7 +37,7 @@ public class CategoryCharacteristicValueServiceImpl implements CategoryCharacter
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
         CategoryCharacteristicValueDTO2 categoryCharacteristicValue = categoryCharacteristicValueRepository.findByIdCustom(lang, id).orElseThrow(
-                () -> RestException.restThrow("Category characteristic value not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Category characteristic value not found", HttpStatus.NOT_FOUND)
         );
         return ResponseEntity.ok(categoryCharacteristicValue);
     }
@@ -52,11 +52,11 @@ public class CategoryCharacteristicValueServiceImpl implements CategoryCharacter
     @Override
     public ResponseEntity<?> edit(Long id, CategoryCharacteristicValueReqDTO dto) {
         CategoryCharacteristicValue entity = categoryCharacteristicValueRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Category characteristic value not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Category characteristic value not found", HttpStatus.NOT_FOUND)
         );
 
         CategoryCharacteristic categoryCharacteristic = categoryCharacteristicRepository.findById(dto.getCategoryCharacteristicId()).orElseThrow(
-                () -> RestException.restThrow("Category characteristic not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Category characteristic not found", HttpStatus.NOT_FOUND)
         );
 
         entity.setCharacteristic(categoryCharacteristic);
@@ -68,7 +68,7 @@ public class CategoryCharacteristicValueServiceImpl implements CategoryCharacter
     @Override
     public ResponseEntity<?> delete(Long id) {
         categoryCharacteristicValueRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Category characteristic value not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Category characteristic value not found", HttpStatus.NOT_FOUND)
         );
         try {
             categoryCharacteristicValueRepository.deleteById(id);

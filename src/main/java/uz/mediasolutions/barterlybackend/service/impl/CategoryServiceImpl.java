@@ -55,7 +55,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity<?> edit(Long id, CategoryReqDTO dto) {
         Category category = categoryRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Category not found", HttpStatus.NOT_FOUND)
         );
         if (dto.getParentCategoryId() != null) {
             category.setParentCategory(categoryRepository.findById(dto.getParentCategoryId()).orElse(null));
@@ -76,11 +76,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseEntity<?> delete(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
+                () -> RestException.restThrow("Category not found", HttpStatus.NOT_FOUND)
         );
-
+        fileService.deleteFile(category.getImageUrl());
         try {
-//            fileService.deleteFile(category.getImageUrl());
             categoryRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
         } catch (Exception e) {
