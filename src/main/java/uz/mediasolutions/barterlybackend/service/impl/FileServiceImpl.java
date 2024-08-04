@@ -40,7 +40,7 @@ public class FileServiceImpl implements FileService {
             converted.deleteOnExit();
             Date expiration = new Date();
             long expTimeMillis = expiration.getTime();
-            expTimeMillis += 1000 * 60 * 60; // 1 soat
+            expTimeMillis += 1000 * 60 * 60 * 24 * 7; // 7 kun
             expiration.setTime(expTimeMillis);
 
             GeneratePresignedUrlRequest generatePresignedUrlRequest =
