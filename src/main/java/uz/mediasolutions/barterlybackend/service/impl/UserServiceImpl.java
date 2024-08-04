@@ -24,6 +24,8 @@ import uz.mediasolutions.barterlybackend.repository.UserRepository;
 import uz.mediasolutions.barterlybackend.service.abs.UserService;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -49,19 +51,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<Page<UserResDTO>> getAllUsers(int page, int size) {
+    public ResponseEntity<Page<UserResDTO>> getAllUsers(String search, int page, int size) {
+        Role role = roleRepository.findByName(RoleEnum.ROLE_USER);
         Pageable pageable = PageRequest.of(page, size);
-        Page<User> users = userRepository.findAllByRoleNameOrderByCreatedAtDesc(RoleEnum.ROLE_USER, pageable);
-        Page<UserResDTO> resDTOS = users.map(userMapper::toResDto);
-        return ResponseEntity.ok(resDTOS);
+        Page<UserResDTO> users = userRepository.findAllUsersCustom(role.getId(), search, pageable);
+        return ResponseEntity.ok(users);
     }
 
     @Override
-    public ResponseEntity<Page<AdminResDTO>> getAllAdmins(int page, int size) {
+    public ResponseEntity<Page<AdminResDTO>> getAllAdmins(String search, int page, int size) {
+        Role role = roleRepository.findByName(RoleEnum.ROLE_USER);
         Pageable pageable = PageRequest.of(page, size);
-        Page<User> users = userRepository.findAllByRoleNameIsNotOrderByCreatedAtDesc(RoleEnum.ROLE_USER, pageable);
-        Page<AdminResDTO> resDTOS = users.map(userMapper::toAdminResDto);
-        return ResponseEntity.ok(resDTOS);
+        Page<AdminResDTO> admins = userRepository.findAllAdminsCustom(role.getId(), search, pageable);
+        return ResponseEntity.ok(admins);
     }
 
     @Override
@@ -90,6 +92,39 @@ public class UserServiceImpl implements UserService {
                 .build();
         userRepository.save(admin);
         return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<?> editAdmin(UUID id, AdminReqDTO dto) {
+        Role role = roleRepository.findById(dto.getRoleId()).orElseThrow(
+                () -> RestException.restThrow("Role not found", HttpStatus.NOT_FOUND)
+        );
+        User admin = userRepository.findById(id).orElseThrow(
+                () -> RestException.restThrow("Admin not found", HttpStatus.NOT_FOUND)
+        );
+
+        if (admin.getRole().getName().equals(RoleEnum.ROLE_USER) || role.getName().equals(RoleEnum.ROLE_USER)) {
+            throw RestException.restThrow("Role type error (You chose user role)", HttpStatus.BAD_REQUEST);
+        }
+
+        admin.setRole(role);
+        admin.setUsername(dto.getUsername());
+        admin.setPassword(passwordEncoder.encode(dto.getPassword()));
+        userRepository.save(admin);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteAdmin(UUID id) {
+        userRepository.findById(id).orElseThrow(
+                () -> RestException.restThrow("Admin not found", HttpStatus.NOT_FOUND)
+        );
+        try {
+            userRepository.deleteById(id);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Rest.ERROR);
+        }
     }
 
 }

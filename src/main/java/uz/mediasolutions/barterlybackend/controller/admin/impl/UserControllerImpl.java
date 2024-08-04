@@ -11,6 +11,8 @@ import uz.mediasolutions.barterlybackend.payload.response.AdminResDTO;
 import uz.mediasolutions.barterlybackend.payload.response.UserResDTO;
 import uz.mediasolutions.barterlybackend.service.abs.UserService;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 public class UserControllerImpl implements UserController {
@@ -23,18 +25,28 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public ResponseEntity<Page<UserResDTO>> getAllUsers(int page, int size) {
-        return userService.getAllUsers(page, size);
+    public ResponseEntity<Page<UserResDTO>> getAllUsers(String search, int page, int size) {
+        return userService.getAllUsers(search, page, size);
     }
 
     @Override
-    public ResponseEntity<Page<AdminResDTO>> getAllAdmins(int page, int size) {
-        return userService.getAllAdmins(page, size);
+    public ResponseEntity<Page<AdminResDTO>> getAllAdmins(String search, int page, int size) {
+        return userService.getAllAdmins(search, page, size);
     }
 
     @Override
     public ResponseEntity<?> addAdmin(AdminReqDTO dto) {
         return userService.addAdmin(dto);
+    }
+
+    @Override
+    public ResponseEntity<?> editAdmin(UUID id, AdminReqDTO dto) {
+        return userService.editAdmin(id, dto);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteAdmin(UUID id) {
+        return userService.deleteAdmin(id);
     }
 
 }

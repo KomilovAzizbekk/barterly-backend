@@ -13,8 +13,6 @@ import java.util.UUID;
 @Builder
 public class AdminReqDTO {
 
-    private String email;
-
     private String username;
 
     private String password;

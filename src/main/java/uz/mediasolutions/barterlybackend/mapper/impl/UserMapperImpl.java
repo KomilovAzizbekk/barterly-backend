@@ -4,8 +4,6 @@ import org.springframework.stereotype.Component;
 import uz.mediasolutions.barterlybackend.entity.User;
 import uz.mediasolutions.barterlybackend.mapper.abs.UserMapper;
 import uz.mediasolutions.barterlybackend.payload.UserDTO;
-import uz.mediasolutions.barterlybackend.payload.response.AdminResDTO;
-import uz.mediasolutions.barterlybackend.payload.response.UserResDTO;
 
 @Component
 public class UserMapperImpl implements UserMapper {
@@ -20,31 +18,6 @@ public class UserMapperImpl implements UserMapper {
                 .name(user.getName())
                 .password(user.getPassword())
                 .username(user.getUsername())
-                .build();
-    }
-
-    @Override
-    public UserResDTO toResDto(User user) {
-        if (user == null) {
-            return null;
-        }
-        return UserResDTO.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .phoneNumber(user.getPhoneNumber())
-                .username(user.getUsername())
-                .build();
-    }
-
-    @Override
-    public AdminResDTO toAdminResDto(User user) {
-        if (user == null) {
-            return null;
-        }
-        return AdminResDTO.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .role(user.getRole().getName().name())
                 .build();
     }
 }

@@ -1,22 +1,15 @@
 package uz.mediasolutions.barterlybackend.payload.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.UUID;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class AdminResDTO {
+public interface AdminResDTO {
 
-    private UUID id;
+    UUID getId();
 
-    private String username;
+    String getUsername();
 
-    private String role;
+    String getRole();
+
+    UUID getRoleId();
 
 }
