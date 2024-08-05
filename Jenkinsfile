@@ -22,7 +22,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Maven orqali build qilish
-                sh 'mvn clean package'
+                sh 'mvn clean install'
             }
         }
         stage('Test') {
