@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import uz.mediasolutions.barterlybackend.controller.admin.abs.FileController;
-import uz.mediasolutions.barterlybackend.service.abs.FileService;
+import uz.mediasolutions.barterlybackend.service.admin.abs.FileService;
 
 @RestController
 @RequiredArgsConstructor

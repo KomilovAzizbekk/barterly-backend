@@ -9,11 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CharacteristicDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CharacteristicDTO2;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CharacteristicDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CharacteristicDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CharacteristicReqDTO;
-import uz.mediasolutions.barterlybackend.payload.response.CharacteristicResDTO;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 @RequestMapping(Rest.BASE_PATH + "admin/characteristics")

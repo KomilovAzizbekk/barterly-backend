@@ -12,7 +12,8 @@ public interface Rest {
             "/webjars/**",
             "/api/auth/**",
             "/*",
-            "/error"
+            "/error",
+            "/api/catalog/**"
     };
 
     String CREATED = "CREATED";

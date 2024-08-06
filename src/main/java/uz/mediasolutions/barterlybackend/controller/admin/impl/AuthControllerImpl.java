@@ -10,7 +10,7 @@ import uz.mediasolutions.barterlybackend.payload.SignInUserDTO;
 import uz.mediasolutions.barterlybackend.payload.SignUpUserDTO;
 import uz.mediasolutions.barterlybackend.payload.response.SignUpResDTO;
 import uz.mediasolutions.barterlybackend.payload.response.TokenDTO;
-import uz.mediasolutions.barterlybackend.service.abs.AuthService;
+import uz.mediasolutions.barterlybackend.service.admin.abs.AuthService;
 
 @RestController
 @RequiredArgsConstructor

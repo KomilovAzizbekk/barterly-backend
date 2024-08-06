@@ -9,13 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristicValue;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicValueDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicValueDTO2;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicValueDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicValueDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryCharacteristicValueReqDTO;
-import uz.mediasolutions.barterlybackend.payload.request.CharacteristicValueReqDTO;
-import uz.mediasolutions.barterlybackend.payload.response.CharacteristicValueResDTO;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 @RequestMapping(Rest.BASE_PATH + "admin/category-characteristic-value")

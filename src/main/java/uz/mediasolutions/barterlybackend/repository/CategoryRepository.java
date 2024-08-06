@@ -6,10 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uz.mediasolutions.barterlybackend.entity.Category;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryDTO2;
-import uz.mediasolutions.barterlybackend.payload.response.CategoryResDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryDTO2;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.CatalogDTO;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
@@ -41,4 +42,17 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "AND c.id=:id", nativeQuery = true)
     Optional<CategoryDTO2> findByIdCustom(@Param("lang") String lang,
                                          @Param("id") Long id);
+
+    @Query(value = "SELECT id, translations ->> :lang as name\n" +
+            "FROM categories\n" +
+            "WHERE parent_id IS NULL\n" +
+            "ORDER BY translations ->> :lang", nativeQuery = true)
+    List<CatalogDTO> findAllParentCatalogs(@Param("lang") String lang);
+
+    @Query(value = "SELECT id, translations ->> :lang as name\n" +
+            "FROM categories\n" +
+            "WHERE parent_id = :parentId\n" +
+            "ORDER BY translations ->> :lang", nativeQuery = true)
+    List<CategoryDTO> findAllByParentId(@Param("lang") String lang,
+                                        @Param("parentId") Long parentId);
 }

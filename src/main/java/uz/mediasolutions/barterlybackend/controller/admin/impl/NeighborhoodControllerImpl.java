@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uz.mediasolutions.barterlybackend.controller.admin.abs.NeighborhoodController;
 import uz.mediasolutions.barterlybackend.payload.request.NeighborhoodReqDTO;
-import uz.mediasolutions.barterlybackend.service.abs.NeighborhoodService;
+import uz.mediasolutions.barterlybackend.service.admin.abs.NeighborhoodService;
 
 @RestController
 @RequiredArgsConstructor

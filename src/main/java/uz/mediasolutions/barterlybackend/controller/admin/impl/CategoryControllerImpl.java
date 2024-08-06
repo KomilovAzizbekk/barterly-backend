@@ -6,8 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uz.mediasolutions.barterlybackend.controller.admin.abs.CategoryController;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryReqDTO;
-import uz.mediasolutions.barterlybackend.payload.response.CategoryResDTO;
-import uz.mediasolutions.barterlybackend.service.abs.CategoryService;
+import uz.mediasolutions.barterlybackend.service.admin.abs.CategoryService;
 
 @RestController
 @RequiredArgsConstructor

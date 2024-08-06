@@ -6,8 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uz.mediasolutions.barterlybackend.controller.admin.abs.CategoryCharacteristicValueController;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryCharacteristicValueReqDTO;
-import uz.mediasolutions.barterlybackend.payload.response.CharacteristicValueResDTO;
-import uz.mediasolutions.barterlybackend.service.abs.CategoryCharacteristicValueService;
+import uz.mediasolutions.barterlybackend.service.admin.abs.CategoryCharacteristicValueService;
 
 @RestController
 @RequiredArgsConstructor

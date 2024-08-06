@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uz.mediasolutions.barterlybackend.controller.admin.abs.CurrencyController;
 import uz.mediasolutions.barterlybackend.payload.request.CurrencyReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CurrencyResDTO;
-import uz.mediasolutions.barterlybackend.service.abs.CurrencyService;
+import uz.mediasolutions.barterlybackend.service.admin.abs.CurrencyService;
 
 @RestController
 @RequiredArgsConstructor

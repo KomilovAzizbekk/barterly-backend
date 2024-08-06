@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uz.mediasolutions.barterlybackend.controller.admin.abs.RoleController;
 import uz.mediasolutions.barterlybackend.payload.response.RoleResDTO;
-import uz.mediasolutions.barterlybackend.service.abs.RoleService;
+import uz.mediasolutions.barterlybackend.service.admin.abs.RoleService;
 
 import java.util.List;
 

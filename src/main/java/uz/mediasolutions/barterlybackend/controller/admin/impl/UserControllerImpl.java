@@ -9,7 +9,7 @@ import uz.mediasolutions.barterlybackend.payload.UserDTO;
 import uz.mediasolutions.barterlybackend.payload.request.AdminReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.AdminResDTO;
 import uz.mediasolutions.barterlybackend.payload.response.UserResDTO;
-import uz.mediasolutions.barterlybackend.service.abs.UserService;
+import uz.mediasolutions.barterlybackend.service.admin.abs.UserService;
 
 import java.util.UUID;
 

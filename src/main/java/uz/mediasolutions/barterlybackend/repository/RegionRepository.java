@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uz.mediasolutions.barterlybackend.entity.Region;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.RegionDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.RegionDTO2;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.RegionDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.RegionDTO2;
 
 import java.util.Optional;
 

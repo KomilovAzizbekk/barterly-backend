@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uz.mediasolutions.barterlybackend.entity.Currency;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CurrencyDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CurrencyDTO;
 
 public interface CurrencyRepository extends JpaRepository<Currency, Long> {
 

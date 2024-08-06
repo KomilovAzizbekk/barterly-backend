@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uz.mediasolutions.barterlybackend.controller.admin.abs.RefreshTokenController;
 import uz.mediasolutions.barterlybackend.payload.response.TokenDTO;
-import uz.mediasolutions.barterlybackend.service.abs.RefreshTokenService;
+import uz.mediasolutions.barterlybackend.service.admin.abs.RefreshTokenService;
 
 @RestController
 @RequiredArgsConstructor

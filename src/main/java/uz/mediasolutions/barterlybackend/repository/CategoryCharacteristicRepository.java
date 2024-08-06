@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristic;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicDTO2;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicDTO2;
 
 import java.util.Optional;
 

@@ -9,11 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicValueDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryDTO2;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryReqDTO;
-import uz.mediasolutions.barterlybackend.payload.response.CategoryResDTO;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 @RequestMapping(Rest.BASE_PATH + "admin/category")

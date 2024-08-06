@@ -1,7 +1,6 @@
 package uz.mediasolutions.barterlybackend.payload.response;
 
 import lombok.*;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryDTO;
 
 import java.util.Map;
 

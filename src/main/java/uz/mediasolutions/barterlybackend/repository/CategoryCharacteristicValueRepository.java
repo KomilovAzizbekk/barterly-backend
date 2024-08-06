@@ -5,10 +5,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.expression.spel.ast.OpAnd;
 import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristicValue;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicValueDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CategoryCharacteristicValueDTO2;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicValueDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicValueDTO2;
 
 import java.util.Optional;
 

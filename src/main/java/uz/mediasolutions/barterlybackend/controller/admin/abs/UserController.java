@@ -10,13 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.mediasolutions.barterlybackend.payload.UserDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.RegionDTO;
 import uz.mediasolutions.barterlybackend.payload.request.AdminReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.AdminResDTO;
 import uz.mediasolutions.barterlybackend.payload.response.UserResDTO;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
-import java.util.List;
 import java.util.UUID;
 
 @RequestMapping(Rest.BASE_PATH + "admin/users")

@@ -9,9 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CharacteristicDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CityDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.CityDTO2;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CityDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CityDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CityReqDTO;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 

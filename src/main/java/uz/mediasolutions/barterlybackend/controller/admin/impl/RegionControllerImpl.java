@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uz.mediasolutions.barterlybackend.controller.admin.abs.RegionController;
 import uz.mediasolutions.barterlybackend.payload.request.RegionReqDTO;
-import uz.mediasolutions.barterlybackend.service.abs.RegionService;
+import uz.mediasolutions.barterlybackend.service.admin.abs.RegionService;
 
 @RestController
 @RequiredArgsConstructor
