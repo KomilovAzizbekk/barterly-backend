@@ -1,4 +1,4 @@
-package uz.mediasolutions.barterlybackend.service.admin.impl;
+package uz.mediasolutions.barterlybackend.service.common.impl;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
-import uz.mediasolutions.barterlybackend.service.admin.abs.FileService;
+import uz.mediasolutions.barterlybackend.service.common.abs.FileService;
 
 import java.io.File;
 import java.io.FileOutputStream;

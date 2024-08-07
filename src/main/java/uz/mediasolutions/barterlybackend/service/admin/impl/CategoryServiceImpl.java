@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.Category;
+import uz.mediasolutions.barterlybackend.entity.User;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CategoryMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryDTO;
@@ -15,7 +16,8 @@ import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryDTO2
 import uz.mediasolutions.barterlybackend.payload.request.CategoryReqDTO;
 import uz.mediasolutions.barterlybackend.repository.CategoryRepository;
 import uz.mediasolutions.barterlybackend.service.admin.abs.CategoryService;
-import uz.mediasolutions.barterlybackend.service.admin.abs.FileService;
+import uz.mediasolutions.barterlybackend.service.common.abs.FileService;
+import uz.mediasolutions.barterlybackend.utills.CommonUtils;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 @Service
@@ -28,6 +30,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity<Page<?>> getAll(String lang, String search, Long parentId, int page, int size) {
+        User user = (User) CommonUtils.getUserFromSecurityContext();
+        assert user != null;
+        System.out.println(user.getUsername() + " : " + user.getAuthorities() + " : " + user.getRole().getName());
         Pageable pageable = PageRequest.of(page, size);
         Page<CategoryDTO> categoryPage = categoryRepository.findAllCustom(lang, search, parentId, pageable);
         return ResponseEntity.ok(categoryPage);

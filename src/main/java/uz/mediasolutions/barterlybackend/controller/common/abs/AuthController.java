@@ -1,4 +1,4 @@
-package uz.mediasolutions.barterlybackend.controller.admin.abs;
+package uz.mediasolutions.barterlybackend.controller.common.abs;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +16,12 @@ public interface AuthController {
     ResponseEntity<SignUpResDTO> signUpUser(@RequestBody SignUpUserDTO dto);
 
     @PostMapping("/sign-in")
-    ResponseEntity<TokenDTO> signInUser(@RequestBody SignInUserDTO dto);
+    ResponseEntity<?> signInUser(@RequestBody SignInUserDTO dto);
 
     @PostMapping("/admin/sign-in")
     ResponseEntity<TokenDTO> signInAdmin(@RequestBody SignInAdminDTO dto);
 
     @PostMapping("/logout")
-    ResponseEntity<?> logout(@RequestBody SignInUserDTO dto);
+    ResponseEntity<?> logout();
 
 }

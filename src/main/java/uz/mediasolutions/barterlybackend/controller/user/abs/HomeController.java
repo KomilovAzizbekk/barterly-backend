@@ -1,6 +1,5 @@
 package uz.mediasolutions.barterlybackend.controller.user.abs;
 
-import com.amazonaws.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

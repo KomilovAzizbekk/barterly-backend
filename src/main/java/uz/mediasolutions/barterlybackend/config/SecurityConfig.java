@@ -12,9 +12,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import uz.mediasolutions.barterlybackend.secret.JwtAuthFilter;
 import uz.mediasolutions.barterlybackend.secret.JwtAuthenticationEntryPoint;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
@@ -29,27 +26,20 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final AuthenticationProvider authenticationProvider;
-//    private final UsernamePasswordAuthenticationProvider usernamePasswordAuthenticationProvider;
-//    private final PhoneNumberOtpAuthenticationProvider phoneNumberOtpAuthenticationProvider;
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(Rest.OPEN_PAGES_FOR_ALL_METHOD).permitAll()
-//                        .requestMatchers("/").hasAnyAuthority(RoleEnum.ROLE_USER.name())
-//                        .requestMatchers("/").hasAnyAuthority(RoleEnum.ROLE_ADMIN.name())
                         .anyRequest().authenticated())
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authenticationProvider(authenticationProvider)
+                .authenticationProvider(authenticationProvider)
                 .formLogin(withDefaults());
 //                .oauth2Login(withDefaults());
-
-        http.authenticationProvider(authenticationProvider);
 
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

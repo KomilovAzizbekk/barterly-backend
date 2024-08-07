@@ -15,7 +15,7 @@ import uz.mediasolutions.barterlybackend.payload.request.CurrencyReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CurrencyResDTO;
 import uz.mediasolutions.barterlybackend.repository.CurrencyRepository;
 import uz.mediasolutions.barterlybackend.service.admin.abs.CurrencyService;
-import uz.mediasolutions.barterlybackend.service.admin.abs.FileService;
+import uz.mediasolutions.barterlybackend.service.common.abs.FileService;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 import java.util.Objects;

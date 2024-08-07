@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -67,21 +68,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
         String authorization = request.getHeader(Rest.AUTHORIZATION_HEADER);
-        if (authorization != null) {
+        Authentication existingAuth = SecurityContextHolder.getContext().getAuthentication();
+
+        // Faqat mavjud autentifikatsiya mavjud bo'lmaganda yangisini sozlash
+        if (authorization != null && (existingAuth == null || !existingAuth.isAuthenticated())) {
             User user = null;
             if (authorization.startsWith("Bearer ")) {
                 user = getUserFromBearerToken(authorization);
             }
             if (user != null) {
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                         user, null, user.getAuthorities());
-                usernamePasswordAuthenticationToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
         filterChain.doFilter(request, response);
     }
+
 
     public User getUserFromBearerToken(String token) {
         try {

@@ -39,4 +39,12 @@ public class SwaggerConfig {
                 .packagesToScan("uz.mediasolutions.barterlybackend.controller.admin")
                 .build();
     }
+
+    @Bean
+    public GroupedOpenApi commonApi() {
+        return GroupedOpenApi.builder()
+                .group("common")
+                .packagesToScan("uz.mediasolutions.barterlybackend.controller.common")
+                .build();
+    }
 }

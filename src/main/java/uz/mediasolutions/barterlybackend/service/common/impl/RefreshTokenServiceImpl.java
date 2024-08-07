@@ -1,10 +1,11 @@
-package uz.mediasolutions.barterlybackend.service.admin.impl;
+package uz.mediasolutions.barterlybackend.service.common.impl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.RefreshToken;
 import uz.mediasolutions.barterlybackend.entity.User;
@@ -13,7 +14,7 @@ import uz.mediasolutions.barterlybackend.payload.response.TokenDTO;
 import uz.mediasolutions.barterlybackend.repository.RefreshTokenRepository;
 import uz.mediasolutions.barterlybackend.repository.UserRepository;
 import uz.mediasolutions.barterlybackend.secret.JwtService;
-import uz.mediasolutions.barterlybackend.service.admin.abs.RefreshTokenService;
+import uz.mediasolutions.barterlybackend.service.common.abs.RefreshTokenService;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -25,6 +26,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtService jwtService;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public ResponseEntity<TokenDTO> refreshToken(HttpServletRequest request) {
@@ -39,19 +41,19 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
         username = jwtService.extractUsername(refreshToken);
         if (username == null) {
-            throw RestException.restThrow("Invalid refresh token", HttpStatus.UNAUTHORIZED);
+            throw RestException.restThrow("Invalid refresh token", HttpStatus.BAD_REQUEST);
         }
 
         Optional<User> optionalUser = userRepository.findFirstByUsernameAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(username);
         if (optionalUser.isEmpty() || !refreshTokenRepository.existsByUserId(optionalUser.get().getId())) {
-            throw RestException.restThrow("User not found with this token", HttpStatus.UNAUTHORIZED);
+            throw RestException.restThrow("User not found with this token", HttpStatus.NOT_FOUND);
         }
 
         User user = optionalUser.get();
 
         RefreshToken token = refreshTokenRepository.findByUserId(user.getId());
-        if (!Objects.equals(token.getToken(), refreshToken)) {
-            throw RestException.restThrow("Invalid refresh token", HttpStatus.UNAUTHORIZED);
+        if (!passwordEncoder.matches(refreshToken, token.getToken())) {
+            throw RestException.restThrow("Invalid refresh token", HttpStatus.BAD_REQUEST);
         }
 
         if (jwtService.isTokenValid(refreshToken, user)) {
@@ -59,8 +61,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
             var tokenDTO = new TokenDTO("Bearer", accessToken, refreshToken);
             return ResponseEntity.ok(tokenDTO);
         } else {
-            throw RestException.restThrow("Invalid refresh token", HttpStatus.UNAUTHORIZED);
+            throw RestException.restThrow("Invalid refresh token", HttpStatus.BAD_REQUEST);
         }
     }
+
 
 }

@@ -1,4 +1,4 @@
-package uz.mediasolutions.barterlybackend.controller.admin.abs;
+package uz.mediasolutions.barterlybackend.controller.common.abs;
 
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;

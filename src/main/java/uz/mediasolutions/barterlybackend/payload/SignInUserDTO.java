@@ -14,10 +14,8 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SignInUserDTO {
 
-    @NotBlank(message = "enter username")
-    private String username;
+    private String phoneNumber;
 
-    @NotBlank(message = "enter password")
-    private String password;
+    private String otp;
 
 }

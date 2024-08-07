@@ -1,4 +1,4 @@
-package uz.mediasolutions.barterlybackend.controller.admin.abs;
+package uz.mediasolutions.barterlybackend.controller.common.abs;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;

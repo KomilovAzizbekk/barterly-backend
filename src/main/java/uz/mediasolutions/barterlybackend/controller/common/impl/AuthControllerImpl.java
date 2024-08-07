@@ -1,16 +1,16 @@
-package uz.mediasolutions.barterlybackend.controller.admin.impl;
+package uz.mediasolutions.barterlybackend.controller.common.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import uz.mediasolutions.barterlybackend.controller.admin.abs.AuthController;
+import uz.mediasolutions.barterlybackend.controller.common.abs.AuthController;
 import uz.mediasolutions.barterlybackend.payload.SignInAdminDTO;
 import uz.mediasolutions.barterlybackend.payload.SignInUserDTO;
 import uz.mediasolutions.barterlybackend.payload.SignUpUserDTO;
 import uz.mediasolutions.barterlybackend.payload.response.SignUpResDTO;
 import uz.mediasolutions.barterlybackend.payload.response.TokenDTO;
-import uz.mediasolutions.barterlybackend.service.admin.abs.AuthService;
+import uz.mediasolutions.barterlybackend.service.common.abs.AuthService;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +24,7 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @Override
-    public ResponseEntity<TokenDTO> signInUser(@RequestBody SignInUserDTO dto) {
+    public ResponseEntity<?> signInUser(@RequestBody SignInUserDTO dto) {
         return authService.signInUser(dto);
     }
 
@@ -34,7 +34,7 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @Override
-    public ResponseEntity<?> logout(@RequestBody SignInUserDTO dto) {
+    public ResponseEntity<?> logout() {
         return authService.logout();
     }
 

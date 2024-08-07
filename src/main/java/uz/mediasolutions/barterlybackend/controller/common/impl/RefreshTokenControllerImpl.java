@@ -1,12 +1,12 @@
-package uz.mediasolutions.barterlybackend.controller.admin.impl;
+package uz.mediasolutions.barterlybackend.controller.common.impl;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import uz.mediasolutions.barterlybackend.controller.admin.abs.RefreshTokenController;
+import uz.mediasolutions.barterlybackend.controller.common.abs.RefreshTokenController;
 import uz.mediasolutions.barterlybackend.payload.response.TokenDTO;
-import uz.mediasolutions.barterlybackend.service.admin.abs.RefreshTokenService;
+import uz.mediasolutions.barterlybackend.service.common.abs.RefreshTokenService;
 
 @RestController
 @RequiredArgsConstructor

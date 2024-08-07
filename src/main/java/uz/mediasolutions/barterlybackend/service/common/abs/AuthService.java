@@ -1,4 +1,4 @@
-package uz.mediasolutions.barterlybackend.service.admin.abs;
+package uz.mediasolutions.barterlybackend.service.common.abs;
 
 import org.springframework.http.ResponseEntity;
 import uz.mediasolutions.barterlybackend.payload.SignInAdminDTO;
@@ -11,9 +11,10 @@ public interface AuthService {
 
     ResponseEntity<TokenDTO> signInAdmin(SignInAdminDTO adminDTO);
 
-    ResponseEntity<TokenDTO> signInUser(SignInUserDTO userDTO);
+    ResponseEntity<?> signInUser(SignInUserDTO userDTO);
 
     ResponseEntity<SignUpResDTO> signUpUser(SignUpUserDTO dto);
 
     ResponseEntity<?> logout();
+
 }

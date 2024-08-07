@@ -18,7 +18,7 @@ import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 public interface CategoryController {
 
     @GetMapping("/get-all")
-    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_USER')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     content = {@Content(mediaType = "application/json",

@@ -36,7 +36,7 @@ public class User extends AbsUUID implements UserDetails {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @Column(precision = 10, scale = 2)
