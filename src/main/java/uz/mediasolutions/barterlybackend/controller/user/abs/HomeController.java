@@ -1,15 +1,27 @@
 package uz.mediasolutions.barterlybackend.controller.user.abs;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 @RequestMapping(Rest.BASE_PATH + "home")
 public interface HomeController {
 
-    @GetMapping
-    ResponseEntity<?> getHeaderDetails(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang);
+    @GetMapping("/header")
+    ResponseEntity<?> getHeaderDetails(HttpServletRequest request,
+                                       HttpSession session);
+
+    @GetMapping("/items")
+    ResponseEntity<Page<?>> getItems(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
+                                     @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
+                                     @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size,
+                                     HttpServletRequest request,
+                                     HttpSession session);
+
+//    @GetMapping("/search")
+//    ResponseEntity<Page<?>> search(@RequestParam(name = "q") String query)
 
 }

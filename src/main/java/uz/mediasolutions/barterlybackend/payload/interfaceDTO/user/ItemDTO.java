@@ -16,4 +16,6 @@ public interface ItemDTO {
 
     boolean getLiked();
 
+    Integer getSwaps();
+
 }

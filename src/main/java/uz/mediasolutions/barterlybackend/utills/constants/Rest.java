@@ -14,6 +14,7 @@ public interface Rest {
             "/*",
             "/error",
             "/api/catalog/**",
+            "/api/home/**",
             "/api/favorites/**"
     };
 
