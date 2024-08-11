@@ -21,6 +21,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findFirstByUsernameAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(String username);
 
+    Optional<User> findFirstByIdAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(UUID id);
+
     List<User> findAllBySocketStatus(UserSocketStatusEnum socketStatus);
 
     @Query(value = "SELECT id,\n" +

@@ -65,4 +65,8 @@ public class Item extends AbsDateDeleted {
     @ToString.Exclude
     private List<ItemImage> itemImages;
 
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Favorite> favorites;
+
 }

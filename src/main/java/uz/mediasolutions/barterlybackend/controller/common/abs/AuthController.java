@@ -1,5 +1,6 @@
 package uz.mediasolutions.barterlybackend.controller.common.abs;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.mediasolutions.barterlybackend.payload.SignInAdminDTO;
@@ -13,7 +14,7 @@ import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 public interface AuthController {
 
     @PostMapping("/sign-up")
-    ResponseEntity<SignUpResDTO> signUpUser(@RequestBody SignUpUserDTO dto);
+    ResponseEntity<SignUpResDTO> signUpUser(@RequestBody SignUpUserDTO dto, HttpSession session);
 
     @PostMapping("/sign-in")
     ResponseEntity<?> signInUser(@RequestBody SignInUserDTO dto);

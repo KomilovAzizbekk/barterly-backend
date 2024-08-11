@@ -1,10 +1,8 @@
 package uz.mediasolutions.barterlybackend.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import uz.mediasolutions.barterlybackend.entity.template.AbsDate;
 
 /**
  * @author Azizbek Komilov
@@ -17,7 +15,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Favorite {
+@Builder
+public class Favorite extends AbsDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

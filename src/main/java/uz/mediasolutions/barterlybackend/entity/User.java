@@ -49,14 +49,6 @@ public class User extends AbsUUID implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserSocketStatusEnum socketStatus;
 
-    @OneToMany(mappedBy = "user1", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private List<Conversation> conversationsUser1;
-
-    @OneToMany(mappedBy = "user2", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private List<Conversation> conversationsUser2;
-
     @ManyToOne
     @JoinColumn(name = "language_id")
     private Language language;
@@ -76,6 +68,18 @@ public class User extends AbsUUID implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "currency_id")
     private Currency currency;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
+    @OneToMany(mappedBy = "user1", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Conversation> conversationsUser1;
+
+    @OneToMany(mappedBy = "user2", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Conversation> conversationsUser2;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude  // Avoid potential issues with circular references
@@ -105,9 +109,9 @@ public class User extends AbsUUID implements UserDetails {
     @ToString.Exclude
     private List<Report> reportsReported;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Favorite> favorites;
 
     // These 4 fields are created for user details
     @Column(nullable = false)

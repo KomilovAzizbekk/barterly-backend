@@ -18,6 +18,7 @@ import uz.mediasolutions.barterlybackend.service.common.abs.RefreshTokenService;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,19 +33,19 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     public ResponseEntity<TokenDTO> refreshToken(HttpServletRequest request) {
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
-        final String username;
+        final UUID userId;
 
         if (authorization == null || !authorization.startsWith("Bearer ")) {
             throw RestException.notFound("Authorization header is missing");
         }
         refreshToken = authorization.substring(7);
 
-        username = jwtService.extractUsername(refreshToken);
-        if (username == null) {
+        userId = jwtService.extractUserId(refreshToken);
+        if (userId == null) {
             throw RestException.restThrow("Invalid refresh token", HttpStatus.BAD_REQUEST);
         }
 
-        Optional<User> optionalUser = userRepository.findFirstByUsernameAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(username);
+        Optional<User> optionalUser = userRepository.findFirstByIdAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(userId);
         if (optionalUser.isEmpty() || !refreshTokenRepository.existsByUserId(optionalUser.get().getId())) {
             throw RestException.restThrow("User not found with this token", HttpStatus.NOT_FOUND);
         }

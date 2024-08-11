@@ -18,6 +18,7 @@ import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -91,8 +92,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             token = token.substring("Bearer".length()).trim();
             if (jwtService.validToken(token)) {
-                String username = jwtService.extractUsername(token);
-                Optional<User> optionalUser = userRepository.findFirstByUsernameAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(username);
+                UUID userId = jwtService.extractUserId(token);
+                Optional<User> optionalUser = userRepository.findFirstByIdAndEnabledIsTrueAndAccountNonExpiredIsTrueAndAccountNonLockedIsTrueAndCredentialsNonExpiredIsTrue(userId);
                 return optionalUser.orElse(null);
             }
         } catch (Exception e) {

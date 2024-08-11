@@ -1,5 +1,7 @@
 package uz.mediasolutions.barterlybackend.service.common.impl;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,8 @@ import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -56,11 +60,6 @@ public class AuthServiceImpl implements AuthService {
 
         TokenDTO tokenDTO = getTokenDTO(user);
 
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(adminDTO.getUsername(), adminDTO.getPassword())
-//        );
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         return ResponseEntity.ok(tokenDTO);
     }
 
@@ -90,7 +89,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public ResponseEntity<SignUpResDTO> signUpUser(SignUpUserDTO dto) {
+    public ResponseEntity<SignUpResDTO> signUpUser(SignUpUserDTO dto, HttpSession session) {
 
         if (!dto.getPhoneNumber().matches(Rest.PHONE_NUMBER_REGEX)) {
             throw RestException.restThrow("Phone number is not valid", HttpStatus.BAD_REQUEST);
@@ -115,6 +114,12 @@ public class AuthServiceImpl implements AuthService {
                 .enabled(true)
                 .build();
         userRepository.save(user);
+
+        Set<Long> likedItems = (Set<Long>) session.getAttribute("likedItems");
+        if (likedItems != null) {
+            //todo set liked items to user
+
+        }
 
 //        otpService.generateOtp(dto.getPhoneNumber());
 
@@ -161,5 +166,19 @@ public class AuthServiceImpl implements AuthService {
         refreshTokenRepository.save(token);
 
         return new TokenDTO("Bearer", accessToken, refreshToken);
+    }
+
+    public UUID getAuthenticatedUserId(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7); // "Bearer " so'zini olib tashlaymiz
+            try {
+               return jwtService.extractUserId(token);
+            } catch (Exception e) {
+                // Token noto'g'ri yoki muddati o'tgan bo'lishi mumkin
+                return null;
+            }
+        }
+        return null;
     }
 }

@@ -13,7 +13,8 @@ public interface Rest {
             "/api/auth/**",
             "/*",
             "/error",
-            "/api/catalog/**"
+            "/api/catalog/**",
+            "/api/favorites/**"
     };
 
     String CREATED = "CREATED";

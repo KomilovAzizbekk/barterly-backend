@@ -1,5 +1,6 @@
 package uz.mediasolutions.barterlybackend.controller.common.impl;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +20,8 @@ public class AuthControllerImpl implements AuthController {
     private final AuthService authService;
 
     @Override
-    public ResponseEntity<SignUpResDTO> signUpUser(@RequestBody SignUpUserDTO dto) {
-        return authService.signUpUser(dto);
+    public ResponseEntity<SignUpResDTO> signUpUser(@RequestBody SignUpUserDTO dto, HttpSession session) {
+        return authService.signUpUser(dto, session);
     }
 
     @Override
