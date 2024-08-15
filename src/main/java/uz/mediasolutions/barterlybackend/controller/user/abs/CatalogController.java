@@ -14,7 +14,7 @@ import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 import java.util.List;
 
-@RequestMapping(Rest.BASE_PATH + "catalog")
+@RequestMapping(Rest.BASE_PATH + "app/catalog")
 public interface CatalogController {
 
     @GetMapping

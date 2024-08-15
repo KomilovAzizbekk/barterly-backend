@@ -6,6 +6,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import uz.mediasolutions.barterlybackend.entity.template.AbsLongDef;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,5 +31,8 @@ public class CategoryCharacteristicValue extends AbsLongDef {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private Map<String, String> translations;
+
+    @OneToMany(mappedBy = "categoryCharacteristicValue", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Item> items;
 
 }

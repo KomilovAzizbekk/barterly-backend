@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
-@RequestMapping(Rest.BASE_PATH + "home")
+@RequestMapping(Rest.BASE_PATH + "app/home")
 public interface HomeController {
 
     @GetMapping("/header")

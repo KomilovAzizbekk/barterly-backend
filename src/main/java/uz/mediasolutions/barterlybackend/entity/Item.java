@@ -22,6 +22,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @SQLDelete(sql = "UPDATE items SET deleted=true WHERE id=?")
+@Builder
 public class Item extends AbsDateDeleted {
 
     @Id
@@ -41,6 +42,10 @@ public class Item extends AbsDateDeleted {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "category_characteristic_value_id")
+    private CategoryCharacteristicValue categoryCharacteristicValue;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal swapValue;

@@ -16,6 +16,7 @@ import uz.mediasolutions.barterlybackend.entity.template.AbsLongDef;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@Builder
 public class ItemCharacteristic extends AbsLongDef {
 
     @ManyToOne
@@ -26,6 +27,8 @@ public class ItemCharacteristic extends AbsLongDef {
     @JoinColumn(name = "characteristic_id")
     private Characteristic characteristic;
 
-    private String value;
+    @ManyToOne
+    @JoinColumn(name = "characteristic_value_id")
+    private CharacteristicValue value;
 
 }

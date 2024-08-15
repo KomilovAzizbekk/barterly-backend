@@ -13,9 +13,9 @@ public interface Rest {
             "/api/auth/**",
             "/*",
             "/error",
-            "/api/catalog/**",
-            "/api/home/**",
-            "/api/favorites/**"
+            "/api/app/catalog/**",
+            "/api/app/home/**",
+            "/api/app/favorites/**"
     };
 
     String CREATED = "CREATED";

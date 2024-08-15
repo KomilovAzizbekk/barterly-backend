@@ -14,7 +14,7 @@ import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 import java.util.UUID;
 
-@RequestMapping(Rest.BASE_PATH + "favorites")
+@RequestMapping(Rest.BASE_PATH + "app/favorites")
 public interface FavoriteController {
 
     @GetMapping()
