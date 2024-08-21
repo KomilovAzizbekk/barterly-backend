@@ -16,7 +16,7 @@ public interface ItemController {
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<?> addItem(@Valid @RequestBody ItemReqDTO dto);
 
-    @GetMapping("/{itemId}")
+    @GetMapping("/get/{itemId}")
     ResponseEntity<?> getItemById(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
                                   @PathVariable UUID itemId);
 

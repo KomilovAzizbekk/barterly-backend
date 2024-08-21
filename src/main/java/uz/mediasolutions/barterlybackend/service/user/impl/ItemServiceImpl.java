@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.*;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.Item2DTO;
 import uz.mediasolutions.barterlybackend.payload.request.ItemCharacteristicReqDTO;
 import uz.mediasolutions.barterlybackend.payload.request.ItemReqDTO;
 import uz.mediasolutions.barterlybackend.repository.*;
@@ -44,7 +45,6 @@ public class ItemServiceImpl implements ItemService {
 
         User user = (User) CommonUtils.getUserFromSecurityContext();
         Item item = Item.builder()
-                .title("ok")
                 .description(dto.getDescription())
                 .user(user)
                 .category(category)
@@ -61,14 +61,13 @@ public class ItemServiceImpl implements ItemService {
                     () -> RestException.restThrow("Characteristic not found", HttpStatus.NOT_FOUND)
             );
 
-            CharacteristicValue characteristicValue = characteristicValueRepository.findById(characteristic.getCharacteristicValueId()).orElseThrow(
-                    () -> RestException.restThrow("Characteristic value not found", HttpStatus.NOT_FOUND)
-            );
+            CharacteristicValue characteristicValue = characteristicValueRepository.findById(characteristic.getCharacteristicValueId()).orElse(null);
 
             ItemCharacteristic itemCharacteristic = ItemCharacteristic.builder()
                     .item(savedItem)
                     .characteristic(characteristic1)
                     .value(characteristicValue)
+                    .textValue(characteristic.getValue())
                     .build();
             itemCharacteristicList.add(itemCharacteristic);
         }
@@ -86,6 +85,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ResponseEntity<?> getById(String lang, UUID itemId) {
-        return null;
+        Item2DTO byIdCustom = itemRepository.findByIdCustom(lang, itemId);
+        System.out.println(byIdCustom.toString());
+        return ResponseEntity.ok(byIdCustom);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uz.mediasolutions.barterlybackend.entity.Item;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.Item2DTO;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ItemDTO;
 
 import java.util.List;
@@ -58,5 +59,23 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
     Page<ItemDTO> findAllForHomeForNotAuthenticatedUser(@Param("lang") String lang,
                                                         @Param("itemIds") List<UUID> itemIds,
                                                         Pageable pageable);
+
+    @Query(value = "SELECT i.id,\n" +
+            "       i.description,\n" +
+            "       json_agg(im.url)                          as imageUrls,\n" +
+            "       json_build_object('characteristic', c.translations ->> :lang, 'value', cv.translations ->> :lang,\n" +
+            "                         'required', c.required) as characteristics\n" +
+            "FROM items i\n" +
+            "         LEFT JOIN\n" +
+            "     item_images im ON i.id = im.item_id\n" +
+            "         LEFT JOIN\n" +
+            "     item_characteristics ic ON i.id = ic.item_id\n" +
+            "         LEFT JOIN\n" +
+            "     characteristics c ON ic.characteristic_id = c.id\n" +
+            "         LEFT JOIN\n" +
+            "     characteristic_values cv ON ic.characteristic_value_id = cv.id\n" +
+            "WHERE i.id = :itemId\n" +
+            "GROUP BY i.id, c.translations, cv.translations, c.required", nativeQuery = true)
+    Item2DTO findByIdCustom(@Param("lang") String lang, @Param("itemId") UUID id);
 
 }

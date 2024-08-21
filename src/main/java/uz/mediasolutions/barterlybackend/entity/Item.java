@@ -33,9 +33,6 @@ public class Item extends AbsDateDeleted {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
-    private String title;
-
     @Column(nullable = false, length = 600)
     private String description;
 

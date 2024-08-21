@@ -16,7 +16,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     Favorite findByUserIdAndItemId(UUID userId, UUID itemId);
 
     @Query(value = "SELECT i.id,\n" +
-            "       i.title,\n" +
+            "       c.translations ->> :lang as title,\n" +
             "       u.username,\n" +
             "       c.translations ->> :lang as category,\n" +
             "       json_agg(ii.url)         as imageUrls,\n" +
@@ -36,8 +36,8 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
                                   @Param("lang") String lang,
                                   Pageable pageable);
 
-    @Query(value = "SELECT i.id, i.title, u.username, c.translations ->> :lang as category, " +
-            "json_agg(ii.url) as imageUrls, true as liked\n" +
+    @Query(value = "SELECT i.id, c.translations ->> :lang as title, u.username, c.translations ->> :lang as category, " +
+            "json_agg(ii.url) as imageUrls, true as liked,\n" +
             "count(s.id)    as swaps\n" +
             "FROM items i\n" +
             "         LEFT JOIN users u ON i.user_id = u.id\n" +
