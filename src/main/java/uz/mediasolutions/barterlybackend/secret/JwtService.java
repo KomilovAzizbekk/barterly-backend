@@ -73,7 +73,7 @@ public class JwtService {
     }
 
     /**
-     * Extracting username (email) from the token
+     * Extracting user id from the token
      */
     public UUID extractUserId(String token) {
         return UUID.fromString(extractClaim(token, Claims::getSubject));

@@ -10,7 +10,9 @@ import uz.mediasolutions.barterlybackend.entity.template.AbsDate;
  */
 
 @Entity
-@Table(name = "favorites")
+@Table(name = "favorites", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "item_id"}, name = "unique_user_item")
+})
 @Getter
 @Setter
 @AllArgsConstructor
@@ -29,6 +31,5 @@ public class Favorite extends AbsDate {
     @ManyToOne
     @JoinColumn(name = "item_id")
     private Item item;
-
 
 }

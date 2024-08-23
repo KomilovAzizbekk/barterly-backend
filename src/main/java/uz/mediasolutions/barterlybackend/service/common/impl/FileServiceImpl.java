@@ -38,18 +38,10 @@ public class FileServiceImpl implements FileService {
             String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
             s3Client.putObject(new PutObjectRequest(bucketName, fileName, converted));
             converted.deleteOnExit();
-            Date expiration = new Date();
-            long expTimeMillis = expiration.getTime();
-            expTimeMillis += 1000 * 60 * 60 * 24 * 7; // 7 kun
-            expiration.setTime(expTimeMillis);
 
-            GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                    new GeneratePresignedUrlRequest(bucketName, fileName)
-                            .withMethod(HttpMethod.GET)
-                            .withExpiration(expiration);
-            URL url = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
+            String url = s3Client.getUrl(bucketName, fileName).toString();
 
-            return ResponseEntity.ok(url.toString());
+            return ResponseEntity.ok(url);
         } catch (Exception e) {
             e.printStackTrace();
             throw RestException.restThrow("Cannot upload file " + file.getOriginalFilename(), HttpStatus.BAD_REQUEST);

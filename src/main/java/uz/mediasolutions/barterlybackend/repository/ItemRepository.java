@@ -18,7 +18,7 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
             "       i.title,\n" +
             "       u.username,\n" +
             "       c.translations ->> :lang    as category,\n" +
-            "       json_agg(ii.url)            as imageUrls,\n" +
+            "       array_agg(ii.url)            as imageUrls,\n" +
             "       COALESCE(f1.liked, 'false') as liked,\n" +
             "       count(s.id)                 as swaps\n" +
             "FROM items i\n" +
@@ -41,7 +41,7 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
             "       i.title,\n" +
             "       u.username,\n" +
             "       c.translations ->> :lang    as category,\n" +
-            "       json_agg(ii.url)            as imageUrls,\n" +
+            "       array_agg(ii.url)            as imageUrls,\n" +
             "       COALESCE(f1.liked, 'false') as liked,\n" +
             "       count(s.id)                 as swaps\n" +
             "FROM items i\n" +
@@ -62,20 +62,25 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
 
     @Query(value = "SELECT i.id,\n" +
             "       i.description,\n" +
-            "       json_agg(im.url)                          as imageUrls,\n" +
-            "       json_build_object('characteristic', c.translations ->> :lang, 'value', cv.translations ->> :lang,\n" +
-            "                         'required', c.required) as characteristics\n" +
+            "       array_agg(DISTINCT im.url) as imageUrls,\n" +
+            "       json_agg(\n" +
+            "           DISTINCT CASE\n" +
+            "               WHEN c.translations ->> :lang IS NOT NULL AND (cv.translations ->> :lang IS NOT NULL OR ic.text_value IS NOT NULL) AND c.required IS NOT NULL THEN\n" +
+            "                   jsonb_build_object(\n" +
+            "                       'characteristic', c.translations ->> :lang,\n" +
+            "                       'value', COALESCE(cv.translations ->> :lang, ic.text_value),\n" +
+            "                       'required', c.required\n" +
+            "                   )\n" +
+            "               ELSE NULL\n" +
+            "           END\n" +
+            "       ) FILTER (WHERE c.translations ->> :lang IS NOT NULL AND (cv.translations ->> :lang IS NOT NULL OR ic.text_value IS NOT NULL) AND c.required IS NOT NULL) as characteristics\n" +
             "FROM items i\n" +
-            "         LEFT JOIN\n" +
-            "     item_images im ON i.id = im.item_id\n" +
-            "         LEFT JOIN\n" +
-            "     item_characteristics ic ON i.id = ic.item_id\n" +
-            "         LEFT JOIN\n" +
-            "     characteristics c ON ic.characteristic_id = c.id\n" +
-            "         LEFT JOIN\n" +
-            "     characteristic_values cv ON ic.characteristic_value_id = cv.id\n" +
+            "LEFT JOIN item_images im ON i.id = im.item_id\n" +
+            "LEFT JOIN item_characteristics ic ON i.id = ic.item_id\n" +
+            "LEFT JOIN characteristics c ON ic.characteristic_id = c.id\n" +
+            "LEFT JOIN characteristic_values cv ON ic.characteristic_value_id = cv.id\n" +
             "WHERE i.id = :itemId\n" +
-            "GROUP BY i.id, c.translations, cv.translations, c.required", nativeQuery = true)
+            "GROUP BY i.id", nativeQuery = true)
     Item2DTO findByIdCustom(@Param("lang") String lang, @Param("itemId") UUID id);
 
 }
