@@ -7,9 +7,11 @@ public interface Item2DTO {
 
     UUID getId();
 
+    UUID getUserId();
+
     String getTitle();
 
-    Object getImageUrls();
+    List<String> getImageUrls();
 
     String getDescription();
 

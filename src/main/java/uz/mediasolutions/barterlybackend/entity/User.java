@@ -36,11 +36,9 @@ public class User extends AbsUUID implements UserDetails {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column
     private String password;
 
-    @Column(precision = 10, scale = 2)
-    private BigDecimal balance;
+    private Integer level;
 
     @ManyToOne
     @JoinColumn(name = "user_type_id")

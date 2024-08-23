@@ -15,10 +15,10 @@ import java.util.UUID;
 public interface ItemRepository extends JpaRepository<Item, UUID> {
 
     @Query(value = "SELECT i.id,\n" +
-            "       i.title,\n" +
+            "       c.translations ->> :lang    as title,\n" +
             "       u.username,\n" +
             "       c.translations ->> :lang    as category,\n" +
-            "       array_agg(ii.url)            as imageUrls,\n" +
+            "       array_agg(ii.url)           as imageUrls,\n" +
             "       COALESCE(f1.liked, 'false') as liked,\n" +
             "       count(s.id)                 as swaps\n" +
             "FROM items i\n" +
@@ -32,16 +32,16 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
             "                    FROM favorites f1\n" +
             "                    WHERE f1.user_id = :userId) f1 ON i.id = f1.item_id\n" +
             "WHERE c.translations ->> :lang IS NOT NULL\n" +
-            "GROUP BY i.id, i.title, u.username, c.translations, f1.liked", nativeQuery = true)
+            "GROUP BY i.id, u.username, c.translations, f1.liked", nativeQuery = true)
     Page<ItemDTO> findAllForHomeForAuthenticatedUser(@Param("lang") String lang,
                                                      @Param("userId") UUID userId,
                                                      Pageable pageable);
 
     @Query(value = "SELECT i.id,\n" +
-            "       i.title,\n" +
+            "       c.translations ->> :lang    as title,\n" +
             "       u.username,\n" +
             "       c.translations ->> :lang    as category,\n" +
-            "       array_agg(ii.url)            as imageUrls,\n" +
+            "       array_agg(ii.url)           as imageUrls,\n" +
             "       COALESCE(f1.liked, 'false') as liked,\n" +
             "       count(s.id)                 as swaps\n" +
             "FROM items i\n" +
@@ -55,12 +55,13 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
             "                    FROM favorites f1\n" +
             "                    WHERE f1.item_id IN :itemIds) f1 ON i.id = f1.item_id\n" +
             "WHERE c.translations ->> :lang IS NOT NULL\n" +
-            "GROUP BY i.id, i.title, u.username, c.translations, f1.liked", nativeQuery = true)
+            "GROUP BY i.id, u.username, c.translations, f1.liked", nativeQuery = true)
     Page<ItemDTO> findAllForHomeForNotAuthenticatedUser(@Param("lang") String lang,
                                                         @Param("itemIds") List<UUID> itemIds,
                                                         Pageable pageable);
 
     @Query(value = "SELECT i.id,\n" +
+            "       u.id                       as userId,\n" +
             "       i.description,\n" +
             "       array_agg(DISTINCT im.url) as imageUrls,\n" +
             "       json_agg(\n" +
@@ -79,8 +80,9 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
             "LEFT JOIN item_characteristics ic ON i.id = ic.item_id\n" +
             "LEFT JOIN characteristics c ON ic.characteristic_id = c.id\n" +
             "LEFT JOIN characteristic_values cv ON ic.characteristic_value_id = cv.id\n" +
+            "LEFT JOIN users u ON u.id = i.user_id\n" +
             "WHERE i.id = :itemId\n" +
-            "GROUP BY i.id", nativeQuery = true)
+            "GROUP BY i.id, u.id", nativeQuery = true)
     Item2DTO findByIdCustom(@Param("lang") String lang, @Param("itemId") UUID id);
 
 }

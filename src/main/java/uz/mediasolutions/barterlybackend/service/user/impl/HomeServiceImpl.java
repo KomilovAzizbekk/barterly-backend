@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ItemDTO;
+import uz.mediasolutions.barterlybackend.payload.response.HeaderResDTO;
 import uz.mediasolutions.barterlybackend.repository.FavoriteRepository;
 import uz.mediasolutions.barterlybackend.repository.ItemRepository;
 import uz.mediasolutions.barterlybackend.repository.SwapRepository;
@@ -27,7 +28,7 @@ public class HomeServiceImpl implements HomeService {
     private final ItemRepository itemRepository;
 
     @Override
-    public ResponseEntity<?> getHeaderDetails(HttpServletRequest request, HttpSession session) {
+    public ResponseEntity<HeaderResDTO> getHeaderDetails(HttpServletRequest request, HttpSession session) {
         UUID userId = authService.getAuthenticatedUserId(request);
         int favourite = 0, swap, profile;
         if (userId == null) {
@@ -43,11 +44,12 @@ public class HomeServiceImpl implements HomeService {
             profile = 0;
             favourite = favoriteRepository.findCountByUserId(userId);
         }
-        Map<String, Integer> map = new HashMap<>();
-        map.put("favourite", favourite);
-        map.put("swap", swap);
-        map.put("profile", profile);
-        return ResponseEntity.ok(map);
+        HeaderResDTO headerResDTO = HeaderResDTO.builder()
+                .profile(profile)
+                .swaps(swap)
+                .favorites(favourite)
+                .build();
+        return ResponseEntity.ok(headerResDTO);
     }
 
     @Override

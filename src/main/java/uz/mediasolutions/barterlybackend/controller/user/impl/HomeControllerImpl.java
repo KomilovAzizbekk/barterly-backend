@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uz.mediasolutions.barterlybackend.controller.user.abs.HomeController;
+import uz.mediasolutions.barterlybackend.payload.response.HeaderResDTO;
 import uz.mediasolutions.barterlybackend.service.user.abs.HomeService;
 
 @RestController
@@ -16,7 +17,7 @@ public class HomeControllerImpl implements HomeController {
     private final HomeService homeService;
 
     @Override
-    public ResponseEntity<?> getHeaderDetails(HttpServletRequest request, HttpSession session) {
+    public ResponseEntity<HeaderResDTO> getHeaderDetails(HttpServletRequest request, HttpSession session) {
         return homeService.getHeaderDetails(request, session);
     }
 

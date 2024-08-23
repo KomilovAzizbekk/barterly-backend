@@ -18,7 +18,7 @@ import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 public interface CategoryController {
 
     @GetMapping("/get-all")
-    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     content = {@Content(mediaType = "application/json",
@@ -38,7 +38,7 @@ public interface CategoryController {
                             schema = @Schema(implementation = CategoryDTO2.class))})
     })
     ResponseEntity<?> getById(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
-                                           @PathVariable Long id);
+                              @PathVariable Long id);
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")

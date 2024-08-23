@@ -44,7 +44,4 @@ public class Swap extends AbsUUID {
     @JoinColumn(name = "swap_status_id")
     private SwapStatus swapStatus;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal additionalAmount;
-
 }

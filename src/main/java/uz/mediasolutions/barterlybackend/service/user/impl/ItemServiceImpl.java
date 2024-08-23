@@ -48,7 +48,6 @@ public class ItemServiceImpl implements ItemService {
                 .description(dto.getDescription())
                 .user(user)
                 .category(category)
-                .swapValue(BigDecimal.valueOf(dto.getValue()))
                 .categoryCharacteristicValue(categoryCharacteristicValue)
                 .build();
 
@@ -61,13 +60,13 @@ public class ItemServiceImpl implements ItemService {
                     () -> RestException.restThrow("Characteristic not found", HttpStatus.NOT_FOUND)
             );
 
-            CharacteristicValue characteristicValue = characteristicValueRepository.findById(characteristic.getCharacteristicValueId()).orElse(null);
+            CharacteristicValue characteristicValue = characteristic.getCharacteristicValueId() != null ? characteristicValueRepository.findById(characteristic.getCharacteristicValueId()).orElse(null) : null;
 
             ItemCharacteristic itemCharacteristic = ItemCharacteristic.builder()
                     .item(savedItem)
                     .characteristic(characteristic1)
                     .value(characteristicValue)
-                    .textValue(characteristic.getValue())
+                    .textValue(characteristic.getValue() != null ? characteristic.getValue() : "")
                     .build();
             itemCharacteristicList.add(itemCharacteristic);
         }

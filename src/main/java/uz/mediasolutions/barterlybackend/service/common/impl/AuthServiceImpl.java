@@ -25,7 +25,6 @@ import uz.mediasolutions.barterlybackend.service.common.abs.AuthService;
 import uz.mediasolutions.barterlybackend.utills.CommonUtils;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -106,8 +105,8 @@ public class AuthServiceImpl implements AuthService {
                 .name(dto.getName())
                 .phoneNumber(dto.getPhoneNumber())
                 .username(dto.getUsername())
-                .balance(BigDecimal.valueOf(0))
                 .role(roleRepository.findByName(RoleEnum.ROLE_USER))
+                .level(1)
                 .accountNonExpired(true)
                 .accountNonLocked(true)
                 .credentialsNonExpired(true)

@@ -20,11 +20,6 @@ public class FileControllerImpl implements FileController {
     }
 
     @Override
-    public ResponseEntity<ByteArrayResource> downloadFile(String fileName) {
-        return fileService.downloadFile(fileName);
-    }
-
-    @Override
     public ResponseEntity<String> deleteFile(String fileName) {
         return fileService.deleteFile(fileName);
     }

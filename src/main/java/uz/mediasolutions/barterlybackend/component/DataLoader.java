@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import uz.mediasolutions.barterlybackend.entity.*;
 import uz.mediasolutions.barterlybackend.enums.RoleEnum;
+import uz.mediasolutions.barterlybackend.enums.SwapStatusEnum;
 import uz.mediasolutions.barterlybackend.enums.UserTypeEnum;
 import uz.mediasolutions.barterlybackend.repository.*;
 
@@ -24,6 +25,7 @@ public class DataLoader implements CommandLineRunner {
     private final LanguageRepository languageRepository;
     private final UserTypeRepository userTypeRepository;
     private final UserRepository userRepository;
+    private final SwapStatusRepository swapStatusRepository;
 
     @Value("${spring.sql.init.mode}")
     private String mode;
@@ -38,8 +40,15 @@ public class DataLoader implements CommandLineRunner {
             addLanguage();
             addRegion();
             addUserType();
+            addSwapStatuses();
         }
 
+    }
+
+    private void addSwapStatuses() {
+        for (SwapStatusEnum value : SwapStatusEnum.values()) {
+            swapStatusRepository.save(new SwapStatus(value));
+        }
     }
 
     private void addUserType() {

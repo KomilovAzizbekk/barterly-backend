@@ -44,9 +44,6 @@ public class Item extends AbsDateDeleted {
     @JoinColumn(name = "category_characteristic_value_id")
     private CategoryCharacteristicValue categoryCharacteristicValue;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal swapValue;
-
     @ManyToOne
     @JoinColumn(name = "item_status_id")
     private ItemStatus itemStatus;

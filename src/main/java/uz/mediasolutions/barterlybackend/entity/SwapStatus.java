@@ -32,4 +32,7 @@ public class SwapStatus {
     @ToString.Exclude
     private List<Swap> swaps;
 
+    public SwapStatus(SwapStatusEnum value) {
+        this.name = value;
+    }
 }
