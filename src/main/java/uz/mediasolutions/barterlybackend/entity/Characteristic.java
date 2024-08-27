@@ -35,6 +35,12 @@ public class Characteristic extends AbsDate {
     @Column(nullable = false)
     private boolean required;
 
+    @Column(nullable = false)
+    private boolean filter;
+
+    @Column(nullable = false)
+    private boolean title;
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private Map<String, String> translations;

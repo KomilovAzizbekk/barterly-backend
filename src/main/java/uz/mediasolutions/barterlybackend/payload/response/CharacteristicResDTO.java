@@ -15,5 +15,9 @@ public class CharacteristicResDTO {
 
     private boolean required;
 
+    private boolean filter;
+
+    private boolean title;
+
     private Map<String, String> translations;
 }

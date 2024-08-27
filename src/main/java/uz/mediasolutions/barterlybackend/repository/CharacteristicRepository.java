@@ -15,6 +15,8 @@ public interface CharacteristicRepository extends JpaRepository<Characteristic, 
 
     @Query(value = "SELECT ch.id,\n" +
             "       ch.required,\n" +
+            "       ch.filter,\n" +
+            "       ch.title,\n" +
             "       ch.translations ->> :lang as name,\n" +
             "       c.id                      as categoryId,\n" +
             "       c.translations ->> :lang  as categoryName\n" +
@@ -32,6 +34,8 @@ public interface CharacteristicRepository extends JpaRepository<Characteristic, 
 
     @Query(value = "SELECT ch.id,\n" +
             "       ch.required,\n" +
+            "       ch.filter,\n" +
+            "       ch.title,\n" +
             "       ch.translations          as names,\n" +
             "       c.id                     as categoryId,\n" +
             "       c.translations ->> :lang as categoryName\n" +

@@ -19,6 +19,12 @@ public class CharacteristicReqDTO {
     private boolean required;
 
     @NotNull
+    private boolean filter;
+
+    @NotNull
+    private boolean title;
+
+    @NotNull
     private Map<String, String> translations;
 
 }

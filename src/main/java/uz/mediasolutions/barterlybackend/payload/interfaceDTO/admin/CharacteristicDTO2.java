@@ -6,6 +6,10 @@ public interface CharacteristicDTO2 {
 
     boolean isRequired();
 
+    boolean isTitle();
+
+    boolean isFilter();
+
     String getNames();
 
     Long getCategoryId();

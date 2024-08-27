@@ -60,6 +60,8 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 
         characteristic.setTranslations(dto.getTranslations());
         characteristic.setRequired(dto.isRequired());
+        characteristic.setFilter(dto.isFilter());
+        characteristic.setTitle(dto.isTitle());
         characteristic.setCategory(category);
         characteristicRepository.save(characteristic);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
