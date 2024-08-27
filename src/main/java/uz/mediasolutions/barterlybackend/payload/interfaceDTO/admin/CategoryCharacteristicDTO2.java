@@ -8,6 +8,8 @@ public interface CategoryCharacteristicDTO2 {
 
     Long getCategoryId();
 
+    boolean isTitle();
+
     String getCategoryName();
 
     Long getParentCharacteristicId();

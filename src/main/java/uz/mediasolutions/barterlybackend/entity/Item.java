@@ -41,10 +41,6 @@ public class Item extends AbsDateDeleted {
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "category_characteristic_value_id")
-    private CategoryCharacteristicValue categoryCharacteristicValue;
-
-    @ManyToOne
     @JoinColumn(name = "item_status_id")
     private ItemStatus itemStatus;
 
@@ -67,5 +63,9 @@ public class Item extends AbsDateDeleted {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<Favorite> favorites;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<ItemCategoryCharacteristic> itemCategoryCharacteristics;
 
 }

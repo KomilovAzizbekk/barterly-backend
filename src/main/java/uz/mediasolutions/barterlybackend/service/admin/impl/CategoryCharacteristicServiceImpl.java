@@ -66,6 +66,7 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
             categoryCharacteristic.setParent(categoryCharacteristicRepository.findById(dto.getParentId()).orElse(null));
         }
 
+        categoryCharacteristic.setTitle(dto.isTitle());
         categoryCharacteristic.setCategory(category);
         categoryCharacteristic.setTranslations(dto.getTranslations());
         categoryCharacteristicRepository.save(categoryCharacteristic);

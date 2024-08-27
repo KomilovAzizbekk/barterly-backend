@@ -13,6 +13,8 @@ public class CategoryCharacteristicReqDTO {
 
     private Long categoryId;
 
+    private boolean title;
+
     private Long parentId;
 
     private Map<String, String> translations;

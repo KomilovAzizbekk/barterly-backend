@@ -7,7 +7,6 @@ import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristic;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CategoryCharacteristicMapper;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryCharacteristicReqDTO;
-import uz.mediasolutions.barterlybackend.payload.response.CategoryCharacteristicResDTO;
 import uz.mediasolutions.barterlybackend.repository.CategoryCharacteristicRepository;
 import uz.mediasolutions.barterlybackend.repository.CategoryRepository;
 
@@ -17,19 +16,6 @@ public class CategoryCharacteristicMapperImpl implements CategoryCharacteristicM
 
     private final CategoryCharacteristicRepository categoryCharacteristicRepository;
     private final CategoryRepository categoryRepository;
-
-    @Override
-    public CategoryCharacteristicResDTO toResDTO(CategoryCharacteristic categoryCharacteristic) {
-        if (categoryCharacteristic == null) {
-            return null;
-        }
-
-        return CategoryCharacteristicResDTO
-                .builder()
-                .id(categoryCharacteristic.getId())
-                .translations(categoryCharacteristic.getTranslations())
-                .build();
-    }
 
     @Override
     public CategoryCharacteristic toEntity(CategoryCharacteristicReqDTO dto) {
@@ -50,6 +36,7 @@ public class CategoryCharacteristicMapperImpl implements CategoryCharacteristicM
                 () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
         ));
         categoryCharacteristic.setTranslations(dto.getTranslations());
+        categoryCharacteristic.setTitle(dto.isTitle());
         return categoryCharacteristic;
     }
 }

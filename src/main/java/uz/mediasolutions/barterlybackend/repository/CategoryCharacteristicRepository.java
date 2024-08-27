@@ -15,6 +15,7 @@ public interface CategoryCharacteristicRepository extends JpaRepository<Category
 
     @Query(value = "SELECT cch.id,\n" +
             "       cch.translations ->> :lang  as name,\n" +
+            "       cch.title,\n" +
             "       c.id                        as categoryId,\n" +
             "       c.translations ->> :lang    as categoryName,\n" +
             "       cch2.id                     as parentCharacteristicId,\n" +
@@ -36,6 +37,7 @@ public interface CategoryCharacteristicRepository extends JpaRepository<Category
 
     @Query(value = "SELECT cch.id,\n" +
             "       cch.translations  as names,\n" +
+            "       cch.title,\n" +
             "       c.id                        as categoryId,\n" +
             "       c.translations ->> :lang    as categoryName,\n" +
             "       cch2.id                     as parentCharacteristicId,\n" +

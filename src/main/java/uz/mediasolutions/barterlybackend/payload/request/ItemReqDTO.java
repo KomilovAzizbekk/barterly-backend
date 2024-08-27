@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +16,9 @@ public class ItemReqDTO {
 
     @NotNull
     private Long categoryId;
+
+    @NotNull
+    private Long categoryCharacteristicId;
 
     @NotNull
     private Long categoryCharacteristicValueId;

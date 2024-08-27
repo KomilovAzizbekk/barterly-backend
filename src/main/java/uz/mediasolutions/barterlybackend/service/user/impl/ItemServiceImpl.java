@@ -14,7 +14,6 @@ import uz.mediasolutions.barterlybackend.service.user.abs.ItemService;
 import uz.mediasolutions.barterlybackend.utills.CommonUtils;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -30,11 +29,14 @@ public class ItemServiceImpl implements ItemService {
     private final CharacteristicRepository characteristicRepository;
     private final CharacteristicValueRepository characteristicValueRepository;
     private final ItemImageRepository itemImageRepository;
+    private final CategoryCharacteristicRepository categoryCharacteristicRepository;
+    private final ItemCategoryCharacteristicRepository itemCategoryCharacteristicRepository;
 
 
     @Override
     public ResponseEntity<?> add(ItemReqDTO dto) {
 
+        //Checking Category, CategoryCharacteristic, CategoryCharacteristicValue exist in database or else throw! (41-51 lines)
         Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow(
                 () -> RestException.restThrow("Category not found", HttpStatus.NOT_FOUND)
         );
@@ -43,18 +45,35 @@ public class ItemServiceImpl implements ItemService {
                 () -> RestException.restThrow("Category characteristic value not found", HttpStatus.NOT_FOUND)
         );
 
+        CategoryCharacteristic categoryCharacteristic = categoryCharacteristicRepository.findById(dto.getCategoryCharacteristicId()).orElseThrow(
+                () -> RestException.restThrow("Category characteristic not found", HttpStatus.NOT_FOUND)
+        );
+
+        //Getting User from Security Context
         User user = (User) CommonUtils.getUserFromSecurityContext();
+
+        //Creating item and save + flush it to database (57-63 lines)
         Item item = Item.builder()
                 .description(dto.getDescription())
                 .user(user)
                 .category(category)
-                .categoryCharacteristicValue(categoryCharacteristicValue)
                 .build();
 
         Item savedItem = itemRepository.saveAndFlush(item);
 
-        List<ItemCharacteristic> itemCharacteristicList = new ArrayList<>();
+        /*Creating itemCategoryCharacteristic and save it to database (68-74 lines)
+        This is for connect categoryCharacteristics and its value to item.
+        */
+        ItemCategoryCharacteristic itemCategoryCharacteristic = ItemCategoryCharacteristic.builder()
+                .categoryCharacteristic(categoryCharacteristic)
+                .categoryCharacteristicValue(categoryCharacteristicValue)
+                .item(savedItem)
+                .build();
 
+        itemCategoryCharacteristicRepository.save(itemCategoryCharacteristic);
+
+        //Iterating characteristics list and save them all to itemCharacteristics table. (77-93 lines)
+        List<ItemCharacteristic> itemCharacteristicList = new ArrayList<>();
         for (ItemCharacteristicReqDTO characteristic : dto.getCharacteristics()) {
             Characteristic characteristic1 = characteristicRepository.findById(characteristic.getCharacteristicId()).orElseThrow(
                     () -> RestException.restThrow("Characteristic not found", HttpStatus.NOT_FOUND)
@@ -72,6 +91,7 @@ public class ItemServiceImpl implements ItemService {
         }
         itemCharacteristicRepository.saveAll(itemCharacteristicList);
 
+        //Saving all the image urls to itemImages table. (96-102 lines)
         for (String imageUrl : dto.getImageUrls()) {
             ItemImage itemImage = ItemImage.builder()
                     .item(savedItem)

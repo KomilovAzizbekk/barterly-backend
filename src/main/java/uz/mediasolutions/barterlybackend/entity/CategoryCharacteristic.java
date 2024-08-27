@@ -31,6 +31,9 @@ public class CategoryCharacteristic extends AbsDate {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(nullable = false)
+    private boolean title;
+
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private CategoryCharacteristic parent;
@@ -40,6 +43,11 @@ public class CategoryCharacteristic extends AbsDate {
     private Map<String, String> translations;
 
     @OneToMany(mappedBy = "characteristic", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<CategoryCharacteristicValue> categoryCharacteristicValues;
+
+    @OneToMany(mappedBy = "categoryCharacteristic", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<ItemCategoryCharacteristic> itemCategoryCharacteristics;
 
 }

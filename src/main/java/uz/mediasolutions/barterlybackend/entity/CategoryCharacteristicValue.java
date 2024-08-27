@@ -33,6 +33,7 @@ public class CategoryCharacteristicValue extends AbsLongDef {
     private Map<String, String> translations;
 
     @OneToMany(mappedBy = "categoryCharacteristicValue", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Item> items;
+    @ToString.Exclude
+    private List<ItemCategoryCharacteristic> itemCategoryCharacteristics;
 
 }
