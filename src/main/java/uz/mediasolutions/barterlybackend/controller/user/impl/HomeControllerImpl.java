@@ -25,4 +25,9 @@ public class HomeControllerImpl implements HomeController {
     public ResponseEntity<Page<?>> getItems(String lang, int page, int size, HttpServletRequest request, HttpSession session) {
         return homeService.getItems(lang, page, size, request, session);
     }
+
+    @Override
+    public ResponseEntity<Page<?>> search(String search, Long categoryId) {
+        return homeService.search(search, categoryId);
+    }
 }

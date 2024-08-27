@@ -68,4 +68,9 @@ public class HomeServiceImpl implements HomeService {
         }
         return ResponseEntity.ok(items);
     }
+
+    @Override
+    public ResponseEntity<Page<?>> search(String search, Long categoryId) {
+        return null;
+    }
 }

@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uz.mediasolutions.barterlybackend.entity.Favorite;
+import uz.mediasolutions.barterlybackend.entity.Item;
 import uz.mediasolutions.barterlybackend.entity.RefreshToken;
 import uz.mediasolutions.barterlybackend.entity.User;
 import uz.mediasolutions.barterlybackend.enums.RoleEnum;
@@ -17,9 +19,7 @@ import uz.mediasolutions.barterlybackend.payload.SignInUserDTO;
 import uz.mediasolutions.barterlybackend.payload.SignUpUserDTO;
 import uz.mediasolutions.barterlybackend.payload.response.SignUpResDTO;
 import uz.mediasolutions.barterlybackend.payload.response.TokenDTO;
-import uz.mediasolutions.barterlybackend.repository.RefreshTokenRepository;
-import uz.mediasolutions.barterlybackend.repository.RoleRepository;
-import uz.mediasolutions.barterlybackend.repository.UserRepository;
+import uz.mediasolutions.barterlybackend.repository.*;
 import uz.mediasolutions.barterlybackend.secret.JwtService;
 import uz.mediasolutions.barterlybackend.service.common.abs.AuthService;
 import uz.mediasolutions.barterlybackend.utills.CommonUtils;
@@ -40,6 +40,8 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final ItemRepository itemRepository;
+    private final FavoriteRepository favoriteRepository;
 
     @Override
     public ResponseEntity<TokenDTO> signInAdmin(SignInAdminDTO adminDTO) {
@@ -112,12 +114,20 @@ public class AuthServiceImpl implements AuthService {
                 .credentialsNonExpired(true)
                 .enabled(true)
                 .build();
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        Set<Long> likedItems = (Set<Long>) session.getAttribute("likedItems");
+        Set<UUID> likedItems = (Set<UUID>) session.getAttribute("likedItems");
         if (likedItems != null) {
-            //todo set liked items to user
-
+            for (UUID likedItem : likedItems) {
+                Item item = itemRepository.findById(likedItem).orElse(null);
+                if (item != null) {
+                    Favorite favorite = Favorite.builder()
+                            .item(item)
+                            .user(savedUser)
+                            .build();
+                    favoriteRepository.save(favorite);
+                }
+            }
         }
 
 //        otpService.generateOtp(dto.getPhoneNumber());

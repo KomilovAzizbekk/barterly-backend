@@ -12,4 +12,5 @@ public interface HomeService {
 
     ResponseEntity<Page<?>> getItems(String lang, int page, int size, HttpServletRequest request, HttpSession session);
 
+    ResponseEntity<Page<?>> search(String search, Long categoryId);
 }

@@ -32,7 +32,13 @@ public interface HomeController {
                                      HttpServletRequest request,
                                      HttpSession session);
 
-//    @GetMapping("/search")
-//    ResponseEntity<Page<?>> search(@RequestParam(name = "q") String query)
+    @GetMapping("/search")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ItemDTO.class))})
+    })
+    ResponseEntity<Page<?>> search(@RequestParam(name = "search") String search,
+                                   @RequestParam(name = "categoryId") Long categoryId);
 
 }

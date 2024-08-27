@@ -4,6 +4,10 @@ public enum SwapStatusEnum {
 
     NEW,
 
-    DONE
+    WAITING,
+
+    ACCEPTED,
+
+    REJECTED
 
 }
