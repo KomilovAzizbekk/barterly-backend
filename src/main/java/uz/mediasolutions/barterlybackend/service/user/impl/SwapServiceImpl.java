@@ -38,7 +38,7 @@ public class SwapServiceImpl implements SwapService {
         Pageable pageable = PageRequest.of(page, size);
 //        if (Objects.equals(lang, "uz")) {
             int now = LocalDateTime.now().getSecond();
-            Page<SwapDTO> swapDTOS = swapRepository.findAllByUserId(userId, pageable);
+            Page<SwapDTO> swapDTOS = swapRepository.findAllByUserId(userId, lang, pageable);
             System.out.println(LocalDateTime.now().getSecond() - now);
             return ResponseEntity.ok(swapDTOS);
 //        } else {

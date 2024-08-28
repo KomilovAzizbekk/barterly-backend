@@ -16,19 +16,19 @@ public interface SwapRepository extends JpaRepository<Swap, UUID> {
     Integer findCountByUserId(UUID userId);
 
     @Query(value = "SELECT s.id,\n" +
-            "       ss.name as status,\n" +
+            "       ss.name      as status,\n" +
             "       s.created_at AS createdAt,\n" +
             "       CASE\n" +
             "           WHEN responder.id != :userId THEN responder.username\n" +
             "           ELSE requester.username\n" +
             "           END      AS username,\n" +
             "       CASE\n" +
-            "           WHEN i1.user_id = :userId THEN i1.description\n" +
-            "           ELSE i2.description\n" +
+            "           WHEN i1.user_id = :userId THEN i1.title ->> :lang\n" +
+            "           ELSE i2.title ->> :lang\n" +
             "           END      AS title1,\n" +
             "       CASE\n" +
-            "           WHEN i1.user_id != :userId THEN i1.description\n" +
-            "           ELSE i2.description\n" +
+            "           WHEN i1.user_id != :userId THEN i1.title ->> :lang\n" +
+            "           ELSE i2.title ->> :lang\n" +
             "           END      AS title2\n" +
             "FROM swaps s\n" +
             "         LEFT JOIN swap_statuses ss ON s.swap_status_id = ss.id\n" +
@@ -40,7 +40,7 @@ public interface SwapRepository extends JpaRepository<Swap, UUID> {
             "   OR responder.id = :userId\n" +
             "ORDER BY s.created_at DESC", nativeQuery = true)
     Page<SwapDTO> findAllByUserId(@Param("userId") UUID userId,
-//                                  @Param("lang") String lang,
+                                  @Param("lang") String lang,
                                   Pageable pageable);
 
     Page<Swap> findAllByRequesterIdOrResponderId(UUID userId, UUID userId1, Pageable pageable);

@@ -18,10 +18,7 @@ public class ItemReqDTO {
     private Long categoryId;
 
     @NotNull
-    private Long categoryCharacteristicId;
-
-    @NotNull
-    private Long categoryCharacteristicValueId;
+    private List<CategoryCharacteristicReqDTO2> categoryCharacteristics;
 
     @NotNull
     private List<ItemCharacteristicReqDTO> characteristics;

@@ -23,6 +23,9 @@ public class ItemCategoryCharacteristic extends AbsLongDef {
     @JoinColumn(name = "item_id")
     private Item item;
 
+    @Column(nullable = false)
+    private boolean title;
+
     @ManyToOne
     @JoinColumn(name = "category_characteristic_id")
     private CategoryCharacteristic categoryCharacteristic;
