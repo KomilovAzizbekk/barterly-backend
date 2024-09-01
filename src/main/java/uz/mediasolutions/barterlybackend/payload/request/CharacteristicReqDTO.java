@@ -12,7 +12,7 @@ import java.util.Map;
 @Builder
 public class CharacteristicReqDTO {
 
-    @NotNull
+    @NotNull(message = "choose category")
     private Long categoryId;
 
     @NotNull
@@ -24,7 +24,7 @@ public class CharacteristicReqDTO {
     @NotNull
     private boolean title;
 
-    @NotNull
+    @NotNull(message = "enter translations")
     private Map<String, String> translations;
 
 }

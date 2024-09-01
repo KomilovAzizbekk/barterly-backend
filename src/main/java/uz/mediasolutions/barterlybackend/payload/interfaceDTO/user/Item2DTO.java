@@ -15,6 +15,6 @@ public interface Item2DTO {
 
     String getDescription();
 
-    Object getCharacteristics();
+    CharacteristicDTO getCharacteristics();
 
 }

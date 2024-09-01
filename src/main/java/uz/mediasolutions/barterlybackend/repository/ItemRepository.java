@@ -15,7 +15,7 @@ import java.util.UUID;
 public interface ItemRepository extends JpaRepository<Item, UUID> {
 
     @Query(value = "SELECT i.id,\n" +
-            "       i.title ->> :lang    as title,\n" +
+            "       i.title ->> :lang           as title,\n" +
             "       u.username,\n" +
             "       c.translations ->> :lang    as category,\n" +
             "       array_agg(ii.url)           as imageUrls,\n" +
@@ -33,13 +33,15 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
             "                    WHERE f1.user_id = :userId) f1 ON i.id = f1.item_id\n" +
             "WHERE c.translations ->> :lang IS NOT NULL\n" +
             "  AND i.title ->> :lang IS NOT NULL\n" +
+            "  AND i.deleted = false\n" +
+            "  AND i.active = true\n" +
             "GROUP BY i.id, u.username, c.translations, f1.liked", nativeQuery = true)
     Page<ItemDTO> findAllForHomeForAuthenticatedUser(@Param("lang") String lang,
                                                      @Param("userId") UUID userId,
                                                      Pageable pageable);
 
     @Query(value = "SELECT i.id,\n" +
-            "       i.title ->> :lang    as title,\n" +
+            "       i.title ->> :lang           as title,\n" +
             "       u.username,\n" +
             "       c.translations ->> :lang    as category,\n" +
             "       array_agg(ii.url)           as imageUrls,\n" +
@@ -57,6 +59,8 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
             "                    WHERE f1.item_id IN :itemIds) f1 ON i.id = f1.item_id\n" +
             "WHERE c.translations ->> :lang IS NOT NULL\n" +
             "  AND i.title ->> :lang IS NOT NULL\n" +
+            "  AND i.deleted = false\n" +
+            "  AND i.active = true\n" +
             "GROUP BY i.id, u.username, c.translations, f1.liked", nativeQuery = true)
     Page<ItemDTO> findAllForHomeForNotAuthenticatedUser(@Param("lang") String lang,
                                                         @Param("itemIds") List<UUID> itemIds,
@@ -90,7 +94,11 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
             "         LEFT JOIN users u ON u.id = i.user_id\n" +
             "WHERE i.id = :itemId\n" +
             "  AND i.title ->> :lang IS NOT NULL\n" +
+            "  AND i.active = :isActive\n" +
+            "  AND i.deleted = false\n" +
             "GROUP BY i.id, u.id", nativeQuery = true)
-    Item2DTO findByIdCustom(@Param("lang") String lang, @Param("itemId") UUID id);
+    Item2DTO findByIdCustom(@Param("lang") String lang,
+                            @Param("itemId") UUID id,
+                            @Param("isActive") boolean isActive);
 
 }

@@ -1,5 +1,6 @@
 package uz.mediasolutions.barterlybackend.payload.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Map;
@@ -11,12 +12,15 @@ import java.util.Map;
 @Builder
 public class CategoryCharacteristicReqDTO {
 
+    @NotNull(message = "choose category")
     private Long categoryId;
 
+    @NotNull(message = "choose whether appears in title")
     private boolean title;
 
     private Long parentId;
 
+    @NotNull(message = "enter translations")
     private Map<String, String> translations;
 
 }

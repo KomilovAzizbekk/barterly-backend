@@ -47,12 +47,12 @@ public interface UserController {
 
     @PostMapping("/add-admin")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    ResponseEntity<?> addAdmin(@Valid @RequestBody AdminReqDTO dto);
+    ResponseEntity<?> addAdmin(@RequestBody @Valid AdminReqDTO dto);
 
     @PutMapping("edit-admin/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     ResponseEntity<?> editAdmin(@PathVariable UUID id,
-                                @Valid @RequestBody AdminReqDTO dto);
+                                @RequestBody @Valid AdminReqDTO dto);
 
     @DeleteMapping("/delete-admin/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")

@@ -5,9 +5,11 @@ import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.type.SqlTypes;
+import uz.mediasolutions.barterlybackend.entity.template.AbsAuditDeleted;
 import uz.mediasolutions.barterlybackend.entity.template.AbsDateDeleted;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -24,9 +26,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@SQLDelete(sql = "UPDATE items SET deleted=true WHERE id=?")
+@SQLDelete(sql = "UPDATE items SET deleted = true WHERE id=?")
 @Builder
-public class Item extends AbsDateDeleted {
+public class Item extends AbsAuditDeleted {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,6 +44,17 @@ public class Item extends AbsDateDeleted {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Column(nullable = false)
+    private boolean active;
+
+    @Column(nullable = false)
+    private boolean premium;
+
+    @Column(nullable = false)
+    private boolean temporary;
+
+    private Timestamp temporaryToDate;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")

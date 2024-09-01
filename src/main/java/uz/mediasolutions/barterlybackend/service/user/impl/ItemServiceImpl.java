@@ -1,20 +1,24 @@
 package uz.mediasolutions.barterlybackend.service.user.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.*;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.Item2DTO;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryCharacteristicReqDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.ItemCharacteristicReqDTO;
+import uz.mediasolutions.barterlybackend.payload.request.ItemEditReqDTO;
 import uz.mediasolutions.barterlybackend.payload.request.ItemReqDTO;
 import uz.mediasolutions.barterlybackend.repository.*;
 import uz.mediasolutions.barterlybackend.service.user.abs.ItemService;
 import uz.mediasolutions.barterlybackend.utills.CommonUtils;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -31,6 +35,7 @@ public class ItemServiceImpl implements ItemService {
     private final CategoryCharacteristicRepository categoryCharacteristicRepository;
     private final ItemCategoryCharacteristicRepository itemCategoryCharacteristicRepository;
 
+    private final ModelMapper modelMapper;
 
     @Override
     public ResponseEntity<?> add(ItemReqDTO dto) {
@@ -53,6 +58,10 @@ public class ItemServiceImpl implements ItemService {
                 .description(dto.getDescription())
                 .user(user)
                 .category(category)
+                .active(dto.getIsActive())
+                .premium(dto.getIsPremium())
+                .temporary(dto.getIsTemporary())
+                .temporaryToDate(new Timestamp(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 1 day
                 .build();
 
         Item savedItem = itemRepository.saveAndFlush(item);
@@ -71,9 +80,9 @@ public class ItemServiceImpl implements ItemService {
             //If categoryCharacteristic's value should be in title -> We are generating title for it.
             if (categoryCharacteristic.isTitle()) {
                 Map<String, String> translations = categoryCharacteristicValue.getTranslations();
-                uz.append(translations.get("uz")).append(" ");
-                ru.append(translations.get("ru")).append(" ");
-                en.append(translations.get("en")).append(" ");
+                uz.append(translations.getOrDefault("uz", "")).append(" ");
+                ru.append(translations.getOrDefault("ru", "")).append(" ");
+                en.append(translations.getOrDefault("en", "")).append(" ");
             }
 
             if (i == categoryCharacteristics.size() - 1) {
@@ -104,9 +113,9 @@ public class ItemServiceImpl implements ItemService {
                         () -> RestException.restThrow("Characteristic value not found", HttpStatus.NOT_FOUND)
                 );
                 Map<String, String> translations = characteristicValue.getTranslations();
-                uz.append(", ").append(translations.get("uz"));
-                ru.append(", ").append(translations.get("ru"));
-                en.append(", ").append(translations.get("en"));
+                uz.append(", ").append(translations.getOrDefault("uz", ""));
+                ru.append(", ").append(translations.getOrDefault("ru", ""));
+                en.append(", ").append(translations.getOrDefault("en", ""));
             }
 
             CharacteristicValue characteristicValue = characteristic.getCharacteristicValueId() != null ? characteristicValueRepository.findById(characteristic.getCharacteristicValueId()).orElse(null) : null;
@@ -141,9 +150,61 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ResponseEntity<?> getById(String lang, UUID itemId) {
-        Item2DTO byIdCustom = itemRepository.findByIdCustom(lang, itemId);
+    public ResponseEntity<?> getById(String lang, UUID itemId, boolean active) {
+        Item2DTO byIdCustom = itemRepository.findByIdCustom(lang, itemId, active);
         System.out.println(byIdCustom.toString());
         return ResponseEntity.ok(byIdCustom);
+    }
+
+    @Override
+    public ResponseEntity<?> edit(UUID itemId, ItemEditReqDTO dto) {
+        Item item = itemRepository.findById(itemId).orElseThrow(
+                () -> RestException.restThrow("Item not found", HttpStatus.NOT_FOUND)
+        );
+        User user = (User) CommonUtils.getUserFromSecurityContext();
+        assert user != null;
+        if (!item.getUser().getId().equals(user.getId())) {
+            throw RestException.restThrow("You do not have permission to edit this item", HttpStatus.FORBIDDEN);
+        }
+        if (dto.getCharacteristics() != null) {
+            List<ItemCharacteristicReqDTO> characteristics = dto.getCharacteristics();
+            for (ItemCharacteristicReqDTO characteristic : characteristics) {
+                Optional<ItemCharacteristic> optionalItemCharacteristic = itemCharacteristicRepository.findByItemIdAndCharacteristicId(itemId, characteristic.getCharacteristicId());
+
+                Characteristic characteristic1 = characteristicRepository.findById(characteristic.getCharacteristicId()).orElseThrow(
+                        () -> RestException.restThrow("Characteristic not found", HttpStatus.NOT_FOUND)
+                );
+
+                if (optionalItemCharacteristic.isPresent()) {
+                    ItemCharacteristic itemCharacteristic = optionalItemCharacteristic.get();
+                    itemCharacteristic.setCharacteristic(characteristic1);
+                    itemCharacteristic.setItem(item);
+                    itemCharacteristic.setTextValue(characteristic.getValue());
+                    itemCharacteristic.setValue(characteristicValueRepository.findById(characteristic.getCharacteristicValueId()).orElse(null));
+                    itemCharacteristic.setTitle(characteristic1.isTitle());
+                }
+            }
+        }
+
+        if (dto.getDescription() != null) {
+
+        }
+
+        if (dto.getImageUrls() != null) {
+
+        }
+
+        if (dto.getIsActive() != null) {
+
+        }
+
+        if (dto.getIsTemporary() != null) {
+
+        }
+
+        if (dto.getIsPremium() != null) {
+
+        }
+        return null;
     }
 }

@@ -11,30 +11,18 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class ItemReqDTO {
+public class ItemEditReqDTO {
 
-    @NotNull
-    private Long categoryId;
-
-    @NotNull
-    private List<CategoryCharacteristicReqDTO2> categoryCharacteristics;
-
-    @NotNull
     private List<ItemCharacteristicReqDTO> characteristics;
 
-    @NotNull
     private List<String> imageUrls;
 
-    @NotBlank
     private String description;
 
-    @NotNull
     private Boolean isActive;
 
-    @NotNull
     private Boolean isPremium;
 
-    @NotNull
     private Boolean isTemporary;
 
 }
