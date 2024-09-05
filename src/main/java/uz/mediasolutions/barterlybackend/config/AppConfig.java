@@ -28,7 +28,7 @@ import uz.mediasolutions.barterlybackend.security.UserAuthenticationProvider;
 public class AppConfig {
 
     private final UserRepository userRepository;
-    private final CustomUserDetailsService userDetailsService;
+//    private final CustomUserDetailsService userDetailsService;
 
     @Bean
     public ModelMapper modelMapper() {
