@@ -164,7 +164,7 @@ public class AuthServiceImpl implements AuthService {
         if (refreshTokenRepository.existsByUserId(user.getId())) {
             token = refreshTokenRepository.findByUserId(user.getId());
             token.setExpireDate(jwtService.extractExpiration(refreshToken));
-            token.setToken(refreshToken);
+            token.setToken(passwordEncoder.encode(refreshToken));
         } else {
             token = RefreshToken.builder()
                     .token(passwordEncoder.encode(refreshToken))

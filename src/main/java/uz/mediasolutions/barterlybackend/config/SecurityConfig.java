@@ -25,7 +25,8 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final AuthenticationProvider authenticationProvider;
+    private final AuthenticationProvider adminAuthenticationProvider;
+    private final AuthenticationProvider userAuthenticationProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -40,7 +41,8 @@ public class SecurityConfig {
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
+                .authenticationProvider(adminAuthenticationProvider)
+                .authenticationProvider(userAuthenticationProvider)
                 .formLogin(withDefaults());
 //                .oauth2Login(withDefaults());
 
@@ -52,6 +54,7 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
+
 
 //    @Bean
 //    public CorsFilter corsFilter() {
