@@ -14,6 +14,7 @@ import java.util.Map;
 public class RegionReqDTO {
 
     @NotBlank
+    @NotNull
     private String imageUrl;
 
     @NotNull

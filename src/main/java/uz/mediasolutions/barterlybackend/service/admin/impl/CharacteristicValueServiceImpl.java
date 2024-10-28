@@ -19,6 +19,8 @@ import uz.mediasolutions.barterlybackend.repository.CharacteristicValueRepositor
 import uz.mediasolutions.barterlybackend.service.admin.abs.CharacteristicValueService;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CharacteristicValueServiceImpl implements CharacteristicValueService {
@@ -34,6 +36,7 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
         return ResponseEntity.ok(dtos);
     }
 
+
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
         CharacteristicValueDTO2 characteristicValue = characteristicValueRepository.findByIdCustom(lang, id).orElseThrow(
@@ -42,6 +45,7 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
         return ResponseEntity.ok(characteristicValue);
     }
 
+
     @Override
     public ResponseEntity<?> add(CharacteristicValueReqDTO dto) {
         CharacteristicValue entity = characteristicValueMapper.toEntity(dto);
@@ -49,29 +53,33 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
         return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
 
+
     @Override
     public ResponseEntity<?> edit(Long id, CharacteristicValueReqDTO dto) {
         CharacteristicValue characteristicValue = characteristicValueRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Characteristic value not found", HttpStatus.NOT_FOUND)
         );
-        Characteristic characteristic = characteristicRepository.findById(dto.getCharacteristicId()).orElseThrow(
-                () -> RestException.restThrow("Characteristic not found", HttpStatus.NOT_FOUND)
-        );
 
-        characteristicValue.setTranslations(dto.getTranslations());
-        characteristicValue.setCharacteristic(characteristic);
+        Optional.ofNullable(dto.getTranslations()).ifPresent(characteristicValue::setTranslations);
+        Optional.ofNullable(dto.getCharacteristicId()).ifPresent(characteristicId -> characteristicValue.setCharacteristic(
+                characteristicRepository.findById(characteristicId).orElseThrow(
+                        () -> RestException.restThrow("Characteristic not found", HttpStatus.NOT_FOUND)
+                )
+        ));
         characteristicValueRepository.save(characteristicValue);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
 
+
     @Override
     public ResponseEntity<?> delete(Long id) {
-        characteristicValueRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Characteristic value not found", HttpStatus.NOT_FOUND)
-        );
+        if (!characteristicValueRepository.existsById(id)) {
+            throw RestException.restThrow("Characteristic value not found", HttpStatus.NOT_FOUND);
+        }
+
         try {
             characteristicValueRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Rest.DELETED);
         } catch (Exception e) {
             e.printStackTrace();
             throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);

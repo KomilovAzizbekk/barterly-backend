@@ -141,7 +141,6 @@ public class AuthServiceImpl implements AuthService {
     public ResponseEntity<?> logout() {
         User user = (User) CommonUtils.getUserFromSecurityContext();
 
-
         if (user == null) {
             throw RestException.restThrow("User not found", HttpStatus.NOT_FOUND);
         }

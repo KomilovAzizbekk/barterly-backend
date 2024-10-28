@@ -48,4 +48,8 @@ public class Currency extends AbsAudit {
     @ToString.Exclude
     private List<ExchangeRate> exchangeRatesTo;
 
+    @OneToMany(mappedBy = "currency", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Region> regions;
+
 }

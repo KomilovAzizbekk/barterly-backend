@@ -42,7 +42,6 @@ public class DataLoader implements CommandLineRunner {
             addUserType();
             addSwapStatuses();
         }
-
     }
 
     private void addSwapStatuses() {

@@ -22,9 +22,9 @@ import uz.mediasolutions.barterlybackend.payload.response.UserResDTO;
 import uz.mediasolutions.barterlybackend.repository.RoleRepository;
 import uz.mediasolutions.barterlybackend.repository.UserRepository;
 import uz.mediasolutions.barterlybackend.service.admin.abs.UserService;
-import uz.mediasolutions.barterlybackend.utills.CommonUtils;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -36,8 +36,10 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
+
     @Override
     public ResponseEntity<UserDTO> getMe() {
+        // Security Contextdan Authenticationni olamiz
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw RestException.restThrow("User is not authenticated", HttpStatus.UNAUTHORIZED);
@@ -51,6 +53,7 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(userMapper.toDto(user));
     }
 
+
     @Override
     public ResponseEntity<Page<UserResDTO>> getAllUsers(String search, int page, int size) {
         Role role = roleRepository.findByName(RoleEnum.ROLE_USER);
@@ -58,6 +61,7 @@ public class UserServiceImpl implements UserService {
         Page<UserResDTO> users = userRepository.findAllUsersCustom(role.getId(), search, pageable);
         return ResponseEntity.ok(users);
     }
+
 
     @Override
     public ResponseEntity<Page<AdminResDTO>> getAllAdmins(String search, int page, int size) {
@@ -67,17 +71,21 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.ok(admins);
     }
 
+
     @Override
     public ResponseEntity<?> addAdmin(AdminReqDTO dto) {
 
+        // dto'da kelayotgan role bazada mavjudligini tekshiramiz
         Role role = roleRepository.findById(dto.getRoleId()).orElseThrow(
                 () -> new RestException("Role does not exist", HttpStatus.NOT_FOUND)
         );
 
+        // Role USER bolsa 400 qaytaramiz
         if (role.getName().equals(RoleEnum.ROLE_USER)) {
             throw RestException.restThrow("Role type error (You chose user role)", HttpStatus.BAD_REQUEST);
         }
 
+        // dto'dagi username bazada mavjud bo'lsa 409 qaytaramiz
         if (userRepository.existsByUsername(dto.getUsername())) {
             throw RestException.restThrow("User already exists", HttpStatus.CONFLICT);
         }
@@ -95,34 +103,44 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
 
+
     @Override
     public ResponseEntity<?> editAdmin(UUID id, AdminReqDTO dto) {
-        Role role = roleRepository.findById(dto.getRoleId()).orElseThrow(
-                () -> RestException.restThrow("Role not found", HttpStatus.NOT_FOUND)
-        );
         User admin = userRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Admin not found", HttpStatus.NOT_FOUND)
         );
 
-        if (admin.getRole().getName().equals(RoleEnum.ROLE_USER) || role.getName().equals(RoleEnum.ROLE_USER)) {
-            throw RestException.restThrow("Role type error (You chose user role)", HttpStatus.BAD_REQUEST);
+        // Agar tahrirlanayotgan adminning roli USER yoki SUPER_ADMIN bo'lsa 400
+        if (admin.getRole().getName().equals(RoleEnum.ROLE_USER) || admin.getRole().getName().equals(RoleEnum.ROLE_SUPER_ADMIN)) {
+            throw RestException.restThrow("Role type error", HttpStatus.BAD_REQUEST);
         }
 
-        admin.setRole(role);
-        admin.setUsername(dto.getUsername());
-        admin.setPassword(passwordEncoder.encode(dto.getPassword()));
+        // Adminga birma-bir null bo'lmagan fieldlarni set qilib bazaga saqlaymiz
+        Optional.ofNullable(dto.getUsername()).ifPresent(admin::setUsername);
+        Optional.ofNullable(dto.getPassword()).ifPresent(password -> admin.setPassword(passwordEncoder.encode(password)));
+        Optional.ofNullable(dto.getRoleId()).ifPresent(roleId -> admin.setRole(
+                roleRepository.findById(roleId).orElseThrow(
+                        () -> RestException.restThrow("Role not found", HttpStatus.NOT_FOUND)
+                )
+        ));
         userRepository.save(admin);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
 
+
     @Override
     public ResponseEntity<?> deleteAdmin(UUID id) {
-        userRepository.findById(id).orElseThrow(
+        // Ushbu ID ga tegishli user(admin) bor ekanligini tekshiramz, aks holda 404 qaytaramiz.
+        User admin = userRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Admin not found", HttpStatus.NOT_FOUND)
         );
+        // Agar SUPER_ADMIN ni delete qilishga harakat qilsa 403
+        if (admin.getRole().getName().equals(RoleEnum.ROLE_SUPER_ADMIN)) {
+            throw RestException.restThrow("Cannot delete SUPER_ADMIN", HttpStatus.FORBIDDEN);
+        }
         try {
             userRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Rest.DELETED);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Rest.ERROR);
         }

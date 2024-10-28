@@ -29,18 +29,22 @@ public interface CurrencyController {
                                    @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
                                    @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
 
+
     @GetMapping("/get/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     ResponseEntity<CurrencyResDTO> getById(@PathVariable Long id);
+
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     ResponseEntity<?> add(@RequestBody @Valid CurrencyReqDTO dto);
 
-    @PutMapping("/edit/{id}")
+
+    @PatchMapping("/edit/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     ResponseEntity<?> edit(@PathVariable Long id,
-                           @RequestBody @Valid CurrencyReqDTO dto);
+                           @RequestBody CurrencyReqDTO dto);
+
 
     @DeleteMapping("delete/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")

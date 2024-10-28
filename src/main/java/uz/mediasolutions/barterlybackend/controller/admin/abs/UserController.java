@@ -30,9 +30,10 @@ public interface UserController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = UserResDTO.class))})
     })
-    ResponseEntity<Page<UserResDTO>> getAllUsers(@RequestParam(required = false, defaultValue = "") String search,
+    ResponseEntity<Page<UserResDTO>> getAllUsers(@RequestParam(required = false) String search,
                                                  @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
                                                  @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
+
 
     @GetMapping("/get-all-admins")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
@@ -41,18 +42,21 @@ public interface UserController {
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = AdminResDTO.class))})
     })
-    ResponseEntity<Page<AdminResDTO>> getAllAdmins(@RequestParam(required = false, defaultValue = "") String search,
+    ResponseEntity<Page<AdminResDTO>> getAllAdmins(@RequestParam(required = false) String search,
                                                    @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
                                                    @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
+
 
     @PostMapping("/add-admin")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     ResponseEntity<?> addAdmin(@RequestBody @Valid AdminReqDTO dto);
 
-    @PutMapping("edit-admin/{id}")
+
+    @PatchMapping("edit-admin/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     ResponseEntity<?> editAdmin(@PathVariable UUID id,
-                                @RequestBody @Valid AdminReqDTO dto);
+                                @RequestBody AdminReqDTO dto);
+
 
     @DeleteMapping("/delete-admin/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")

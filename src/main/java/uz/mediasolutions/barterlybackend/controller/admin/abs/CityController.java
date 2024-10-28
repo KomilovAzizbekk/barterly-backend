@@ -25,10 +25,11 @@ public interface CityController {
                             schema = @Schema(implementation = CityDTO.class))})
     })
     ResponseEntity<Page<?>> getAll(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
-                                 @RequestParam(required = false, defaultValue = "") String search,
-                                 @RequestParam(required = false, defaultValue = "") Long regionId,
-                                 @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
-                                 @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
+                                   @RequestParam(required = false) String search,
+                                   @RequestParam(required = false) Long regionId,
+                                   @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
+                                   @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
+
 
     @GetMapping("/get/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
@@ -40,13 +41,17 @@ public interface CityController {
     ResponseEntity<?> get(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
                           @PathVariable Long id);
 
+
     @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     ResponseEntity<?> add(@RequestBody @Valid CityReqDTO dto);
 
-    @PutMapping("/edit/{id}")
+
+    @PatchMapping("/edit/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    ResponseEntity<?> edit(@RequestBody @Valid CityReqDTO dto, @PathVariable Long id);
+    ResponseEntity<?> edit(@PathVariable Long id,
+                           @RequestBody CityReqDTO dto);
+
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")

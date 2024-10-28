@@ -14,9 +14,11 @@ import java.util.Map;
 public class CurrencyReqDTO {
 
     @NotBlank
+    @NotNull
     private String currencyCode;
 
     @NotBlank
+    @NotNull
     private String imageUrl;
 
     @NotNull

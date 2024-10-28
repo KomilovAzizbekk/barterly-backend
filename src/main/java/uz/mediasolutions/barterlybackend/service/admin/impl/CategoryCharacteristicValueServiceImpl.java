@@ -34,6 +34,7 @@ public class CategoryCharacteristicValueServiceImpl implements CategoryCharacter
         return ResponseEntity.ok(valueDTOS);
     }
 
+
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
         CategoryCharacteristicValueDTO2 categoryCharacteristicValue = categoryCharacteristicValueRepository.findByIdCustom(lang, id).orElseThrow(
@@ -42,12 +43,14 @@ public class CategoryCharacteristicValueServiceImpl implements CategoryCharacter
         return ResponseEntity.ok(categoryCharacteristicValue);
     }
 
+
     @Override
     public ResponseEntity<?> add(CategoryCharacteristicValueReqDTO dto) {
         CategoryCharacteristicValue entity = categoryCharacteristicValueMapper.toEntity(dto);
         categoryCharacteristicValueRepository.save(entity);
         return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
+
 
     @Override
     public ResponseEntity<?> edit(Long id, CategoryCharacteristicValueReqDTO dto) {
@@ -65,14 +68,16 @@ public class CategoryCharacteristicValueServiceImpl implements CategoryCharacter
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
 
+
     @Override
     public ResponseEntity<?> delete(Long id) {
-        categoryCharacteristicValueRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Category characteristic value not found", HttpStatus.NOT_FOUND)
-        );
+        if (!categoryCharacteristicValueRepository.existsById(id)) {
+            throw RestException.restThrow("Category characteristic value not found", HttpStatus.NOT_FOUND);
+        }
+
         try {
             categoryCharacteristicValueRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Rest.DELETED);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Rest.ERROR);

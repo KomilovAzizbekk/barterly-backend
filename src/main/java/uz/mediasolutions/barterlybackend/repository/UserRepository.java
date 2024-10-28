@@ -30,7 +30,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Query(value = "SELECT id,\n" +
             "       phone_number,\n" +
             "       username,\n" +
-            "       role_id\n" +
+            "       name\n" +
             "FROM users\n" +
             "WHERE ((:search IS NULL OR name ILIKE '%' || :search || '%')\n" +
             "   OR (:search IS NULL OR username ILIKE '%' || :search || '%'))\n" +

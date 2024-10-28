@@ -25,10 +25,11 @@ public interface CategoryCharacteristicValueController {
                             schema = @Schema(implementation = CategoryCharacteristicValueDTO.class))})
     })
     ResponseEntity<Page<?>> getAll(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
-                                   @RequestParam(required = false, defaultValue = "") Long categoryCharacteristicId,
-                                   @RequestParam(required = false, defaultValue = "") String search,
+                                   @RequestParam(required = false) Long categoryCharacteristicId,
+                                   @RequestParam(required = false) String search,
                                    @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
                                    @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
+
 
     @GetMapping("/get/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
@@ -40,14 +41,17 @@ public interface CategoryCharacteristicValueController {
     ResponseEntity<?> getById(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
                               @PathVariable Long id);
 
+
     @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     ResponseEntity<?> add(@RequestBody @Valid CategoryCharacteristicValueReqDTO dto);
 
-    @PutMapping("/edit/{id}")
+
+    @PatchMapping("/edit/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     ResponseEntity<?> edit(@PathVariable Long id,
-                           @RequestBody @Valid CategoryCharacteristicValueReqDTO dto);
+                           @RequestBody CategoryCharacteristicValueReqDTO dto);
+
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")

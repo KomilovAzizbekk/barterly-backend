@@ -19,6 +19,8 @@ import uz.mediasolutions.barterlybackend.repository.RegionRepository;
 import uz.mediasolutions.barterlybackend.service.admin.abs.RegionService;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class RegionServiceImpl implements RegionService {
@@ -27,12 +29,14 @@ public class RegionServiceImpl implements RegionService {
     private final RegionMapper regionMapper;
     private final CurrencyRepository currencyRepository;
 
+
     @Override
     public ResponseEntity<Page<?>> getAll(String lang, String search, Long currencyId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<RegionDTO> regionDTOS = regionRepository.findAllCustom(lang, search, currencyId, pageable);
         return ResponseEntity.ok(regionDTOS);
     }
+
 
     @Override
     public ResponseEntity<?> getById(Long id) {
@@ -42,6 +46,7 @@ public class RegionServiceImpl implements RegionService {
         return ResponseEntity.ok(region);
     }
 
+
     @Override
     public ResponseEntity<?> add(RegionReqDTO dto) {
         Region region = regionMapper.toEntity(dto);
@@ -49,30 +54,36 @@ public class RegionServiceImpl implements RegionService {
         return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
 
+
     @Override
     public ResponseEntity<?> edit(Long id, RegionReqDTO dto) {
         Region region = regionRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Region not found", HttpStatus.NOT_FOUND)
         );
 
-        Currency currency = currencyRepository.findById(dto.getCurrencyId()).orElseThrow(
-                () -> RestException.restThrow("Currency not found", HttpStatus.NOT_FOUND)
-        );
-        region.setTranslations(dto.getTranslations());
-        region.setCurrency(currency);
-        region.setImageUrl(dto.getImageUrl());
+        // Agar dto ichidagi fieldlar null bolmasa bazaga saqlanadi, aks holda yo'q
+        Optional.ofNullable(dto.getImageUrl()).ifPresent(region::setImageUrl);
+        Optional.ofNullable(dto.getTranslations()).ifPresent(region::setTranslations);
+        Optional.ofNullable(dto.getCurrencyId()).ifPresent(currencyId -> region.setCurrency(
+                currencyRepository.findById(currencyId).orElseThrow(
+                        () -> RestException.restThrow("Currency not found", HttpStatus.NOT_FOUND)
+                )
+        ));
         regionRepository.save(region);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
 
+
     @Override
     public ResponseEntity<?> delete(Long id) {
-        regionRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Region not found", HttpStatus.NOT_FOUND)
-        );
+        // Agar ushbu id'lik region topilmasa 404 qaytaramiz
+        if (!regionRepository.existsById(id)) {
+            throw new RestException("Region not found", HttpStatus.NOT_FOUND);
+        }
+
         try {
             regionRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Rest.DELETED);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Rest.ERROR);
         }

@@ -16,9 +16,11 @@ import java.util.UUID;
 public class AdminReqDTO {
 
     @NotBlank
+    @NotNull
     private String username;
 
     @NotBlank
+    @NotNull
     private String password;
 
     @NotNull

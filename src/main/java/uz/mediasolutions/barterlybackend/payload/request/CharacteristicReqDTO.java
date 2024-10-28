@@ -16,13 +16,13 @@ public class CharacteristicReqDTO {
     private Long categoryId;
 
     @NotNull
-    private boolean required;
+    private Boolean required;
 
     @NotNull
-    private boolean filter;
+    private Boolean filter;
 
     @NotNull
-    private boolean title;
+    private Boolean title;
 
     @NotNull(message = "enter translations")
     private Map<String, String> translations;

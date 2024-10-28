@@ -25,10 +25,11 @@ public interface RegionController {
                             schema = @Schema(implementation = RegionDTO.class))})
     })
     ResponseEntity<Page<?>> getAll(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
-                                   @RequestParam(required = false, defaultValue = "") String search,
-                                   @RequestParam(required = false, defaultValue = "") Long currencyId,
+                                   @RequestParam(required = false) String search,
+                                   @RequestParam(required = false) Long currencyId,
                                    @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
                                    @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
+
 
     @GetMapping("/get/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
@@ -39,14 +40,17 @@ public interface RegionController {
     })
     ResponseEntity<?> getById(@PathVariable Long id);
 
+
     @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     ResponseEntity<?> add(@RequestBody @Valid RegionReqDTO dto);
 
-    @PutMapping("/edit/{id}")
+
+    @PatchMapping("/edit/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     ResponseEntity<?> edit(@PathVariable Long id,
-                           @RequestBody @Valid RegionReqDTO dto);
+                           @RequestBody RegionReqDTO dto);
+
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")

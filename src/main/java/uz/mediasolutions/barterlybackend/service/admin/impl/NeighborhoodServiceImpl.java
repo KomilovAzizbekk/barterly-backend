@@ -21,6 +21,8 @@ import uz.mediasolutions.barterlybackend.repository.RegionRepository;
 import uz.mediasolutions.barterlybackend.service.admin.abs.NeighborhoodService;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class NeighborhoodServiceImpl implements NeighborhoodService {
@@ -30,12 +32,14 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     private final RegionRepository regionRepository;
     private final CityRepository cityRepository;
 
+
     @Override
     public ResponseEntity<Page<?>> getAll(String lang, String search, Long regionId, Long cityId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<NeighborhoodDTO> neighborhoodDTOS = neighborhoodRepository.findAllCustom(lang, search, regionId, cityId, pageable);
         return ResponseEntity.ok(neighborhoodDTOS);
     }
+
 
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
@@ -45,6 +49,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
         return ResponseEntity.ok(neighborhoodDTO2);
     }
 
+
     @Override
     public ResponseEntity<?> add(NeighborhoodReqDTO dto) {
         Neighborhood entity = neighborhoodMapper.toEntity(dto);
@@ -52,35 +57,40 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
         return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
 
+
     @Override
     public ResponseEntity<?> edit(Long id, NeighborhoodReqDTO dto) {
         Neighborhood neighborhood = neighborhoodRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Neighborhood not found", HttpStatus.NOT_FOUND)
         );
 
-        Region region = regionRepository.findById(dto.getRegionId()).orElseThrow(
-                () -> RestException.restThrow("Region not found", HttpStatus.NOT_FOUND)
-        );
-
-        City city = cityRepository.findById(dto.getCityId()).orElseThrow(
-                () -> RestException.restThrow("City not found", HttpStatus.NOT_FOUND)
-        );
-
-        neighborhood.setTranslations(dto.getTranslations());
-        neighborhood.setRegion(region);
-        neighborhood.setCity(city);
+        // Null bo'lmagan barcha fieldlarni set qilamz va bazaga qo'shamiz
+        Optional.ofNullable(dto.getTranslations()).ifPresent(neighborhood::setTranslations);
+        Optional.ofNullable(dto.getRegionId()).ifPresent(regionId -> neighborhood.setRegion(
+                regionRepository.findById(regionId).orElseThrow(
+                        () -> RestException.restThrow("Region not found", HttpStatus.NOT_FOUND)
+                )
+        ));
+        Optional.ofNullable(dto.getCityId()).ifPresent(cityId -> neighborhood.setCity(
+                cityRepository.findById(cityId).orElseThrow(
+                        () -> RestException.restThrow("City not found", HttpStatus.NOT_FOUND)
+                )
+        ));
         neighborhoodRepository.save(neighborhood);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
 
+
     @Override
     public ResponseEntity<?> delete(Long id) {
-        neighborhoodRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Neighborhood not found", HttpStatus.NOT_FOUND)
-        );
+        // Agar bazada ushbu id'lik Neighborhood topilmasa 404 qaytaramiz
+        if (!neighborhoodRepository.existsById(id)) {
+            throw RestException.restThrow("Neighborhood not found", HttpStatus.NOT_FOUND);
+        }
+
         try {
             neighborhoodRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Rest.DELETED);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Rest.ERROR);

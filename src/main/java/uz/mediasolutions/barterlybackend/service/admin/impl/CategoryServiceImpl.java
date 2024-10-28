@@ -20,6 +20,9 @@ import uz.mediasolutions.barterlybackend.service.common.abs.FileService;
 import uz.mediasolutions.barterlybackend.utills.CommonUtils;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
+import java.util.Objects;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
@@ -32,7 +35,6 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseEntity<Page<?>> getAll(String lang, String search, Long parentId, int page, int size) {
         User user = (User) CommonUtils.getUserFromSecurityContext();
         assert user != null;
-        System.out.println(user.getUsername() + " : " + user.getAuthorities() + " : " + user.getRole().getName());
         Pageable pageable = PageRequest.of(page, size);
         Page<CategoryDTO> categoryPage = categoryRepository.findAllCustom(lang, search, parentId, pageable);
         return ResponseEntity.ok(categoryPage);
@@ -47,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
         return ResponseEntity.ok(categoryDTO2);
     }
 
+
     @Override
     public ResponseEntity<?> add(CategoryReqDTO dto) {
         Category entity = categoryMapper.toEntity(dto);
@@ -60,21 +63,22 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Category not found", HttpStatus.NOT_FOUND)
         );
-        if (dto.getParentCategoryId() != null) {
-            category.setParentCategory(categoryRepository.findById(dto.getParentCategoryId()).orElse(null));
-        }
 
-        if (!category.getImageUrl().equals(dto.getImageUrl())) {
+        if (!Objects.equals(category.getImageUrl(), dto.getImageUrl()) && dto.getImageUrl() != null) {
             //Deleting previous file
             fileService.deleteFile(category.getImageUrl());
         }
 
-        category.setImageUrl(dto.getImageUrl());
-        category.setTranslations(dto.getTranslations());
+        Optional.ofNullable(dto.getImageUrl()).ifPresent(category::setImageUrl);
+        Optional.ofNullable(dto.getTranslations()).ifPresent(category::setTranslations);
+        Optional.ofNullable(dto.getParentCategoryId()).ifPresent(parentCategoryId -> category.setParentCategory(
+                categoryRepository.findById(parentCategoryId).orElse(null)
+        ));
         categoryRepository.save(category);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
+
 
     @Override
     public ResponseEntity<?> delete(Long id) {
@@ -84,7 +88,7 @@ public class CategoryServiceImpl implements CategoryService {
         fileService.deleteFile(category.getImageUrl());
         try {
             categoryRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Rest.DELETED);
         } catch (Exception e) {
             e.printStackTrace();
             throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -17,6 +17,7 @@ import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 @RequestMapping(Rest.BASE_PATH + "admin/neighborhood")
 public interface NeighborhoodController {
 
+
     @GetMapping("/get-all")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     @ApiResponses(value = {
@@ -25,11 +26,12 @@ public interface NeighborhoodController {
                             schema = @Schema(implementation = NeighborhoodDTO.class))})
     })
     ResponseEntity<Page<?>> getAll(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
-                                   @RequestParam(required = false, defaultValue = "") String search,
-                                   @RequestParam(required = false, defaultValue = "") Long regionId,
-                                   @RequestParam(required = false, defaultValue = "") Long cityId,
+                                   @RequestParam(required = false) String search,
+                                   @RequestParam(required = false) Long regionId,
+                                   @RequestParam(required = false) Long cityId,
                                    @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
                                    @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
+
 
     @GetMapping("/get/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
@@ -41,14 +43,17 @@ public interface NeighborhoodController {
     ResponseEntity<?> getById(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
                               @PathVariable Long id);
 
+
     @PostMapping("/add")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     ResponseEntity<?> add(@RequestBody @Valid NeighborhoodReqDTO dto);
 
-    @PutMapping("/edit/{id}")
+
+    @PatchMapping("/edit/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     ResponseEntity<?> edit(@PathVariable Long id,
-                           @RequestBody @Valid NeighborhoodReqDTO dto);
+                           @RequestBody NeighborhoodReqDTO dto);
+
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")

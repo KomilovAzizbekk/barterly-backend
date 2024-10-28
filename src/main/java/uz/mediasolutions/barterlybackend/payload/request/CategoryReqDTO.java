@@ -19,6 +19,7 @@ public class CategoryReqDTO {
     private Map<String, String> translations;
 
     @NotBlank(message = "enter image url")
+    @NotNull
     private String imageUrl;
 
     private Long parentCategoryId;

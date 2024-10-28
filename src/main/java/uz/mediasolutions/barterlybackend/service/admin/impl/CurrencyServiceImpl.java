@@ -16,9 +16,11 @@ import uz.mediasolutions.barterlybackend.payload.response.CurrencyResDTO;
 import uz.mediasolutions.barterlybackend.repository.CurrencyRepository;
 import uz.mediasolutions.barterlybackend.service.admin.abs.CurrencyService;
 import uz.mediasolutions.barterlybackend.service.common.abs.FileService;
+import uz.mediasolutions.barterlybackend.service.common.impl.FileServiceImpl;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +28,8 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     private final CurrencyRepository currencyRepository;
     private final CurrencyMapper currencyMapper;
-    private final FileService fileService;
+    private final FileServiceImpl fileService;
+
 
     @Override
     public ResponseEntity<Page<?>> getAll(String lang, String search, int page, int size) {
@@ -34,6 +37,7 @@ public class CurrencyServiceImpl implements CurrencyService {
         Page<CurrencyDTO> currencyDTOS = currencyRepository.findAllCustom(lang, search, pageable);
         return ResponseEntity.ok(currencyDTOS);
     }
+
 
     @Override
     public ResponseEntity<CurrencyResDTO> getById(Long id) {
@@ -44,6 +48,7 @@ public class CurrencyServiceImpl implements CurrencyService {
         return ResponseEntity.ok(resDTO);
     }
 
+
     @Override
     public ResponseEntity<?> add(CurrencyReqDTO dto) {
         Currency entity = currencyMapper.toEntity(dto);
@@ -51,22 +56,24 @@ public class CurrencyServiceImpl implements CurrencyService {
         return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
 
+
     @Override
     public ResponseEntity<?> edit(Long id, CurrencyReqDTO dto) {
         Currency currency = currencyRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Currency not found", HttpStatus.NOT_FOUND)
         );
 
-        if (!Objects.equals(currency.getImageUrl(), dto.getImageUrl())) {
+        if (dto.getImageUrl() != null && !Objects.equals(currency.getImageUrl(), dto.getImageUrl())) {
             fileService.deleteFile(currency.getImageUrl());
         }
 
-        currency.setCurrencyCode(dto.getCurrencyCode());
-        currency.setTranslations(dto.getTranslations());
-        currency.setImageUrl(dto.getImageUrl());
+        Optional.ofNullable(dto.getCurrencyCode()).ifPresent(currency::setCurrencyCode);
+        Optional.ofNullable(dto.getTranslations()).ifPresent(currency::setTranslations);
+        Optional.ofNullable(dto.getImageUrl()).ifPresent(currency::setImageUrl);
         currencyRepository.save(currency);
-        return ResponseEntity.ok(Rest.EDITED);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
+
 
     @Override
     public ResponseEntity<?> delete(Long id) {
@@ -76,7 +83,7 @@ public class CurrencyServiceImpl implements CurrencyService {
         fileService.deleteFile(currency.getImageUrl());
         try {
             currencyRepository.deleteById(id);
-            return ResponseEntity.ok(Rest.DELETED);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Rest.DELETED);
         } catch (Exception e) {
             e.printStackTrace();
             throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);

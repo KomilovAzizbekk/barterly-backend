@@ -18,6 +18,8 @@ import uz.mediasolutions.barterlybackend.repository.*;
 import uz.mediasolutions.barterlybackend.service.admin.abs.CharacteristicService;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class CharacteristicServiceImpl implements CharacteristicService {
@@ -33,6 +35,7 @@ public class CharacteristicServiceImpl implements CharacteristicService {
         return ResponseEntity.ok(characteristics);
     }
 
+
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
         CharacteristicDTO2 characteristic = characteristicRepository.findByIdCustom(lang, id).orElseThrow(
@@ -41,6 +44,7 @@ public class CharacteristicServiceImpl implements CharacteristicService {
         return ResponseEntity.ok(characteristic);
     }
 
+
     @Override
     public ResponseEntity<?> add(CharacteristicReqDTO dto) {
         Characteristic entity = characteristicMapper.toEntity(dto);
@@ -48,33 +52,36 @@ public class CharacteristicServiceImpl implements CharacteristicService {
         return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
     }
 
+
     @Override
     public ResponseEntity<?> edit(Long id, CharacteristicReqDTO dto) {
         Characteristic characteristic = characteristicRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Characteristic not found", HttpStatus.NOT_FOUND)
         );
 
-        Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow(
-                () -> RestException.restThrow("Category not found", HttpStatus.NOT_FOUND)
-        );
-
-        characteristic.setTranslations(dto.getTranslations());
-        characteristic.setRequired(dto.isRequired());
-        characteristic.setFilter(dto.isFilter());
-        characteristic.setTitle(dto.isTitle());
-        characteristic.setCategory(category);
+        Optional.ofNullable(dto.getTranslations()).ifPresent(characteristic::setTranslations);
+        Optional.ofNullable(dto.getRequired()).ifPresent(characteristic::setRequired);
+        Optional.ofNullable(dto.getFilter()).ifPresent(characteristic::setFilter);
+        Optional.ofNullable(dto.getTitle()).ifPresent(characteristic::setTitle);
+        Optional.ofNullable(dto.getCategoryId()).ifPresent(categoryId -> characteristic.setCategory(
+                categoryRepository.findById(categoryId).orElseThrow(
+                        () -> RestException.restThrow("Category not found", HttpStatus.NOT_FOUND)
+                )
+        ));
         characteristicRepository.save(characteristic);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
 
+
     @Override
     public ResponseEntity<?> delete(Long id) {
-        characteristicRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Characteristic not found", HttpStatus.NOT_FOUND)
-        );
+        if (!characteristicRepository.existsById(id)) {
+            throw RestException.restThrow("Characteristic not found", HttpStatus.NOT_FOUND);
+        }
+
         try {
             characteristicRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Rest.DELETED);
         } catch (Exception e) {
             e.printStackTrace();
             throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
