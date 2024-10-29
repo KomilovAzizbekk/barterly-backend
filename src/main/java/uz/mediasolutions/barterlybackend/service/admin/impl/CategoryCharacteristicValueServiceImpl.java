@@ -19,6 +19,8 @@ import uz.mediasolutions.barterlybackend.repository.CategoryCharacteristicValueR
 import uz.mediasolutions.barterlybackend.service.admin.abs.CategoryCharacteristicValueService;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryCharacteristicValueServiceImpl implements CategoryCharacteristicValueService {
@@ -54,17 +56,18 @@ public class CategoryCharacteristicValueServiceImpl implements CategoryCharacter
 
     @Override
     public ResponseEntity<?> edit(Long id, CategoryCharacteristicValueReqDTO dto) {
-        CategoryCharacteristicValue entity = categoryCharacteristicValueRepository.findById(id).orElseThrow(
+        CategoryCharacteristicValue characteristicValue = categoryCharacteristicValueRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Category characteristic value not found", HttpStatus.NOT_FOUND)
         );
 
-        CategoryCharacteristic categoryCharacteristic = categoryCharacteristicRepository.findById(dto.getCategoryCharacteristicId()).orElseThrow(
-                () -> RestException.restThrow("Category characteristic not found", HttpStatus.NOT_FOUND)
-        );
-
-        entity.setCharacteristic(categoryCharacteristic);
-        entity.setTranslations(dto.getTranslations());
-        categoryCharacteristicValueRepository.save(entity);
+        // Null bolmagan qiymatlarni entityga set qilib saqlaymiz
+        Optional.ofNullable(dto.getTranslations()).ifPresent(characteristicValue::setTranslations);
+        Optional.ofNullable(dto.getCategoryCharacteristicId()).ifPresent(categoryCharacteristicId -> characteristicValue.setCharacteristic(
+                categoryCharacteristicRepository.findById(categoryCharacteristicId).orElseThrow(
+                        () -> RestException.restThrow("Category characteristic not found", HttpStatus.NOT_FOUND)
+                )
+        ));
+        categoryCharacteristicValueRepository.save(characteristicValue);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
 

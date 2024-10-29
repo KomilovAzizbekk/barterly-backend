@@ -16,7 +16,7 @@ public class CategoryCharacteristicReqDTO {
     private Long categoryId;
 
     @NotNull(message = "choose whether appears in title")
-    private boolean title;
+    private Boolean title;
 
     private Long parentId;
 

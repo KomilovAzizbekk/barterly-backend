@@ -19,6 +19,8 @@ import uz.mediasolutions.barterlybackend.repository.CategoryRepository;
 import uz.mediasolutions.barterlybackend.service.admin.abs.CategoryCharacteristicService;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryCharacteristicServiceImpl implements CategoryCharacteristicService {
@@ -26,6 +28,7 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
     private final CategoryCharacteristicRepository categoryCharacteristicRepository;
     private final CategoryCharacteristicMapper categoryCharacteristicMapper;
     private final CategoryRepository categoryRepository;
+
 
     @Override
     public ResponseEntity<Page<?>> getAll(String lang, String search, Long categoryId,
@@ -36,6 +39,7 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
         return ResponseEntity.ok(dtos);
     }
 
+
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
         CategoryCharacteristicDTO2 categoryCharacteristic = categoryCharacteristicRepository.findByIdCustom(lang, id).orElseThrow(
@@ -43,6 +47,7 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
         );
         return ResponseEntity.ok(categoryCharacteristic);
     }
+
 
     @Override
     public ResponseEntity<?> add(CategoryCharacteristicReqDTO dto) {
@@ -58,29 +63,31 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
                 () -> RestException.restThrow("Category characteristic not found", HttpStatus.NOT_FOUND)
         );
 
-        Category category = categoryRepository.findById(dto.getCategoryId()).orElseThrow(
-                () -> RestException.restThrow("Category not found", HttpStatus.NOT_FOUND)
-        );
-
-        if (dto.getParentId() != null) {
-            categoryCharacteristic.setParent(categoryCharacteristicRepository.findById(dto.getParentId()).orElse(null));
-        }
-
-        categoryCharacteristic.setTitle(dto.isTitle());
-        categoryCharacteristic.setCategory(category);
-        categoryCharacteristic.setTranslations(dto.getTranslations());
+        // Null bo'lmagan qiymatlarni entityga set qilib bazaga saqlaymiz
+        Optional.ofNullable(dto.getTitle()).ifPresent(categoryCharacteristic::setTitle);
+        Optional.ofNullable(dto.getTranslations()).ifPresent(categoryCharacteristic::setTranslations);
+        Optional.ofNullable(dto.getCategoryId()).ifPresent(categoryId -> categoryCharacteristic.setCategory(
+                categoryRepository.findById(categoryId).orElseThrow(
+                        () -> RestException.restThrow("Category not found", HttpStatus.NOT_FOUND)
+                )
+        ));
+        Optional.ofNullable(dto.getParentId()).ifPresent(parentId -> categoryCharacteristic.setParent(
+                categoryCharacteristicRepository.findById(parentId).orElse(null)
+        ));
         categoryCharacteristicRepository.save(categoryCharacteristic);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
     }
 
+
     @Override
     public ResponseEntity<?> delete(Long id) {
-        categoryCharacteristicRepository.findById(id).orElseThrow(
-                () -> RestException.restThrow("Category characteristic not found", HttpStatus.NOT_FOUND)
-        );
+        if (!categoryCharacteristicRepository.existsById(id)) {
+            throw RestException.restThrow("Category characteristic not found", HttpStatus.NOT_FOUND);
+        }
+
         try {
             categoryCharacteristicRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.DELETED);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Rest.DELETED);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Rest.ERROR);
