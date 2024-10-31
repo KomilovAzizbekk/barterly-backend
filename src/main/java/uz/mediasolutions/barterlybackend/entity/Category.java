@@ -6,9 +6,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import uz.mediasolutions.barterlybackend.entity.template.AbsDate;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Azizbek Komilov
@@ -42,15 +40,18 @@ public class Category extends AbsDate {
 
     @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private Set<Category> subCategories;
+    private List<Category> subCategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<CategoryCharacteristic> categoryCharacteristics;
+    private List<CategoryCharacteristic> categoryCharacteristics = new ArrayList<>();
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<Characteristic> characteristics;
+    private List<Characteristic> characteristics = new ArrayList<>();
 
+//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+//    @ToString.Exclude
+//    private List<Item> items = new ArrayList<>();
 
 }

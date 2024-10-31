@@ -43,7 +43,9 @@ public class CharacteristicMapperImpl implements CharacteristicMapper {
         );
 
         return Characteristic.builder()
-                .required(dto.isRequired())
+                .required(dto.getRequired())
+                .title(dto.getTitle())
+                .filter(dto.getFilter())
                 .translations(dto.getTranslations())
                 .category(category)
                 .build();

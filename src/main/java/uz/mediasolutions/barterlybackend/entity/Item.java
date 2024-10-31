@@ -45,14 +45,11 @@ public class Item extends AbsAuditDeleted {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(nullable = false)
-    private boolean active;
+    private boolean active = true;
 
-    @Column(nullable = false)
-    private boolean premium;
+    private boolean premium = false;
 
-    @Column(nullable = false)
-    private boolean temporary;
+    private boolean temporary = true;
 
     private Timestamp temporaryToDate;
 

@@ -64,7 +64,7 @@ public class CurrencyServiceImpl implements CurrencyService {
         );
 
         if (dto.getImageUrl() != null && !Objects.equals(currency.getImageUrl(), dto.getImageUrl())) {
-            fileService.deleteFile(currency.getImageUrl());
+            fileService.deleteAttachedFile(currency.getImageUrl());
         }
 
         Optional.ofNullable(dto.getCurrencyCode()).ifPresent(currency::setCurrencyCode);
@@ -80,7 +80,7 @@ public class CurrencyServiceImpl implements CurrencyService {
         Currency currency = currencyRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Currency not found", HttpStatus.NOT_FOUND)
         );
-        fileService.deleteFile(currency.getImageUrl());
+        fileService.deleteAttachedFile(currency.getImageUrl());
         try {
             currencyRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Rest.DELETED);

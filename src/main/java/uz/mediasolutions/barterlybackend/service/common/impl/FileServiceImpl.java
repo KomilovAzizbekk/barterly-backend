@@ -84,6 +84,17 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    public void deleteAttachedFile(String url) {
+        String fileName = extractFilenameFromUrl(url);
+        if (fileName != null) {
+            try {
+                s3Client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
+            } catch (Exception e) {
+                System.out.println("Cannot delete");
+            }
+        }
+    }
+
     private File convertMultipartFileToFile(MultipartFile multipartFile) {
         File file = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
 
@@ -96,6 +107,10 @@ public class FileServiceImpl implements FileService {
     }
 
     public static String extractFilenameFromUrl(String urlString) {
+        if (!urlString.matches("^(http|https)://.*$")) {
+            return null;
+        }
+
         try {
             URL url = new URL(urlString);
             String path = url.getPath();

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uz.mediasolutions.barterlybackend.entity.Category;
 import uz.mediasolutions.barterlybackend.entity.User;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
@@ -15,8 +16,10 @@ import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryDTO;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryReqDTO;
 import uz.mediasolutions.barterlybackend.repository.CategoryRepository;
+import uz.mediasolutions.barterlybackend.repository.ItemRepository;
 import uz.mediasolutions.barterlybackend.service.admin.abs.CategoryService;
 import uz.mediasolutions.barterlybackend.service.common.abs.FileService;
+import uz.mediasolutions.barterlybackend.service.common.impl.FileServiceImpl;
 import uz.mediasolutions.barterlybackend.utills.CommonUtils;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
@@ -29,7 +32,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-    private final FileService fileService;
+    private final FileServiceImpl fileService;
+    private final ItemRepository itemRepository;
 
     @Override
     public ResponseEntity<Page<?>> getAll(String lang, String search, Long parentId, int page, int size) {
@@ -66,7 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         if (!Objects.equals(category.getImageUrl(), dto.getImageUrl()) && dto.getImageUrl() != null) {
             //Deleting previous file
-            fileService.deleteFile(category.getImageUrl());
+            fileService.deleteAttachedFile(category.getImageUrl());
         }
 
         Optional.ofNullable(dto.getImageUrl()).ifPresent(category::setImageUrl);
@@ -81,12 +85,14 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
+    @Transactional
     public ResponseEntity<?> delete(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Category not found", HttpStatus.NOT_FOUND)
         );
-        fileService.deleteFile(category.getImageUrl());
+        fileService.deleteAttachedFile(category.getImageUrl());
         try {
+            itemRepository.inactiveAllByCategoryId(id);
             categoryRepository.deleteById(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Rest.DELETED);
         } catch (Exception e) {

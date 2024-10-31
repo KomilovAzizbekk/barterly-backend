@@ -30,7 +30,7 @@ public class CityControllerImpl implements CityController {
     }
 
     @Override
-    public ResponseEntity<?> edit(CityReqDTO dto, Long id) {
+    public ResponseEntity<?> edit(Long id, CityReqDTO dto) {
         return cityService.edit(dto, id);
     }
 

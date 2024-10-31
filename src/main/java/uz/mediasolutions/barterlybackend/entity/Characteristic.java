@@ -32,14 +32,11 @@ public class Characteristic extends AbsDate {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(nullable = false)
-    private boolean required;
+    private boolean required = false;
 
-    @Column(nullable = false)
-    private boolean filter;
+    private boolean filter = false;
 
-    @Column(nullable = false)
-    private boolean title;
+    private boolean title = false;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")

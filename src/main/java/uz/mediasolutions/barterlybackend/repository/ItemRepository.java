@@ -3,8 +3,10 @@ package uz.mediasolutions.barterlybackend.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import uz.mediasolutions.barterlybackend.entity.Item;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.Item2DTO;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ItemDTO;
@@ -101,4 +103,9 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
                             @Param("itemId") UUID id,
                             @Param("isActive") boolean isActive);
 
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE items SET deleted = true, category_id = null WHERE category_id = :categoryId", nativeQuery = true)
+    void inactiveAllByCategoryId(Long categoryId);
 }

@@ -6,8 +6,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import uz.mediasolutions.barterlybackend.entity.template.AbsDate;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Azizbek Komilov
@@ -31,12 +30,15 @@ public class CategoryCharacteristic extends AbsDate {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(nullable = false)
-    private boolean title;
+    private boolean title = false;
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private CategoryCharacteristic parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<CategoryCharacteristic> children = new ArrayList<>();
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
@@ -44,10 +46,10 @@ public class CategoryCharacteristic extends AbsDate {
 
     @OneToMany(mappedBy = "characteristic", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<CategoryCharacteristicValue> categoryCharacteristicValues;
+    private List<CategoryCharacteristicValue> categoryCharacteristicValues = new ArrayList<>();
 
     @OneToMany(mappedBy = "categoryCharacteristic", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<ItemCategoryCharacteristic> itemCategoryCharacteristics;
+    private List<ItemCategoryCharacteristic> itemCategoryCharacteristics = new ArrayList<>();
 
 }

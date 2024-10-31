@@ -36,7 +36,7 @@ public class CategoryCharacteristicMapperImpl implements CategoryCharacteristicM
                 () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
         ));
         categoryCharacteristic.setTranslations(dto.getTranslations());
-        categoryCharacteristic.setTitle(dto.isTitle());
+        categoryCharacteristic.setTitle(dto.getTitle());
         return categoryCharacteristic;
     }
 }
