@@ -3,7 +3,6 @@ package uz.mediasolutions.barterlybackend.service.admin.abs;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import uz.mediasolutions.barterlybackend.payload.request.CharacteristicReqDTO;
-import uz.mediasolutions.barterlybackend.payload.response.CharacteristicResDTO;
 
 public interface CharacteristicService {
 

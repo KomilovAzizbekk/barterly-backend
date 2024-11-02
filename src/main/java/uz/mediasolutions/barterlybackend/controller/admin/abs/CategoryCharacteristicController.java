@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryCharacteristicReqDTO;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
@@ -32,13 +31,8 @@ public interface CategoryCharacteristicController {
                                    @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
 
 
-    @GetMapping("/get{id}")
+    @GetMapping("/get/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CategoryCharacteristicDTO2.class))})
-    })
     ResponseEntity<?> getById(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
                               @PathVariable Long id);
 

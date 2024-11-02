@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristic;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicDTO2;
 
 import java.util.Optional;
 
@@ -35,19 +34,19 @@ public interface CategoryCharacteristicRepository extends JpaRepository<Category
                                                   @Param("parentCharacteristicId") Long parentCharacteristicId,
                                                   Pageable pageable);
 
-    @Query(value = "SELECT cch.id,\n" +
-            "       cch.translations  as names,\n" +
-            "       cch.title,\n" +
-            "       c.id                        as categoryId,\n" +
-            "       c.translations ->> :lang    as categoryName,\n" +
-            "       cch2.id                     as parentCharacteristicId,\n" +
-            "       cch2.translations ->> :lang as parentCharacteristicName\n" +
-            "FROM category_characteristics cch\n" +
-            "         LEFT JOIN categories c on c.id = cch.category_id\n" +
-            "         LEFT JOIN category_characteristics cch2 on cch2.id = cch.parent_id\n" +
-            "WHERE c.translations ->> :lang IS NOT NULL\n" +
-            "AND cch.id=:id", nativeQuery = true)
-    Optional<CategoryCharacteristicDTO2> findByIdCustom(@Param("lang") String lang,
-                                                        @Param("id") Long id);
+//    @Query(value = "SELECT cch.id,\n" +
+//            "       cch.translations  as names,\n" +
+//            "       cch.title,\n" +
+//            "       c.id                        as categoryId,\n" +
+//            "       c.translations ->> :lang    as categoryName,\n" +
+//            "       cch2.id                     as parentCharacteristicId,\n" +
+//            "       cch2.translations ->> :lang as parentCharacteristicName\n" +
+//            "FROM category_characteristics cch\n" +
+//            "         LEFT JOIN categories c on c.id = cch.category_id\n" +
+//            "         LEFT JOIN category_characteristics cch2 on cch2.id = cch.parent_id\n" +
+//            "WHERE c.translations ->> :lang IS NOT NULL\n" +
+//            "AND cch.id=:id", nativeQuery = true)
+//    Optional<CategoryCharacteristicDTO2> findByIdCustom(@Param("lang") String lang,
+//                                                        @Param("id") Long id);
 
 }

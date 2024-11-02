@@ -9,19 +9,16 @@ import java.util.Map;
 @Getter
 @Setter
 @Builder
-public class CharacteristicResDTO {
+public class CategoryResDTO2 {
 
     private Long id;
 
-    private boolean required;
-
-    private boolean filter;
-
-    private boolean title;
+    private String imageUrl;
 
     private Map<String, String> names;
 
-    private Long categoryId;
+    private Long parentId;
 
-    private String categoryName;
+    private String parentName;
+
 }

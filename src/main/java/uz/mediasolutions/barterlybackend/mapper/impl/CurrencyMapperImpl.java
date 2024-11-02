@@ -18,7 +18,7 @@ public class CurrencyMapperImpl implements CurrencyMapper {
                 .id(currency.getId())
                 .imageUrl(currency.getImageUrl())
                 .currencyCode(currency.getCurrencyCode())
-                .translations(currency.getTranslations())
+                .names(currency.getTranslations())
                 .build();
     }
 

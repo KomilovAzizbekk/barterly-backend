@@ -1,5 +1,6 @@
 package uz.mediasolutions.barterlybackend.payload.response;
 
+import com.fasterxml.jackson.databind.introspect.ObjectIdInfo;
 import lombok.*;
 
 import java.util.Map;
@@ -9,19 +10,20 @@ import java.util.Map;
 @Getter
 @Setter
 @Builder
-public class CharacteristicResDTO {
+public class CategoryCharacteristicResDTO {
 
     private Long id;
 
-    private boolean required;
-
-    private boolean filter;
+    private Map<String, String> names;
 
     private boolean title;
-
-    private Map<String, String> names;
 
     private Long categoryId;
 
     private String categoryName;
+
+    private Long parentCharacteristicId;
+
+    private String parentCharacteristicName;
+
 }

@@ -1,6 +1,8 @@
 package uz.mediasolutions.barterlybackend.service.admin.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,7 @@ import uz.mediasolutions.barterlybackend.mapper.abs.NeighborhoodMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.NeighborhoodDTO;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.NeighborhoodDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.NeighborhoodReqDTO;
+import uz.mediasolutions.barterlybackend.payload.response.NeighborhoodResDTO;
 import uz.mediasolutions.barterlybackend.repository.CityRepository;
 import uz.mediasolutions.barterlybackend.repository.NeighborhoodRepository;
 import uz.mediasolutions.barterlybackend.repository.RegionRepository;
@@ -32,6 +35,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     private final RegionRepository regionRepository;
     private final CityRepository cityRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(NeighborhoodServiceImpl.class);
 
     @Override
     public ResponseEntity<Page<?>> getAll(String lang, String search, Long regionId, Long cityId, int page, int size) {
@@ -43,10 +47,27 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
-        NeighborhoodDTO2 neighborhoodDTO2 = neighborhoodRepository.findByIdCustom(lang, id).orElseThrow(
+        // ID bo'yicha Neighborhood'ni bazadan izlaymiz, agar topilmasa 404 qaytaramiz
+        Neighborhood neighborhood = neighborhoodRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Neighborhood not found", HttpStatus.NOT_FOUND)
         );
-        return ResponseEntity.ok(neighborhoodDTO2);
+
+        // Neighborhood'ning City va Region'larini get qilib olamiz
+        City city = neighborhood.getCity();
+
+        Region region = neighborhood.getRegion();
+
+        // Response DTO yasaymiz va 200 status bilan qaytaramiz
+        NeighborhoodResDTO dto = NeighborhoodResDTO.builder()
+                .id(neighborhood.getId())
+                .names(neighborhood.getTranslations())
+                .cityId(city.getId())
+                .cityName(city.getTranslations().get(lang))
+                .regionId(region.getId())
+                .regionName(region.getTranslations().get(lang))
+                .build();
+
+        return ResponseEntity.ok(dto);
     }
 
 

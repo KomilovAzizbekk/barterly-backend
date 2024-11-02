@@ -4,7 +4,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import uz.mediasolutions.barterlybackend.entity.Region;
 import uz.mediasolutions.barterlybackend.payload.request.RegionReqDTO;
-import uz.mediasolutions.barterlybackend.payload.response.RegionResDTO;
 
 @Mapper(componentModel = "spring")
 public interface RegionMapper {

@@ -2,6 +2,7 @@ package uz.mediasolutions.barterlybackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import uz.mediasolutions.barterlybackend.entity.template.AbsDate;
@@ -38,6 +39,7 @@ public class CategoryCharacteristic extends AbsDate {
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @BatchSize(size = 10)
     private List<CategoryCharacteristic> children = new ArrayList<>();
 
     @JdbcTypeCode(SqlTypes.JSON)
@@ -46,10 +48,12 @@ public class CategoryCharacteristic extends AbsDate {
 
     @OneToMany(mappedBy = "characteristic", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @BatchSize(size = 10)
     private List<CategoryCharacteristicValue> categoryCharacteristicValues = new ArrayList<>();
 
     @OneToMany(mappedBy = "categoryCharacteristic", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @BatchSize(size = 10)
     private List<ItemCategoryCharacteristic> itemCategoryCharacteristics = new ArrayList<>();
 
 }

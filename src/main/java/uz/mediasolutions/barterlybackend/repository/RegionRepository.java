@@ -30,14 +30,14 @@ public interface RegionRepository extends JpaRepository<Region, Long> {
                                             @Param("currencyId") Long currencyId,
                                             Pageable pageable);
 
-    @Query(value = "SELECT r.id,\n" +
-            "       r.image_url     as imageUrl,\n" +
-            "       c.id            as currencyId,\n" +
-            "       c.currency_code as currencyCode,\n" +
-            "       r.translations  as names\n" +
-            "FROM regions r\n" +
-            "         LEFT JOIN currencies c on c.id = r.default_currency_id\n" +
-            "WHERE r.id = :id", nativeQuery = true)
-    Optional<RegionDTO2> findByIdCustom(@Param("id") Long id);
+//    @Query(value = "SELECT r.id,\n" +
+//            "       r.image_url     as imageUrl,\n" +
+//            "       c.id            as currencyId,\n" +
+//            "       c.currency_code as currencyCode,\n" +
+//            "       r.translations  as names\n" +
+//            "FROM regions r\n" +
+//            "         LEFT JOIN currencies c on c.id = r.default_currency_id\n" +
+//            "WHERE r.id = :id", nativeQuery = true)
+//    Optional<RegionDTO2> findByIdCustom(@Param("id") Long id);
 
 }

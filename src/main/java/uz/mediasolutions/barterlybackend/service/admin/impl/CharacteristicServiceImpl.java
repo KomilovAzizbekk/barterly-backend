@@ -1,6 +1,8 @@
 package uz.mediasolutions.barterlybackend.service.admin.impl;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,7 @@ import uz.mediasolutions.barterlybackend.mapper.abs.CharacteristicMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CharacteristicDTO;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CharacteristicDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CharacteristicReqDTO;
+import uz.mediasolutions.barterlybackend.payload.response.CharacteristicResDTO;
 import uz.mediasolutions.barterlybackend.repository.*;
 import uz.mediasolutions.barterlybackend.service.admin.abs.CharacteristicService;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
@@ -28,6 +31,8 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     private final CategoryRepository categoryRepository;
     private final CharacteristicMapper characteristicMapper;
 
+    private static final Logger log = LoggerFactory.getLogger(CharacteristicServiceImpl.class);
+
     @Override
     public ResponseEntity<Page<?>> getAll(String lang, String search, Long categoryId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -38,10 +43,18 @@ public class CharacteristicServiceImpl implements CharacteristicService {
 
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
-        CharacteristicDTO2 characteristic = characteristicRepository.findByIdCustom(lang, id).orElseThrow(
+        // ID orqali bazadan Characteristic'ni izlaymiz, agar topilmasa 404 qaytaramiz
+        Characteristic characteristic = characteristicRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Characteristic not found", HttpStatus.NOT_FOUND)
         );
-        return ResponseEntity.ok(characteristic);
+
+        // Characteristic'ga bog;langan Categoryni olamiz
+        Category category = characteristic.getCategory();
+
+        // Response DTO yaratamiz va 200 status bilan qaytaramiz
+        CharacteristicResDTO dto = characteristicMapper.toResDTO(characteristic, category, lang);
+
+        return ResponseEntity.ok(dto);
     }
 
 

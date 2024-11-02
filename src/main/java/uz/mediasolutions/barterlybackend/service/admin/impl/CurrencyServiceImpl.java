@@ -1,6 +1,8 @@
 package uz.mediasolutions.barterlybackend.service.admin.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +32,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     private final CurrencyMapper currencyMapper;
     private final FileServiceImpl fileService;
 
+    private static final Logger log = LoggerFactory.getLogger(CurrencyServiceImpl.class);
 
     @Override
     public ResponseEntity<Page<?>> getAll(String lang, String search, int page, int size) {

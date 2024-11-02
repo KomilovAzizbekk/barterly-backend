@@ -35,11 +35,6 @@ public interface NeighborhoodController {
 
     @GetMapping("/get/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = NeighborhoodDTO2.class))})
-    })
     ResponseEntity<?> getById(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
                               @PathVariable Long id);
 

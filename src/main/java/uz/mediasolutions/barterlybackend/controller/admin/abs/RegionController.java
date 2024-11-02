@@ -33,11 +33,6 @@ public interface RegionController {
 
     @GetMapping("/get/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = RegionDTO2.class))})
-    })
     ResponseEntity<?> getById(@PathVariable Long id);
 
 

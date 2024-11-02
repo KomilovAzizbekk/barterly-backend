@@ -20,7 +20,7 @@ public class CharacteristicMapperImpl implements CharacteristicMapper {
     private final CategoryCharacteristicRepository categoryCharacteristicRepository;
 
     @Override
-    public CharacteristicResDTO toResDTO(Characteristic characteristic) {
+    public CharacteristicResDTO toResDTO(Characteristic characteristic, Category category, String lang) {
         if (characteristic == null) {
             return null;
         }
@@ -28,7 +28,11 @@ public class CharacteristicMapperImpl implements CharacteristicMapper {
         return CharacteristicResDTO.builder()
                 .id(characteristic.getId())
                 .required(characteristic.isRequired())
-                .translations(characteristic.getTranslations())
+                .filter(characteristic.isFilter())
+                .title(characteristic.isTitle())
+                .names(characteristic.getTranslations())
+                .categoryId(category.getId())
+                .categoryName(category.getTranslations().get(lang))
                 .build();
     }
 

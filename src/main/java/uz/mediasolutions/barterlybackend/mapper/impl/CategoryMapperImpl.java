@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import uz.mediasolutions.barterlybackend.entity.Category;
 import uz.mediasolutions.barterlybackend.mapper.abs.CategoryMapper;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryReqDTO;
+import uz.mediasolutions.barterlybackend.payload.response.CategoryResDTO2;
 import uz.mediasolutions.barterlybackend.payload.response.CategoryResDTO;
 import uz.mediasolutions.barterlybackend.repository.CategoryRepository;
 
@@ -43,6 +44,21 @@ public class CategoryMapperImpl implements CategoryMapper {
                 .translations(dto.getTranslations())
                 .parentCategory(parentCategory)
                 .imageUrl(dto.getImageUrl())
+                .build();
+    }
+
+    @Override
+    public CategoryResDTO2 toRes2DTO(Category category, Category parentCategory, String lang) {
+        if (category == null) {
+            return null;
+        }
+
+        return CategoryResDTO2.builder()
+                .id(category.getId())
+                .imageUrl(category.getImageUrl())
+                .names(category.getTranslations())
+                .parentId(parentCategory != null ? parentCategory.getId() : null)
+                .parentName(parentCategory != null ? parentCategory.getTranslations().get(lang) : null)
                 .build();
     }
 }

@@ -30,15 +30,15 @@ public interface CityRepository extends JpaRepository<City, Long> {
             @Param("regionId") Long regionId,
             Pageable pageable);
 
-    @Query(value = "SELECT c.id,\n" +
-            "       c.translations           as names,\n" +
-            "       r.id                     as regionId,\n" +
-            "       r.translations ->> :lang as regionName\n" +
-            "FROM cities c\n" +
-            "         LEFT JOIN regions r on r.id = c.region_id\n" +
-            "WHERE c.id = :id\n" +
-            "  AND r.translations ->> :lang IS NOT NULL", nativeQuery = true)
-    Optional<CityDTO2> findByIdCustom(@Param("lang") String lang,
-                                      @Param("id") Long id);
+//    @Query(value = "SELECT c.id,\n" +
+//            "       c.translations           as names,\n" +
+//            "       r.id                     as regionId,\n" +
+//            "       r.translations ->> :lang as regionName\n" +
+//            "FROM cities c\n" +
+//            "         LEFT JOIN regions r on r.id = c.region_id\n" +
+//            "WHERE c.id = :id\n" +
+//            "  AND r.translations ->> :lang IS NOT NULL", nativeQuery = true)
+//    Optional<CityDTO2> findByIdCustom(@Param("lang") String lang,
+//                                      @Param("id") Long id);
 
 }

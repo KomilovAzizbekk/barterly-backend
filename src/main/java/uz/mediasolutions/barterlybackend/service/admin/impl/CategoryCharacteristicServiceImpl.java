@@ -1,6 +1,8 @@
 package uz.mediasolutions.barterlybackend.service.admin.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,8 +14,8 @@ import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristic;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CategoryCharacteristicMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryCharacteristicReqDTO;
+import uz.mediasolutions.barterlybackend.payload.response.CategoryCharacteristicResDTO;
 import uz.mediasolutions.barterlybackend.repository.CategoryCharacteristicRepository;
 import uz.mediasolutions.barterlybackend.repository.CategoryRepository;
 import uz.mediasolutions.barterlybackend.service.admin.abs.CategoryCharacteristicService;
@@ -29,6 +31,7 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
     private final CategoryCharacteristicMapper categoryCharacteristicMapper;
     private final CategoryRepository categoryRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(CategoryCharacteristicServiceImpl.class);
 
     @Override
     public ResponseEntity<Page<?>> getAll(String lang, String search, Long categoryId,
@@ -42,10 +45,21 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
 
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
-        CategoryCharacteristicDTO2 categoryCharacteristic = categoryCharacteristicRepository.findByIdCustom(lang, id).orElseThrow(
-                () -> RestException.restThrow("Category characteristic not found", HttpStatus.NOT_FOUND)
+        // ID bo'yicha Category Characteristic'ni olamiz agar topilmasa 404 qaytaramiz
+        CategoryCharacteristic categoryCharacteristic = categoryCharacteristicRepository.findById(id).orElseThrow(
+                () -> RestException.restThrow("CategoryCharacteristic not found", HttpStatus.NOT_FOUND)
         );
-        return ResponseEntity.ok(categoryCharacteristic);
+
+        // Category Characeristic'ning category'sini get qilib olamiz
+        Category category = categoryCharacteristic.getCategory();
+
+        // Category Characeristic'ning parent'ini get qilib olamiz
+        CategoryCharacteristic parent = categoryCharacteristic.getParent();
+
+        // Response DTO yaratib olamiz va 200 status bilan qaytaramiz
+        CategoryCharacteristicResDTO dto = categoryCharacteristicMapper.toDTO(categoryCharacteristic, category, parent, lang);
+
+        return ResponseEntity.ok(dto);
     }
 
 
@@ -59,6 +73,7 @@ public class CategoryCharacteristicServiceImpl implements CategoryCharacteristic
 
     @Override
     public ResponseEntity<?> edit(Long id, CategoryCharacteristicReqDTO dto) {
+        // ID bo'yicha Category Characteristic'ni olamiz agar topilmasa 404 qaytaramiz
         CategoryCharacteristic categoryCharacteristic = categoryCharacteristicRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Category characteristic not found", HttpStatus.NOT_FOUND)
         );

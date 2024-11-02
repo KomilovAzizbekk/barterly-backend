@@ -30,15 +30,15 @@ public interface CategoryCharacteristicValueRepository extends JpaRepository<Cat
                                                  @Param("search") String search,
                                                  Pageable pageable);
 
-    @Query(value = "SELECT ccv.id,\n" +
-            "       ccv.translations          as names,\n" +
-            "       cc.id                     as categoryCharacteristicId,\n" +
-            "       cc.translations ->> :lang as categoryCharacteristicName\n" +
-            "FROM category_characteristic_values ccv\n" +
-            "         LEFT JOIN category_characteristics cc on cc.id = ccv.characteristic_id\n" +
-            "WHERE cc.translations ->> :lang IS NOT NULL\n" +
-            "  AND ccv.id = :id", nativeQuery = true)
-    Optional<CategoryCharacteristicValueDTO2> findByIdCustom(@Param("lang") String lang,
-                                                             @Param("id") Long id);
+//    @Query(value = "SELECT ccv.id,\n" +
+//            "       ccv.translations          as names,\n" +
+//            "       cc.id                     as categoryCharacteristicId,\n" +
+//            "       cc.translations ->> :lang as categoryCharacteristicName\n" +
+//            "FROM category_characteristic_values ccv\n" +
+//            "         LEFT JOIN category_characteristics cc on cc.id = ccv.characteristic_id\n" +
+//            "WHERE cc.translations ->> :lang IS NOT NULL\n" +
+//            "  AND ccv.id = :id", nativeQuery = true)
+//    Optional<CategoryCharacteristicValueDTO2> findByIdCustom(@Param("lang") String lang,
+//                                                             @Param("id") Long id);
 
 }

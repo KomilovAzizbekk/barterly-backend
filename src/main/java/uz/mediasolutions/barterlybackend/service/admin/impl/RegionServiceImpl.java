@@ -1,6 +1,8 @@
 package uz.mediasolutions.barterlybackend.service.admin.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,7 @@ import uz.mediasolutions.barterlybackend.mapper.abs.RegionMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.RegionDTO;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.RegionDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.RegionReqDTO;
+import uz.mediasolutions.barterlybackend.payload.response.RegionResDTO;
 import uz.mediasolutions.barterlybackend.repository.CurrencyRepository;
 import uz.mediasolutions.barterlybackend.repository.RegionRepository;
 import uz.mediasolutions.barterlybackend.service.admin.abs.RegionService;
@@ -29,6 +32,7 @@ public class RegionServiceImpl implements RegionService {
     private final RegionMapper regionMapper;
     private final CurrencyRepository currencyRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(RegionServiceImpl.class);
 
     @Override
     public ResponseEntity<Page<?>> getAll(String lang, String search, Long currencyId, int page, int size) {
@@ -40,10 +44,24 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public ResponseEntity<?> getById(Long id) {
-        RegionDTO2 region = regionRepository.findByIdCustom(id).orElseThrow(
-                () -> RestException.restThrow("Region not found", HttpStatus.NOT_FOUND)
+        // ID orqali bazadan Region'ni izlaymiz, agar topilmasa 404 qaytaramiz
+        Region region = regionRepository.findById(id).orElseThrow(
+                () -> RestException.restThrow("Region not Found", HttpStatus.NOT_FOUND)
         );
-        return ResponseEntity.ok(region);
+
+        // Region'dan Currency'ni get qilib olamiz
+        Currency currency = region.getCurrency();
+
+        // Response DTO yasab olamiz va 200 status bilan qaytaramiz
+        RegionResDTO dto = RegionResDTO.builder()
+                .id(region.getId())
+                .names(region.getTranslations())
+                .imageUrl(region.getImageUrl())
+                .currencyCode(currency.getCurrencyCode())
+                .currencyId(currency.getId())
+                .build();
+
+        return ResponseEntity.ok(dto);
     }
 
 

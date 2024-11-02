@@ -13,10 +13,12 @@ public class RegionResDTO {
 
     private Long id;
 
-    private Map<String, String> translations;
+    private Map<String, String> names;
 
     private String imageUrl;
 
-    private CurrencyResDTO currency;
+    private String currencyCode;
+
+    private Long currencyId;
 
 }

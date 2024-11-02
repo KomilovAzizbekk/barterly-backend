@@ -13,6 +13,10 @@ public class CharacteristicValueResDTO {
 
     private Long id;
 
-    private Map<String, String> translations;
+    private Map<String, String> names;
+
+    private Long characteristicId;
+
+    private String characteristicName;
 
 }

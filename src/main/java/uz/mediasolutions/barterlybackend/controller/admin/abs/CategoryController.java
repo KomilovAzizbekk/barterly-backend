@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryReqDTO;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
@@ -33,11 +32,6 @@ public interface CategoryController {
 
     @GetMapping("/get/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CategoryDTO2.class))})
-    })
     ResponseEntity<?> getById(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
                               @PathVariable Long id);
 

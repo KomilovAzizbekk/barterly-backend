@@ -18,14 +18,16 @@ public class CharacteristicValueMapperImpl implements CharacteristicValueMapper 
     private final CharacteristicRepository characteristicRepository;
 
     @Override
-    public CharacteristicValueResDTO toResDTO(CharacteristicValue value) {
-        if (value == null) {
+    public CharacteristicValueResDTO toResDTO(CharacteristicValue characteristicValue, Characteristic characteristic, String lan) {
+        if (characteristicValue == null) {
             return null;
         }
 
         return CharacteristicValueResDTO.builder()
-                .id(value.getId())
-                .translations(value.getTranslations())
+                .id(characteristicValue.getId())
+                .names(characteristicValue.getTranslations())
+                .characteristicId(characteristic.getId())
+                .characteristicName(characteristic.getTranslations().get(lan))
                 .build();
     }
 

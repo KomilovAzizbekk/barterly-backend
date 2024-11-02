@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import uz.mediasolutions.barterlybackend.entity.Characteristic;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CharacteristicDTO;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CharacteristicDTO2;
+import uz.mediasolutions.barterlybackend.payload.response.CharacteristicResDTO;
 
 import java.util.Optional;
 

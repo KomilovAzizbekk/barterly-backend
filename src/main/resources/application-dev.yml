@@ -14,6 +14,7 @@ spring:
   main:
     allow-bean-definition-overriding: true
     allow-circular-references: true
+    log-startup-info: false
   datasource:
     url: jdbc:postgresql://localhost:5432/barterly
     username: postgres
@@ -24,7 +25,8 @@ spring:
 
 jwt:
   secret: Ii0tOXc1ZS0yZmUtZjItd2Y0LWYuZjUtd2VmLnMuNjVmd2FhLjVmJV4mQCMkMiZnaCQi
-  expirationMs: 900 000
+#  expirationMs: 900 000
+  expirationMs: 1 296 000 000
   refresh:
     expirationMs: 1 296 000 000
 logging:

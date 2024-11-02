@@ -30,16 +30,16 @@ public interface CharacteristicValueRepository extends JpaRepository<Characteris
             @Param("characteristic_id") Long characteristicId,
             Pageable pageable);
 
-    @Query(value = "SELECT cv.id,\n" +
-            "       cv.translations           as names,\n" +
-            "       ch.id                     as characteristicId,\n" +
-            "       ch.translations ->> :lang as characteristicName\n" +
-            "FROM characteristic_values cv\n" +
-            "         LEFT JOIN characteristics ch on ch.id = cv.characteristic_id\n" +
-            "WHERE cv.id = :id\n" +
-            "  AND ch.translations ->> :lang IS NOT NULL", nativeQuery = true)
-    Optional<CharacteristicValueDTO2> findByIdCustom(
-            @Param("lang") String lang,
-            @Param("id") Long id);
+//    @Query(value = "SELECT cv.id,\n" +
+//            "       cv.translations           as names,\n" +
+//            "       ch.id                     as characteristicId,\n" +
+//            "       ch.translations ->> :lang as characteristicName\n" +
+//            "FROM characteristic_values cv\n" +
+//            "         LEFT JOIN characteristics ch on ch.id = cv.characteristic_id\n" +
+//            "WHERE cv.id = :id\n" +
+//            "  AND ch.translations ->> :lang IS NOT NULL", nativeQuery = true)
+//    Optional<CharacteristicValueDTO2> findByIdCustom(
+//            @Param("lang") String lang,
+//            @Param("id") Long id);
 
 }

@@ -8,6 +8,7 @@ import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristicValue;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CategoryCharacteristicValueMapper;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryCharacteristicValueReqDTO;
+import uz.mediasolutions.barterlybackend.payload.response.CategoryCharacteristicValueResDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CharacteristicValueResDTO;
 import uz.mediasolutions.barterlybackend.repository.CategoryCharacteristicRepository;
 
@@ -16,18 +17,6 @@ import uz.mediasolutions.barterlybackend.repository.CategoryCharacteristicReposi
 public class CategoryCharacteristicValueMapperImpl implements CategoryCharacteristicValueMapper {
 
     private final CategoryCharacteristicRepository characteristicRepository;
-
-    @Override
-    public CharacteristicValueResDTO toResDTO(CategoryCharacteristicValue categoryCharacteristicValue) {
-        if (categoryCharacteristicValue == null) {
-            return null;
-        }
-
-        return CharacteristicValueResDTO.builder()
-                .id(categoryCharacteristicValue.getId())
-                .translations(categoryCharacteristicValue.getTranslations())
-                .build();
-    }
 
     @Override
     public CategoryCharacteristicValue toEntity(CategoryCharacteristicValueReqDTO dto) {
@@ -42,6 +31,21 @@ public class CategoryCharacteristicValueMapperImpl implements CategoryCharacteri
         return CategoryCharacteristicValue.builder()
                 .translations(dto.getTranslations())
                 .characteristic(categoryCharacteristic)
+                .build();
+    }
+
+    @Override
+    public CategoryCharacteristicValueResDTO toResDTO(CategoryCharacteristicValue categoryCharacteristicValue,
+                                                       CategoryCharacteristic categoryCharacteristic, String lang) {
+        if (categoryCharacteristicValue == null) {
+            return null;
+        }
+
+        return CategoryCharacteristicValueResDTO.builder()
+                .id(categoryCharacteristicValue.getId())
+                .names(categoryCharacteristicValue.getTranslations())
+                .categoryCharacteristicId(categoryCharacteristic.getId())
+                .categoryCharacteristicName(categoryCharacteristic.getTranslations().get(lang))
                 .build();
     }
 }

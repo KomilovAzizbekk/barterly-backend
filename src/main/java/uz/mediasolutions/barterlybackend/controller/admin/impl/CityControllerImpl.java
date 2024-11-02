@@ -20,7 +20,7 @@ public class CityControllerImpl implements CityController {
     }
 
     @Override
-    public ResponseEntity<?> get(String lang, Long id) {
+    public ResponseEntity<?> getById(String lang, Long id) {
         return cityService.getById(lang, id);
     }
 

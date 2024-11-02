@@ -33,13 +33,8 @@ public interface CityController {
 
     @GetMapping("/get/{id}")
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CityDTO2.class))})
-    })
-    ResponseEntity<?> get(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
-                          @PathVariable Long id);
+    ResponseEntity<?> getById(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
+                              @PathVariable Long id);
 
 
     @PostMapping("/add")

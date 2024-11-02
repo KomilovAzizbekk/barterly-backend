@@ -107,5 +107,5 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
     @Modifying
     @Transactional
     @Query(value = "UPDATE items SET deleted = true, category_id = null WHERE category_id = :categoryId", nativeQuery = true)
-    void inactiveAllByCategoryId(Long categoryId);
+    void deleteAllByCategoryId(Long categoryId);
 }

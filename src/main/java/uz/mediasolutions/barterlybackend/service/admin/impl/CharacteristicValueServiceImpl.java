@@ -1,6 +1,8 @@
 package uz.mediasolutions.barterlybackend.service.admin.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,7 @@ import uz.mediasolutions.barterlybackend.mapper.abs.CharacteristicValueMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CharacteristicValueDTO;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CharacteristicValueDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CharacteristicValueReqDTO;
+import uz.mediasolutions.barterlybackend.payload.response.CharacteristicValueResDTO;
 import uz.mediasolutions.barterlybackend.repository.CharacteristicRepository;
 import uz.mediasolutions.barterlybackend.repository.CharacteristicValueRepository;
 import uz.mediasolutions.barterlybackend.service.admin.abs.CharacteristicValueService;
@@ -29,6 +32,8 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
     private final CharacteristicValueRepository characteristicValueRepository;
     private final CharacteristicValueMapper characteristicValueMapper;
 
+    private static final Logger log = LoggerFactory.getLogger(CharacteristicValueServiceImpl.class);
+
     @Override
     public ResponseEntity<Page<?>> getAll(String lang, String search, Long characteristicId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -39,10 +44,18 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
 
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
-        CharacteristicValueDTO2 characteristicValue = characteristicValueRepository.findByIdCustom(lang, id).orElseThrow(
+        // ID orqali Characteristic Value'ni bazadan izlaymiz, agar topilmasa 404 qaytaramiz
+        CharacteristicValue characteristicValue = characteristicValueRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Characteristic value not found", HttpStatus.NOT_FOUND)
         );
-        return ResponseEntity.ok(characteristicValue);
+
+        // Characteristic Value'ga tegishli Characteristic'ni get qilib olamiz
+        Characteristic characteristic = characteristicValue.getCharacteristic();
+
+        // Response DTO yaratamiz va 200 status bilan qaytaramiz
+        CharacteristicValueResDTO dto = characteristicValueMapper.toResDTO(characteristicValue, characteristic, lang);
+
+        return ResponseEntity.ok(dto);
     }
 
 
@@ -56,10 +69,12 @@ public class CharacteristicValueServiceImpl implements CharacteristicValueServic
 
     @Override
     public ResponseEntity<?> edit(Long id, CharacteristicValueReqDTO dto) {
+        // ID orqali Characteristic Value'ni bazadan izlaymiz, agar topilmasa 404 qaytaramiz
         CharacteristicValue characteristicValue = characteristicValueRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Characteristic value not found", HttpStatus.NOT_FOUND)
         );
 
+        // Null bo'lmagan fieldlarni entity'ga set qilamz va bazaga saqlaymiz
         Optional.ofNullable(dto.getTranslations()).ifPresent(characteristicValue::setTranslations);
         Optional.ofNullable(dto.getCharacteristicId()).ifPresent(characteristicId -> characteristicValue.setCharacteristic(
                 characteristicRepository.findById(characteristicId).orElseThrow(

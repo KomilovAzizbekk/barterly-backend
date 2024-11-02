@@ -9,14 +9,18 @@ import java.util.Map;
 @Getter
 @Setter
 @Builder
-public class CurrencyResDTO {
+public class NeighborhoodResDTO {
 
     private Long id;
 
-    private String currencyCode;
-
-    private String imageUrl;
-
     private Map<String, String> names;
+
+    private Long regionId;
+
+    private String regionName;
+
+    private Long cityId;
+
+    private String cityName;
 
 }

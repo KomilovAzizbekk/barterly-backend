@@ -1,6 +1,8 @@
 package uz.mediasolutions.barterlybackend.service.admin.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,7 @@ import uz.mediasolutions.barterlybackend.mapper.abs.CityMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CityDTO;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CityDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CityReqDTO;
+import uz.mediasolutions.barterlybackend.payload.response.CityResDTO;
 import uz.mediasolutions.barterlybackend.repository.CityRepository;
 import uz.mediasolutions.barterlybackend.repository.RegionRepository;
 import uz.mediasolutions.barterlybackend.service.admin.abs.CityService;
@@ -30,6 +33,7 @@ public class CityServiceImpl implements CityService {
     private final CityMapper cityMapper;
     private final RegionRepository regionRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(CityServiceImpl.class);
 
     @Override
     public ResponseEntity<Page<?>> getAll(String lang, String search, Long regionId, int page, int size) {
@@ -41,10 +45,23 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
-        CityDTO2 city = cityRepository.findByIdCustom(lang, id).orElseThrow(
-                () -> RestException.restThrow("City not found", HttpStatus.NOT_FOUND)
+        // ID orqali bazadan city'ni izlaymiz, agar yo'q bo'lsa 404 qaytaramiz
+        City city = cityRepository.findById(id).orElseThrow(
+                () -> RestException.restThrow("City not Found", HttpStatus.NOT_FOUND)
         );
-        return ResponseEntity.ok(city);
+
+        // City'ga bog'liq regionni get qilib olamiz
+        Region region = city.getRegion();
+
+        // Response DTO yasab olamiz va 200 status bilan qaytaramiz
+        CityResDTO dto = CityResDTO.builder()
+                .id(city.getId())
+                .names(city.getTranslations())
+                .regionId(region.getId())
+                .regionName(region.getTranslations().get(lang))
+                .build();
+
+        return ResponseEntity.ok(dto);
     }
 
 
