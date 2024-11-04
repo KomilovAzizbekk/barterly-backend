@@ -6,6 +6,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import uz.mediasolutions.barterlybackend.entity.template.AbsAuditDeleted;
 import uz.mediasolutions.barterlybackend.entity.template.AbsUUID;
 import uz.mediasolutions.barterlybackend.enums.UserSocketStatusEnum;
 
@@ -30,19 +31,23 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @DynamicInsert
 @DynamicUpdate
-public class User extends AbsUUID implements UserDetails {
+public class User extends AbsAuditDeleted implements UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     private String name;
 
-    @Column(unique = true)
+    @Column
     private String phoneNumber;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String username;
 
     private String password;
 
-    private Integer level;
+    private int level;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_type_id")
@@ -75,47 +80,39 @@ public class User extends AbsUUID implements UserDetails {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToMany(mappedBy = "user1", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user1", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Conversation> conversationsUser1;
 
-    @OneToMany(mappedBy = "user2", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user2", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Conversation> conversationsUser2;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @ToString.Exclude  // Avoid potential issues with circular references
     private List<Item> items;
 
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Review> reviewsSender;
 
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Review> reviewsReceiver;
 
-    @OneToMany(mappedBy = "requester", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private List<Swap> swapsRequester;
-
-    @OneToMany(mappedBy = "responder", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private List<Swap> swapsResponder;
-
-    @OneToMany(mappedBy = "reporterUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "reporterUser", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Report> reportsReporter;
 
-    @OneToMany(mappedBy = "reportedUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "reportedUser", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Report> reportsReported;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Favorite> favorites;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private RefreshToken refreshToken;
 

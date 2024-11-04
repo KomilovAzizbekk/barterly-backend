@@ -1,15 +1,17 @@
 package uz.mediasolutions.barterlybackend.service.user.abs;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import uz.mediasolutions.barterlybackend.entity.Swap;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.SwapDTO;
 import uz.mediasolutions.barterlybackend.payload.request.SwapReqDTO;
 
 import java.util.UUID;
 
 public interface SwapService {
 
-    ResponseEntity<?> getAll(String lang, UUID userId, int page, int size);
+    Page<SwapDTO> getAll(String lang, UUID userId, int page, int size);
 
-    ResponseEntity<?> create(SwapReqDTO dto);
+    Swap create(SwapReqDTO dto);
 
-    ResponseEntity<?> accept(UUID swapId, boolean accept);
+    Swap accept(UUID swapId, boolean accept);
 }

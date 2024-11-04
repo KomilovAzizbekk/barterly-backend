@@ -7,9 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uz.mediasolutions.barterlybackend.entity.Neighborhood;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.NeighborhoodDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.NeighborhoodDTO2;
-
-import java.util.Optional;
 
 public interface NeighborhoodRepository extends JpaRepository<Neighborhood, Long> {
 
@@ -36,19 +33,19 @@ public interface NeighborhoodRepository extends JpaRepository<Neighborhood, Long
             @Param("cityId") Long cityId,
             Pageable pageable);
 
-    @Query(value = "SELECT n.id,\n" +
-            "       n.translations           as names,\n" +
-            "       r.id                     as regionId,\n" +
-            "       r.translations ->> :lang as regionName,\n" +
-            "       c.id                     as cityId,\n" +
-            "       c.translations ->> :lang as cityName\n" +
-            "FROM neighborhoods n\n" +
-            "         LEFT JOIN regions r on r.id = n.region_id\n" +
-            "         LEFT JOIN cities c on c.id = n.city_id\n" +
-            "WHERE n.id = :id\n" +
-            "  AND r.translations ->> :lang IS NOT NULL\n" +
-            "  AND c.translations ->> :lang IS NOT NULL", nativeQuery = true)
-    Optional<NeighborhoodDTO2> findByIdCustom(@Param("lang") String lang,
-                                              @Param("id") Long id);
+//    @Query(value = "SELECT n.id,\n" +
+//            "       n.translations           as names,\n" +
+//            "       r.id                     as regionId,\n" +
+//            "       r.translations ->> :lang as regionName,\n" +
+//            "       c.id                     as cityId,\n" +
+//            "       c.translations ->> :lang as cityName\n" +
+//            "FROM neighborhoods n\n" +
+//            "         LEFT JOIN regions r on r.id = n.region_id\n" +
+//            "         LEFT JOIN cities c on c.id = n.city_id\n" +
+//            "WHERE n.id = :id\n" +
+//            "  AND r.translations ->> :lang IS NOT NULL\n" +
+//            "  AND c.translations ->> :lang IS NOT NULL", nativeQuery = true)
+//    Optional<NeighborhoodDTO2> findByIdCustom(@Param("lang") String lang,
+//                                              @Param("id") Long id);
 
 }

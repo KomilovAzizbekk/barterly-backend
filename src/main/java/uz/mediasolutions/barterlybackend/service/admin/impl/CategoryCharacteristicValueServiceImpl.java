@@ -14,7 +14,6 @@ import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristicValue;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CategoryCharacteristicValueMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicValueDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicValueDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryCharacteristicValueReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CategoryCharacteristicValueResDTO;
 import uz.mediasolutions.barterlybackend.repository.CategoryCharacteristicRepository;

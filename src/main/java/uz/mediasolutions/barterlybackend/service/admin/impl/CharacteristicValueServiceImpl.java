@@ -14,7 +14,6 @@ import uz.mediasolutions.barterlybackend.entity.CharacteristicValue;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CharacteristicValueMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CharacteristicValueDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CharacteristicValueDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CharacteristicValueReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CharacteristicValueResDTO;
 import uz.mediasolutions.barterlybackend.repository.CharacteristicRepository;

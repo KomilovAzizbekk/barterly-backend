@@ -13,7 +13,7 @@ import uz.mediasolutions.barterlybackend.entity.Category;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CategoryMapper;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryReqDTO;
-import uz.mediasolutions.barterlybackend.payload.response.CategoryResDTO2;
+import uz.mediasolutions.barterlybackend.payload.response.CategoryResDTO;
 import uz.mediasolutions.barterlybackend.repository.CategoryRepository;
 import uz.mediasolutions.barterlybackend.repository.ItemRepository;
 import uz.mediasolutions.barterlybackend.service.admin.abs.CategoryService;
@@ -50,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category parentCategory = category.getParentCategory();
 
         // Response DTO yaratib olamiz va 200 status bilan qaytaramiz
-        CategoryResDTO2 dto = categoryMapper.toRes2DTO(category, parentCategory, lang);
+        CategoryResDTO dto = categoryMapper.toResDTO(category, parentCategory, lang);
 
         return ResponseEntity.ok(dto);
     }

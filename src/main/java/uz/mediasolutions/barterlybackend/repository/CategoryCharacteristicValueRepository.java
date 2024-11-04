@@ -7,9 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uz.mediasolutions.barterlybackend.entity.CategoryCharacteristicValue;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicValueDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryCharacteristicValueDTO2;
-
-import java.util.Optional;
 
 public interface CategoryCharacteristicValueRepository extends JpaRepository<CategoryCharacteristicValue, Long> {
 

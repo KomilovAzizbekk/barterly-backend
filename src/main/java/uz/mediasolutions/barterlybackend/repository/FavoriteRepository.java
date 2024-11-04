@@ -3,8 +3,10 @@ package uz.mediasolutions.barterlybackend.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import uz.mediasolutions.barterlybackend.entity.Favorite;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ItemDTO;
 
@@ -52,5 +54,13 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     @Query(value = "SELECT count(f.id) FROM favorites f WHERE f.user_id = :userId", nativeQuery = true)
     Integer findCountByUserId(UUID userId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM favorites WHERE user_id = :userId AND item_id = :itemId", nativeQuery = true)
+    void deleteFavoritesByUserIdAndItemIdCustom(@Param("userId") UUID userId,
+                                                @Param("itemId") UUID itemId);
+
+    boolean existsByUserIdAndItemId(UUID userId, UUID itemId);
 
 }

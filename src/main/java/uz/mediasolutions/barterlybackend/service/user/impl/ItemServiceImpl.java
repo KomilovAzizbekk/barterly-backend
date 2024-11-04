@@ -3,7 +3,7 @@ package uz.mediasolutions.barterlybackend.service.user.impl;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.*;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
@@ -15,7 +15,6 @@ import uz.mediasolutions.barterlybackend.payload.request.ItemReqDTO;
 import uz.mediasolutions.barterlybackend.repository.*;
 import uz.mediasolutions.barterlybackend.service.user.abs.ItemService;
 import uz.mediasolutions.barterlybackend.utills.CommonUtils;
-import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -37,7 +36,7 @@ public class ItemServiceImpl implements ItemService {
     private final ModelMapper modelMapper;
 
     @Override
-    public ResponseEntity<?> add(ItemReqDTO dto) {
+    public Item add(ItemReqDTO dto) {
 
         Map<String, String> title = new HashMap<>();
         StringBuilder uz = new StringBuilder();
@@ -63,7 +62,7 @@ public class ItemServiceImpl implements ItemService {
                 .temporaryToDate(new Timestamp(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 1 day
                 .build();
 
-        Item savedItem = itemRepository.saveAndFlush(item);
+        item = itemRepository.saveAndFlush(item);
 
         List<CategoryCharacteristicReqDTO2> categoryCharacteristics = dto.getCategoryCharacteristics();
 
@@ -92,7 +91,7 @@ public class ItemServiceImpl implements ItemService {
                         .categoryCharacteristic(categoryCharacteristic)
                         .title(categoryCharacteristic.isTitle())
                         .categoryCharacteristicValue(categoryCharacteristicValue)
-                        .item(savedItem)
+                        .item(item)
                         .build();
 
                 itemCategoryCharacteristicRepository.save(itemCategoryCharacteristic);
@@ -120,7 +119,7 @@ public class ItemServiceImpl implements ItemService {
             CharacteristicValue characteristicValue = characteristic.getCharacteristicValueId() != null ? characteristicValueRepository.findById(characteristic.getCharacteristicValueId()).orElse(null) : null;
 
             ItemCharacteristic itemCharacteristic = ItemCharacteristic.builder()
-                    .item(savedItem)
+                    .item(item)
                     .title(characteristic1.isTitle())
                     .characteristic(characteristic1)
                     .value(characteristicValue)
@@ -134,37 +133,46 @@ public class ItemServiceImpl implements ItemService {
         title.put("ru", ru.toString());
         title.put("en", en.toString());
 
-        savedItem.setTitle(title);
-        itemRepository.save(savedItem);
+        item.setTitle(title);
+        itemRepository.save(item);
 
         //Saving all the image urls to itemImages table.
         for (String imageUrl : dto.getImageUrls()) {
             ItemImage itemImage = ItemImage.builder()
-                    .item(savedItem)
+                    .item(item)
                     .url(imageUrl)
                     .build();
             itemImageRepository.save(itemImage);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
+        return item;
     }
 
     @Override
-    public ResponseEntity<?> getById(String lang, UUID itemId, boolean active) {
-        Item2DTO byIdCustom = itemRepository.findByIdCustom(lang, itemId, active);
-        System.out.println(byIdCustom.toString());
-        return ResponseEntity.ok(byIdCustom);
+    public Item2DTO getById(String lang, UUID itemId, boolean active) {
+        return itemRepository.findByIdCustom(lang, itemId, active);
     }
 
     @Override
-    public ResponseEntity<?> edit(UUID itemId, ItemEditReqDTO dto) {
+    public Item edit(UUID itemId, ItemEditReqDTO dto) {
+        // Bazadan Item'ni ID bo'yicha izlaymiz, agar yo'q bo'lsa 404 qaytaramiz
         Item item = itemRepository.findById(itemId).orElseThrow(
                 () -> RestException.restThrow("Item not found", HttpStatus.NOT_FOUND)
         );
-        User user = (User) CommonUtils.getUserFromSecurityContext();
-        assert user != null;
+
+        // Security contextdan user'ni get qilib olamiz
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Agar user contextda topilmasa 401 qaytarib yuboramiz
+        if (user == null) {
+            throw RestException.restThrow("User is not authenticated", HttpStatus.UNAUTHORIZED);
+        }
+
+        // Tahrirlanayotgan Item aynan shu user'ga tegishli bo'lmasa 403 qaytaramiz
         if (!item.getUser().getId().equals(user.getId())) {
             throw RestException.restThrow("You do not have permission to edit this item", HttpStatus.FORBIDDEN);
         }
+
+
         if (dto.getCharacteristics() != null) {
             List<ItemCharacteristicReqDTO> characteristics = dto.getCharacteristics();
             for (ItemCharacteristicReqDTO characteristic : characteristics) {

@@ -51,6 +51,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "FROM categories\n" +
             "WHERE parent_id = :parentId\n" +
             "ORDER BY translations ->> :lang", nativeQuery = true)
-    List<CategoryDTO> findAllByParentId(@Param("lang") String lang,
-                                        @Param("parentId") Long parentId);
+    List<CatalogDTO> findAllByParentId(@Param("lang") String lang,
+                                       @Param("parentId") Long parentId);
+
 }

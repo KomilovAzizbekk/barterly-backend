@@ -15,7 +15,6 @@ import uz.mediasolutions.barterlybackend.entity.Region;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.NeighborhoodMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.NeighborhoodDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.NeighborhoodDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.NeighborhoodReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.NeighborhoodResDTO;
 import uz.mediasolutions.barterlybackend.repository.CityRepository;

@@ -4,10 +4,10 @@ import lombok.*;
 
 import java.util.Map;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 public class CategoryResDTO {
 
@@ -15,6 +15,10 @@ public class CategoryResDTO {
 
     private String imageUrl;
 
-    private Map<String, String> translations;
+    private Map<String, String> names;
+
+    private Long parentId;
+
+    private String parentName;
 
 }

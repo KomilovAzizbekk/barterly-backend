@@ -14,7 +14,6 @@ import uz.mediasolutions.barterlybackend.entity.Region;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.RegionMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.RegionDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.RegionDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.RegionReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.RegionResDTO;
 import uz.mediasolutions.barterlybackend.repository.CurrencyRepository;

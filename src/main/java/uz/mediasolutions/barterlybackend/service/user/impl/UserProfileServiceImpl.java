@@ -2,10 +2,10 @@ package uz.mediasolutions.barterlybackend.service.user.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.User;
 import uz.mediasolutions.barterlybackend.enums.RoleEnum;
+import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ProfileDTO;
 import uz.mediasolutions.barterlybackend.repository.UserRepository;
 import uz.mediasolutions.barterlybackend.service.user.abs.UserProfileService;
@@ -20,12 +20,16 @@ public class UserProfileServiceImpl implements UserProfileService {
     private final UserRepository userRepository;
 
     @Override
-    public ResponseEntity<?> getUserProfileInfo(String lang, UUID id) {
-        User user = userRepository.findById(id).orElse(null);
-        if (user != null && !Objects.equals(user.getRole().getName(), RoleEnum.ROLE_USER)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD REQUEST");
+    public ProfileDTO getUserProfileInfo(String lang, UUID id) {
+        // User'ni ID bo'yicha izlaymiz agar yo'q bo'lsa 404 qaytaramiz
+        User user = userRepository.findById(id).orElseThrow(
+                () -> RestException.restThrow("User not Found", HttpStatus.NOT_FOUND)
+        );
+
+        // Agar USER'dan boshqa rollik userni ma'lumotlarini ko'rmoqchi bo'lsa 404 beramiz
+        if (!Objects.equals(user.getRole().getName(), RoleEnum.ROLE_USER)) {
+            throw RestException.restThrow("Bad request", HttpStatus.NOT_FOUND);
         }
-        ProfileDTO profileInfo = userRepository.getUserProfileInfo(lang, id);
-        return ResponseEntity.ok(profileInfo);
+        return userRepository.getUserProfileInfo(lang, id);
     }
 }

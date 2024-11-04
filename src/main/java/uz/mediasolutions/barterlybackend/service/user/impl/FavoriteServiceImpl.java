@@ -1,15 +1,11 @@
 package uz.mediasolutions.barterlybackend.service.user.impl;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.Favorite;
 import uz.mediasolutions.barterlybackend.entity.Item;
@@ -18,15 +14,8 @@ import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ItemDTO;
 import uz.mediasolutions.barterlybackend.repository.FavoriteRepository;
 import uz.mediasolutions.barterlybackend.repository.ItemRepository;
-import uz.mediasolutions.barterlybackend.repository.UserRepository;
-import uz.mediasolutions.barterlybackend.service.common.impl.AuthServiceImpl;
 import uz.mediasolutions.barterlybackend.service.user.abs.FavoriteService;
-import uz.mediasolutions.barterlybackend.utills.CommonUtils;
-import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -34,62 +23,49 @@ import java.util.UUID;
 public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
-    private final UserRepository userRepository;
-    private final AuthServiceImpl authService;
     private final ItemRepository itemRepository;
 
     @Override
-    public ResponseEntity<Page<?>> getByUserId(String lang, int page, int size, HttpSession session, HttpServletRequest request) {
-        Pageable pageable = PageRequest.of(page, size);
-        UUID userId = authService.getAuthenticatedUserId(request);
-        Page<ItemDTO> favorites;
-        if (userId == null) {
-            Set<UUID> likedItems = (Set<UUID>) session.getAttribute("likedItems");
-            if (likedItems == null) {
-                likedItems = new HashSet<>();
-            }
-            favorites = favoriteRepository.findAllByItemIds(new ArrayList<>(likedItems), lang, pageable);
-        } else {
-            favorites = favoriteRepository.findAllByUserId(userId, lang, pageable);
+    public Page<ItemDTO> getByUserId(String lang, int page, int size) {
+        // Security contextdan user'ni get qilib olamiz
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Agar user contextda topilmasa 401 qaytarib yuboramiz
+        if (user == null) {
+            throw RestException.restThrow("User is not authenticated", HttpStatus.UNAUTHORIZED);
         }
-        return ResponseEntity.ok(favorites);
+        return favoriteRepository.findAllByUserId(user.getId(), lang, PageRequest.of(page, size));
     }
 
     @Override
-    public ResponseEntity<?> addFavorite(UUID itemId, boolean like, HttpSession session, HttpServletRequest request) {
-        UUID userId = authService.getAuthenticatedUserId(request);
+    public Favorite addFavorite(UUID itemId, boolean like) {
+        // Security Context'dan userni olamiz
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Agar User null bo'lsa 401 xatolik qayaramiz
+        if (user == null) {
+            throw RestException.restThrow("User is not authenticated", HttpStatus.UNAUTHORIZED);
+        }
+
+        // Item'ni bazadan izlaymiz, agar yo'q bo'lsa 404 qaytaramiz
         Item item = itemRepository.findById(itemId).orElseThrow(
                 () -> RestException.restThrow("Item not found", HttpStatus.NOT_FOUND)
         );
 
-        if (userId == null) {
-            Set<UUID> likedItems = (Set<UUID>) session.getAttribute("likedItems");
-            if (likedItems == null) {
-                likedItems = new HashSet<>();
-            }
-            if (like) {
-                likedItems.add(itemId);
-                session.setAttribute("likedItems", likedItems);
-            } else {
-                likedItems.remove(itemId);
-                session.setAttribute("likedItems", likedItems);
-            }
+        /* Agar like = true && bazada duplikatlikka olib kelmasa bazaga yangi Favorite object qo'shamiz,
+        else if like = false && bazada shunday object bo'lsa holda delete qilib yuboramiz
+        else BAD REQUEST */
+        if (like && !favoriteRepository.existsByUserIdAndItemId(user.getId(), itemId)) {
+            return favoriteRepository.save(
+                    Favorite.builder()
+                            .user(user)
+                            .item(item)
+                            .build());
+        } else if (!like && favoriteRepository.existsByUserIdAndItemId(user.getId(), itemId)) {
+            favoriteRepository.deleteFavoritesByUserIdAndItemIdCustom(user.getId(), itemId);
+            return null;
         } else {
-            User user = userRepository.findById(userId).orElseThrow(
-                    () -> RestException.restThrow("User not found", HttpStatus.NOT_FOUND)
-            );
-
-            if (like) {
-                Favorite favorite = Favorite.builder()
-                        .user(user)
-                        .item(item)
-                        .build();
-                favoriteRepository.save(favorite);
-            } else {
-                Favorite favorite = favoriteRepository.findByUserIdAndItemId(userId, itemId);
-                favoriteRepository.deleteById(favorite.getId());
-            }
+            throw RestException.restThrow("Wrong action", HttpStatus.BAD_REQUEST);
         }
-        return like ? ResponseEntity.ok("LIKED") : ResponseEntity.ok("UNLIKED");
     }
 }

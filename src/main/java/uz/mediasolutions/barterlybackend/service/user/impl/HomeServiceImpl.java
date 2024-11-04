@@ -6,8 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import uz.mediasolutions.barterlybackend.entity.User;
+import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ItemDTO;
 import uz.mediasolutions.barterlybackend.payload.response.HeaderResDTO;
 import uz.mediasolutions.barterlybackend.repository.FavoriteRepository;
@@ -28,49 +32,41 @@ public class HomeServiceImpl implements HomeService {
     private final ItemRepository itemRepository;
 
     @Override
-    public ResponseEntity<HeaderResDTO> getHeaderDetails(HttpServletRequest request, HttpSession session) {
-        UUID userId = authService.getAuthenticatedUserId(request);
-        int favourite = 0, swap, profile;
-        if (userId == null) {
-            swap = 0;
-            profile = 0;
-            Set<UUID> likedItems = (Set<UUID>) session.getAttribute("likedItems");
-            if (likedItems == null) {
-                likedItems = new HashSet<>();
-            }
-            favourite = likedItems.size();
-        } else {
-            swap = swapRepository.findCountByUserId(userId);
-            profile = 0;
-            favourite = favoriteRepository.findCountByUserId(userId);
+    public HeaderResDTO getHeaderDetails() {
+        // Security contextdan user'ni get qilib olamiz
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Agar user contextda topilmasa 401 qaytarib yuboramiz
+        if (user == null) {
+            throw RestException.restThrow("User is not authenticated", HttpStatus.UNAUTHORIZED);
         }
-        HeaderResDTO headerResDTO = HeaderResDTO.builder()
+
+        // 3 ta o'zgaruvchi yaratib olamiz
+        int swap = swapRepository.findCountByUserId(user.getId());
+        int profile = 0;
+        int favourite = favoriteRepository.findCountByUserId(user.getId());
+
+        return HeaderResDTO.builder()
                 .profile(profile)
                 .swaps(swap)
                 .favorites(favourite)
                 .build();
-        return ResponseEntity.ok(headerResDTO);
     }
 
     @Override
-    public ResponseEntity<Page<?>> getItems(String lang, int page, int size, HttpServletRequest request, HttpSession session) {
-        Pageable pageable = PageRequest.of(page, size);
-        UUID userId = authService.getAuthenticatedUserId(request);
-        Page<ItemDTO> items;
-        if (userId == null) {
-            Set<UUID> likedItems = (Set<UUID>) session.getAttribute("likedItems");
-            if (likedItems == null) {
-               likedItems = new HashSet<>();
-            }
-            items = itemRepository.findAllForHomeForNotAuthenticatedUser(lang, new ArrayList<>(likedItems), pageable);
-        } else {
-            items = itemRepository.findAllForHomeForAuthenticatedUser(lang, userId, pageable);
+    public Page<ItemDTO> getItems(String lang, int page, int size) {
+        // Security contextdan user'ni get qilib olamiz
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Agar user contextda topilmasa 401 qaytarib yuboramiz
+        if (user == null) {
+            throw RestException.restThrow("User is not authenticated", HttpStatus.UNAUTHORIZED);
         }
-        return ResponseEntity.ok(items);
+        return itemRepository.findAllForHomeForAuthenticatedUser(lang, user.getId(), PageRequest.of(page, size));
     }
 
     @Override
-    public ResponseEntity<Page<?>> search(String search, Long categoryId) {
+    public Page<ItemDTO> search(String search, Long categoryId) {
         return null;
     }
 }

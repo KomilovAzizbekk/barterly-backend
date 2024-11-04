@@ -3,7 +3,6 @@ package uz.mediasolutions.barterlybackend.service.admin.abs;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import uz.mediasolutions.barterlybackend.payload.request.CategoryReqDTO;
-import uz.mediasolutions.barterlybackend.payload.response.CategoryResDTO;
 
 public interface CategoryService {
 

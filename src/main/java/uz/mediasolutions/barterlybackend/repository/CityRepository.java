@@ -7,9 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import uz.mediasolutions.barterlybackend.entity.City;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CityDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CityDTO2;
-
-import java.util.Optional;
 
 public interface CityRepository extends JpaRepository<City, Long> {
 

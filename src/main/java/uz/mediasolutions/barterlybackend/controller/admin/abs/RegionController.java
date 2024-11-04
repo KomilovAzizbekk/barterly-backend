@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.RegionDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.RegionDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.RegionReqDTO;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 

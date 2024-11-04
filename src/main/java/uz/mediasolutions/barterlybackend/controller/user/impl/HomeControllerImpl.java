@@ -1,12 +1,11 @@
 package uz.mediasolutions.barterlybackend.controller.user.impl;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uz.mediasolutions.barterlybackend.controller.user.abs.HomeController;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ItemDTO;
 import uz.mediasolutions.barterlybackend.payload.response.HeaderResDTO;
 import uz.mediasolutions.barterlybackend.service.user.abs.HomeService;
 
@@ -17,17 +16,17 @@ public class HomeControllerImpl implements HomeController {
     private final HomeService homeService;
 
     @Override
-    public ResponseEntity<HeaderResDTO> getHeaderDetails(HttpServletRequest request, HttpSession session) {
-        return homeService.getHeaderDetails(request, session);
+    public ResponseEntity<HeaderResDTO> getHeaderDetails() {
+        return ResponseEntity.ok(homeService.getHeaderDetails());
     }
 
     @Override
-    public ResponseEntity<Page<?>> getItems(String lang, int page, int size, HttpServletRequest request, HttpSession session) {
-        return homeService.getItems(lang, page, size, request, session);
+    public ResponseEntity<Page<ItemDTO>> getItems(String lang, int page, int size) {
+        return ResponseEntity.ok(homeService.getItems(lang, page, size));
     }
 
     @Override
-    public ResponseEntity<Page<?>> search(String search, Long categoryId) {
-        return homeService.search(search, categoryId);
+    public ResponseEntity<Page<ItemDTO>> search(String search, Long categoryId) {
+        return ResponseEntity.ok(homeService.search(search, categoryId));
     }
 }

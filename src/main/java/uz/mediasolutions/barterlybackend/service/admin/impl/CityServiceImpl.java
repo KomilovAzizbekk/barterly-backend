@@ -14,7 +14,6 @@ import uz.mediasolutions.barterlybackend.entity.Region;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CityMapper;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CityDTO;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CityDTO2;
 import uz.mediasolutions.barterlybackend.payload.request.CityReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CityResDTO;
 import uz.mediasolutions.barterlybackend.repository.CityRepository;
@@ -22,7 +21,6 @@ import uz.mediasolutions.barterlybackend.repository.RegionRepository;
 import uz.mediasolutions.barterlybackend.service.admin.abs.CityService;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service

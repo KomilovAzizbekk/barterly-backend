@@ -25,7 +25,6 @@ public class DataLoader implements CommandLineRunner {
     private final LanguageRepository languageRepository;
     private final UserTypeRepository userTypeRepository;
     private final UserRepository userRepository;
-    private final SwapStatusRepository swapStatusRepository;
 
     @Value("${spring.sql.init.mode}")
     private String mode;
@@ -40,13 +39,6 @@ public class DataLoader implements CommandLineRunner {
             addLanguage();
             addRegion();
             addUserType();
-            addSwapStatuses();
-        }
-    }
-
-    private void addSwapStatuses() {
-        for (SwapStatusEnum value : SwapStatusEnum.values()) {
-            swapStatusRepository.save(new SwapStatus(value));
         }
     }
 
