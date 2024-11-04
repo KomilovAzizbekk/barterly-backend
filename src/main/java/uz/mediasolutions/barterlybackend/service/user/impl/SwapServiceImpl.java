@@ -14,6 +14,7 @@ import uz.mediasolutions.barterlybackend.payload.request.SwapReqDTO;
 import uz.mediasolutions.barterlybackend.repository.ItemRepository;
 import uz.mediasolutions.barterlybackend.repository.SwapRepository;
 import uz.mediasolutions.barterlybackend.service.user.abs.SwapService;
+import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 import java.util.*;
 
@@ -30,7 +31,7 @@ public class SwapServiceImpl implements SwapService {
     }
 
     @Override
-    public Swap create(SwapReqDTO dto) {
+    public String create(SwapReqDTO dto) {
         // Ikkala Item ID ni bir so‘rovda olib kelamiz
         List<Item> items = itemRepository.findAllById(Arrays.asList(dto.getRequesterItemId(), dto.getResponderItemId()));
 
@@ -66,12 +67,13 @@ public class SwapServiceImpl implements SwapService {
                 .swapStatus(SwapStatusEnum.NEW)
                 .build();
 
-        return swapRepository.save(swap);
+        swapRepository.save(swap);
+        return Rest.CREATED;
     }
 
 
     @Override
-    public Swap accept(UUID swapId, boolean accept) {
+    public String accept(UUID swapId, boolean accept) {
         // Bazadan ID bo'yicha Swap'ni izlaymiz agar topilmasa 404 qaytaramiz
         Swap swap = swapRepository.findById(swapId).orElseThrow(
                 () -> RestException.restThrow("Swap not found", HttpStatus.NOT_FOUND)
@@ -79,7 +81,8 @@ public class SwapServiceImpl implements SwapService {
 
         // true, false ga qarab status joylaymiz va qaytaramiz
         swap.setSwapStatus(accept ? SwapStatusEnum.ACCEPTED : SwapStatusEnum.REJECTED);
-        return swapRepository.save(swap);
+        swapRepository.save(swap);
+        return Rest.EDITED;
     }
 }
 

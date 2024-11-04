@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uz.mediasolutions.barterlybackend.entity.Swap;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.SwapDTO;
 import uz.mediasolutions.barterlybackend.payload.request.SwapReqDTO;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
@@ -21,10 +20,10 @@ public interface SwapController {
                                                  @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
 
     @PostMapping("/create")
-    ResponseEntity<Swap> create(@RequestBody @Valid SwapReqDTO dto);
+    ResponseEntity<String> create(@RequestBody @Valid SwapReqDTO dto);
 
     @PutMapping("/accept/{swapId}")
-    ResponseEntity<Swap> accept(@PathVariable(name = "swapId") UUID swapId,
-                                @RequestParam(name = "accept", defaultValue = "true") boolean accept);
+    ResponseEntity<String> accept(@PathVariable(name = "swapId") UUID swapId,
+                                  @RequestParam(name = "accept", defaultValue = "true") boolean accept);
 
 }

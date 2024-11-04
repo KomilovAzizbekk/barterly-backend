@@ -3,7 +3,6 @@ package uz.mediasolutions.barterlybackend.controller.user.abs;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uz.mediasolutions.barterlybackend.entity.Favorite;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ItemDTO;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
@@ -18,8 +17,8 @@ public interface FavoriteController {
                                               @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
 
     @PostMapping("/add/{itemId}")
-    ResponseEntity<Favorite> addFavorite(@PathVariable UUID itemId,
-                                         @RequestParam(name = "like", defaultValue = "true") boolean like);
+    ResponseEntity<String> addFavorite(@PathVariable UUID itemId,
+                                       @RequestParam(name = "like", defaultValue = "true") boolean like);
 
 
 }

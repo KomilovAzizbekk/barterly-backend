@@ -2,6 +2,8 @@ package uz.mediasolutions.barterlybackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import uz.mediasolutions.barterlybackend.entity.template.AbsLongDef;
@@ -22,6 +24,8 @@ import java.util.Map;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Builder
+@DynamicInsert
+@DynamicUpdate
 public class CategoryCharacteristicValue extends AbsLongDef {
 
     @ManyToOne

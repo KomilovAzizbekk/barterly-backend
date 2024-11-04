@@ -2,6 +2,9 @@ package uz.mediasolutions.barterlybackend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import uz.mediasolutions.barterlybackend.entity.template.AbsLongDef;
@@ -22,6 +25,8 @@ import java.util.Map;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Builder
+@DynamicInsert
+@DynamicUpdate
 public class CharacteristicValue extends AbsLongDef {
 
     @ManyToOne
@@ -34,6 +39,7 @@ public class CharacteristicValue extends AbsLongDef {
 
     @OneToMany(mappedBy = "value", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @BatchSize(size = 10)
     private List<ItemCharacteristic> itemCharacteristics;
 
 }

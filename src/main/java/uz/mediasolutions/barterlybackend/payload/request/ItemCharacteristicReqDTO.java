@@ -12,6 +12,9 @@ import lombok.*;
 public class ItemCharacteristicReqDTO {
 
     @NotNull
+    private Long id;
+
+    @NotNull
     private Long characteristicId;
 
     private Long characteristicValueId;

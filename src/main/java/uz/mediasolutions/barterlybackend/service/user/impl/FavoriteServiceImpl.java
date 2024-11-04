@@ -3,7 +3,6 @@ package uz.mediasolutions.barterlybackend.service.user.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public Favorite addFavorite(UUID itemId, boolean like) {
+    public String addFavorite(UUID itemId, boolean like) {
         // Security Context'dan userni olamiz
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -56,14 +55,15 @@ public class FavoriteServiceImpl implements FavoriteService {
         else if like = false && bazada shunday object bo'lsa holda delete qilib yuboramiz
         else BAD REQUEST */
         if (like && !favoriteRepository.existsByUserIdAndItemId(user.getId(), itemId)) {
-            return favoriteRepository.save(
-                    Favorite.builder()
-                            .user(user)
-                            .item(item)
-                            .build());
+            Favorite favorite = Favorite.builder()
+                    .user(user)
+                    .item(item)
+                    .build();
+            favoriteRepository.save(favorite);
+            return "LIKED";
         } else if (!like && favoriteRepository.existsByUserIdAndItemId(user.getId(), itemId)) {
             favoriteRepository.deleteFavoritesByUserIdAndItemIdCustom(user.getId(), itemId);
-            return null;
+            return "DISLIKED";
         } else {
             throw RestException.restThrow("Wrong action", HttpStatus.BAD_REQUEST);
         }

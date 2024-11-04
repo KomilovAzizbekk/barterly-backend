@@ -1,5 +1,6 @@
 package uz.mediasolutions.barterlybackend.payload.request;
 
+import jakarta.validation.Valid;
 import lombok.*;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 @Builder
 public class ItemEditReqDTO {
 
+    @Valid
     private List<ItemCharacteristicReqDTO> characteristics;
 
     private List<String> imageUrls;

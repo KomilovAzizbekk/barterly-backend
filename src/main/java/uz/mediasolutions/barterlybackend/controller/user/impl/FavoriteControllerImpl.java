@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uz.mediasolutions.barterlybackend.controller.user.abs.FavoriteController;
-import uz.mediasolutions.barterlybackend.entity.Favorite;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ItemDTO;
 import uz.mediasolutions.barterlybackend.service.user.abs.FavoriteService;
 
@@ -23,7 +22,7 @@ public class FavoriteControllerImpl implements FavoriteController {
     }
 
     @Override
-    public ResponseEntity<Favorite> addFavorite(UUID itemId, boolean like) {
+    public ResponseEntity<String> addFavorite(UUID itemId, boolean like) {
         return ResponseEntity.status(201).body(favoriteService.addFavorite(itemId, like));
     }
 }

@@ -1,10 +1,10 @@
 package uz.mediasolutions.barterlybackend.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.*;
 import org.hibernate.type.SqlTypes;
 import uz.mediasolutions.barterlybackend.entity.template.AbsAuditDeleted;
 import uz.mediasolutions.barterlybackend.entity.template.AbsDateDeleted;
@@ -29,6 +29,8 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @SQLDelete(sql = "UPDATE items SET deleted = true WHERE id=?")
 @Builder
+@DynamicInsert
+@DynamicUpdate
 public class Item extends AbsAuditDeleted {
 
     @Id
