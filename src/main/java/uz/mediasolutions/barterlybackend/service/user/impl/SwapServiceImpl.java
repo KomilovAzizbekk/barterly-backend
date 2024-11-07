@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.Item;
 import uz.mediasolutions.barterlybackend.entity.Swap;
+import uz.mediasolutions.barterlybackend.entity.User;
 import uz.mediasolutions.barterlybackend.enums.SwapStatusEnum;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.SwapDTO;
@@ -16,6 +18,7 @@ import uz.mediasolutions.barterlybackend.repository.SwapRepository;
 import uz.mediasolutions.barterlybackend.service.user.abs.SwapService;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -64,7 +67,7 @@ public class SwapServiceImpl implements SwapService {
                 .requesterItemId(requesterItem.getId())
                 .responderUserId(responderItem.getUser().getId())
                 .requesterUserId(requesterItem.getUser().getId())
-                .swapStatus(SwapStatusEnum.NEW)
+                .swapStatus(SwapStatusEnum.WAITING)
                 .build();
 
         swapRepository.save(swap);
@@ -79,8 +82,22 @@ public class SwapServiceImpl implements SwapService {
                 () -> RestException.restThrow("Swap not found", HttpStatus.NOT_FOUND)
         );
 
+        // Security Context'dan Userni olamiz
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Agar User null ga teng bo'lsa 401 xatolik qaytaramiz
+        if (user == null) {
+            throw RestException.restThrow("User is not authenticated", HttpStatus.UNAUTHORIZED);
+        }
+
+        // Agar Accept yoki Reject qilmoqchi bo'lgan User SwapResponder'ga teng bo'lmasa 400 qaytarib yuboramiz
+        if (!user.getId().equals(swap.getResponderUserId())) {
+            throw RestException.restThrow("You are not responder user for this swap", HttpStatus.BAD_REQUEST);
+        }
+
         // true, false ga qarab status joylaymiz va qaytaramiz
         swap.setSwapStatus(accept ? SwapStatusEnum.ACCEPTED : SwapStatusEnum.REJECTED);
+        swap.setAcceptedTime(accept ? new Timestamp(System.currentTimeMillis()) : null);
         swapRepository.save(swap);
         return Rest.EDITED;
     }

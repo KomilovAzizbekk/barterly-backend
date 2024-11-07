@@ -4,13 +4,15 @@ public interface CharacteristicDTO {
 
     Long getId();
 
-    boolean isRequired();
-
     boolean isTitle();
 
     boolean isFilter();
 
     String getName();
+
+    Long getCharacteristicTypeId();
+
+    String getCharacteristicTypeName();
 
     Long getCategoryId();
 

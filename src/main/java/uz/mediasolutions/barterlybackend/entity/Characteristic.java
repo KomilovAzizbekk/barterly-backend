@@ -36,7 +36,9 @@ public class Characteristic extends AbsDate {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    private boolean required = false;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "characteristic_type_id")
+    private CharacteristicType characteristicType;
 
     private boolean filter = false;
 

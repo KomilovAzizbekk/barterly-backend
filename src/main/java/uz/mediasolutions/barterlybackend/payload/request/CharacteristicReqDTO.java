@@ -15,8 +15,8 @@ public class CharacteristicReqDTO {
     @NotNull(message = "choose category")
     private Long categoryId;
 
-    @NotNull
-    private Boolean required;
+    @NotNull(message = "choose characteristic type")
+    private Long characteristicTypeId;
 
     @NotNull
     private Boolean filter;

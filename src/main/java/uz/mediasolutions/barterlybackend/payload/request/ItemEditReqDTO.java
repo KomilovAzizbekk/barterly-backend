@@ -13,7 +13,7 @@ import java.util.List;
 public class ItemEditReqDTO {
 
     @Valid
-    private List<ItemCharacteristicReqDTO> characteristics;
+    private List<ItemCharacteristicEditDTO> characteristics;
 
     private List<String> imageUrls;
 

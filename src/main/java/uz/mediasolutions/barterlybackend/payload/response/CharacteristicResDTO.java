@@ -13,8 +13,6 @@ public class CharacteristicResDTO {
 
     private Long id;
 
-    private boolean required;
-
     private boolean filter;
 
     private boolean title;
@@ -24,4 +22,8 @@ public class CharacteristicResDTO {
     private Long categoryId;
 
     private String categoryName;
+
+    private Long characteristicTypeId;
+
+    private String characteristicTypeName;
 }

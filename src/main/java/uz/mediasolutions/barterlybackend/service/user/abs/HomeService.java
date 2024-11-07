@@ -8,7 +8,7 @@ public interface HomeService {
 
     HeaderResDTO getHeaderDetails();
 
-    Page<ItemDTO> getItems(String lang, int page, int size);
+    Page<ItemDTO> getItems(String lang, int page, int size, Boolean premium);
 
     Page<ItemDTO> search(String search, Long categoryId);
 }

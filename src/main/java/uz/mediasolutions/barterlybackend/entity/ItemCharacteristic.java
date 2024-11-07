@@ -37,6 +37,10 @@ public class ItemCharacteristic extends AbsLongDef {
     @JoinColumn(name = "characteristic_value_id")
     private CharacteristicValue value;
 
+//    @ManyToOne
+//    @JoinColumn(name = "characteristic_type_id")
+//    private CharacteristicType characteristicType;
+
     @Column
     private String textValue;
 

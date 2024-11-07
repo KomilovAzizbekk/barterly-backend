@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uz.mediasolutions.barterlybackend.controller.user.abs.UserProfileController;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ProfileDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ProfileDTO2;
 import uz.mediasolutions.barterlybackend.service.user.abs.UserProfileService;
 
 import java.util.UUID;
@@ -18,5 +19,10 @@ public class UserProfileControllerImpl implements UserProfileController {
     @Override
     public ResponseEntity<ProfileDTO> getUserProfileInfo(String lang, UUID id) {
         return ResponseEntity.ok(service.getUserProfileInfo(lang, id));
+    }
+
+    @Override
+    public ResponseEntity<ProfileDTO2> getMyProfileInfo(String lang) {
+        return ResponseEntity.ok(service.getMyProfileInfo(lang));
     }
 }

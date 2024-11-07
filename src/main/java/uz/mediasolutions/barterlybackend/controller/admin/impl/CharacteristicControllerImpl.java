@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uz.mediasolutions.barterlybackend.controller.admin.abs.CharacteristicController;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CharacteristicDTO;
 import uz.mediasolutions.barterlybackend.payload.request.CharacteristicReqDTO;
 import uz.mediasolutions.barterlybackend.service.admin.abs.CharacteristicService;
 
@@ -12,30 +13,30 @@ import uz.mediasolutions.barterlybackend.service.admin.abs.CharacteristicService
 @RequiredArgsConstructor
 public class CharacteristicControllerImpl implements CharacteristicController {
 
-    private final CharacteristicService characteristicService;
+    private final CharacteristicService service;
 
     @Override
-    public ResponseEntity<Page<?>> getAll(String lang, String search, Long categoryId, int page, int size) {
-        return characteristicService.getAll(lang, search, categoryId, page, size);
+    public ResponseEntity<Page<CharacteristicDTO>> getAll(String lang, String search, Long categoryId, Long characteristicTypeId, int page, int size) {
+        return ResponseEntity.ok(service.getAll(lang, search, categoryId, characteristicTypeId, page, size));
     }
 
     @Override
     public ResponseEntity<?> getById(String lang, Long id) {
-        return characteristicService.getById(lang, id);
+        return ResponseEntity.ok(service.getById(lang, id));
     }
 
     @Override
     public ResponseEntity<?> add(CharacteristicReqDTO dto) {
-        return characteristicService.add(dto);
+        return ResponseEntity.status(201).body(service.add(dto));
     }
 
     @Override
     public ResponseEntity<?> edit(Long id, CharacteristicReqDTO dto) {
-        return characteristicService.edit(id, dto);
+        return ResponseEntity.status(202).body(service.edit(id, dto));
     }
 
     @Override
     public ResponseEntity<?> delete(Long id) {
-        return characteristicService.delete(id);
+        return ResponseEntity.status(204).body(service.delete(id));
     }
 }

@@ -4,9 +4,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.Item2DTO;
 import uz.mediasolutions.barterlybackend.payload.request.ItemEditReqDTO;
 import uz.mediasolutions.barterlybackend.payload.request.ItemReqDTO;
+import uz.mediasolutions.barterlybackend.payload.response.ItemResDTO;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 import java.util.UUID;
@@ -19,12 +19,12 @@ public interface ItemController {
     ResponseEntity<String> addItem(@RequestBody @Valid ItemReqDTO dto);
 
     @GetMapping("/get/{itemId}")
-    ResponseEntity<Item2DTO> getItemById(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
-                                         @PathVariable UUID itemId,
-                                         @RequestParam(name = "isActive") boolean isActive);
+    ResponseEntity<ItemResDTO> getItemById(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
+                                           @PathVariable UUID itemId);
 
     @PatchMapping("edit/{itemId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<String> edit(@PathVariable UUID itemId,
-                              @RequestBody ItemEditReqDTO dto);
+                                @RequestBody ItemEditReqDTO dto);
 
 }

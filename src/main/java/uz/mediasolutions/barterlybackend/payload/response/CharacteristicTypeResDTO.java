@@ -9,14 +9,13 @@ import java.util.Map;
 @Getter
 @Setter
 @Builder
-public class CategoryCharacteristicValueResDTO {
+public class CharacteristicTypeResDTO {
 
     private Long id;
 
     private Map<String, String> names;
 
-    private Long categoryCharacteristicId;
+    private Long categoryId;
 
-    private String categoryCharacteristicName;
-
+    private String categoryName;
 }

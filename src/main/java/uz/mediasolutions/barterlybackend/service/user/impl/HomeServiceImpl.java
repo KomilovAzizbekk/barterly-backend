@@ -1,13 +1,9 @@
 package uz.mediasolutions.barterlybackend.service.user.impl;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.User;
@@ -17,16 +13,12 @@ import uz.mediasolutions.barterlybackend.payload.response.HeaderResDTO;
 import uz.mediasolutions.barterlybackend.repository.FavoriteRepository;
 import uz.mediasolutions.barterlybackend.repository.ItemRepository;
 import uz.mediasolutions.barterlybackend.repository.SwapRepository;
-import uz.mediasolutions.barterlybackend.service.common.impl.AuthServiceImpl;
 import uz.mediasolutions.barterlybackend.service.user.abs.HomeService;
-
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class HomeServiceImpl implements HomeService {
 
-    private final AuthServiceImpl authService;
     private final SwapRepository swapRepository;
     private final FavoriteRepository favoriteRepository;
     private final ItemRepository itemRepository;
@@ -54,15 +46,10 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
-    public Page<ItemDTO> getItems(String lang, int page, int size) {
-        // Security contextdan user'ni get qilib olamiz
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        // Agar user contextda topilmasa 401 qaytarib yuboramiz
-        if (user == null) {
-            throw RestException.restThrow("User is not authenticated", HttpStatus.UNAUTHORIZED);
-        }
-        return itemRepository.findAllForHomeForAuthenticatedUser(lang, user.getId(), PageRequest.of(page, size));
+    public Page<ItemDTO> getItems(String lang, int page, int size, Boolean premium) {
+        // Premium Boolean null bo'lsa barcha itemlarni qaytaramiz, agar true yoki false bolsa turga ajratgan holda
+        return premium == null ? itemRepository.findAllForHomeForAllUsers(lang, PageRequest.of(page, size)) :
+                itemRepository.findAllForHomeForAllUsers1(lang, premium, PageRequest.of(page, size));
     }
 
     @Override

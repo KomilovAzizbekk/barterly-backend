@@ -21,8 +21,8 @@ public class HomeControllerImpl implements HomeController {
     }
 
     @Override
-    public ResponseEntity<Page<ItemDTO>> getItems(String lang, int page, int size) {
-        return ResponseEntity.ok(homeService.getItems(lang, page, size));
+    public ResponseEntity<Page<ItemDTO>> getItems(String lang, int page, int size, Boolean premium) {
+        return ResponseEntity.ok(homeService.getItems(lang, page, size, premium));
     }
 
     @Override

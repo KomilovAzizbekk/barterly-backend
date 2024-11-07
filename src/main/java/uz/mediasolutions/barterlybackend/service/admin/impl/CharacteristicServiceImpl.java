@@ -5,9 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.Category;
 import uz.mediasolutions.barterlybackend.entity.Characteristic;
@@ -33,46 +31,41 @@ public class CharacteristicServiceImpl implements CharacteristicService {
     private static final Logger log = LoggerFactory.getLogger(CharacteristicServiceImpl.class);
 
     @Override
-    public ResponseEntity<Page<?>> getAll(String lang, String search, Long categoryId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<CharacteristicDTO> characteristics = characteristicRepository.findAllByOrderByCreatedAtDesc(lang, search, categoryId, pageable);
-        return ResponseEntity.ok(characteristics);
+    public Page<CharacteristicDTO> getAll(String lang, String search, Long categoryId,
+                                          Long characteristicTypeId, int page, int size) {
+        return characteristicRepository.findAllByOrderByUpdatedAtDesc(lang, search, categoryId,
+                characteristicTypeId, PageRequest.of(page, size));
     }
 
 
     @Override
-    public ResponseEntity<?> getById(String lang, Long id) {
+    public CharacteristicResDTO getById(String lang, Long id) {
         // ID orqali bazadan Characteristic'ni izlaymiz, agar topilmasa 404 qaytaramiz
         Characteristic characteristic = characteristicRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Characteristic not found", HttpStatus.NOT_FOUND)
         );
 
-        // Characteristic'ga bog;langan Categoryni olamiz
-        Category category = characteristic.getCategory();
-
-        // Response DTO yaratamiz va 200 status bilan qaytaramiz
-        CharacteristicResDTO dto = characteristicMapper.toResDTO(characteristic, category, lang);
-
-        return ResponseEntity.ok(dto);
+        // Response DTO yaratamiz va qaytaramiz
+        return characteristicMapper.toResDTO(characteristic, lang);
     }
 
 
     @Override
-    public ResponseEntity<?> add(CharacteristicReqDTO dto) {
-        Characteristic entity = characteristicMapper.toEntity(dto);
-        characteristicRepository.save(entity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(Rest.CREATED);
+    public String add(CharacteristicReqDTO dto) {
+        characteristicRepository.save(characteristicMapper.toEntity(dto));
+        return Rest.CREATED;
     }
 
 
     @Override
-    public ResponseEntity<?> edit(Long id, CharacteristicReqDTO dto) {
+    public String edit(Long id, CharacteristicReqDTO dto) {
+        // ID orqali bazadan Characteristic'ni izlaymiz, agar topilmasa 404 qaytaramiz
         Characteristic characteristic = characteristicRepository.findById(id).orElseThrow(
                 () -> RestException.restThrow("Characteristic not found", HttpStatus.NOT_FOUND)
         );
 
+        // Null bo'lmagan qiymatlarni Entity'ga set qilamiz
         Optional.ofNullable(dto.getTranslations()).ifPresent(characteristic::setTranslations);
-        Optional.ofNullable(dto.getRequired()).ifPresent(characteristic::setRequired);
         Optional.ofNullable(dto.getFilter()).ifPresent(characteristic::setFilter);
         Optional.ofNullable(dto.getTitle()).ifPresent(characteristic::setTitle);
         Optional.ofNullable(dto.getCategoryId()).ifPresent(categoryId -> characteristic.setCategory(
@@ -81,21 +74,22 @@ public class CharacteristicServiceImpl implements CharacteristicService {
                 )
         ));
         characteristicRepository.save(characteristic);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Rest.EDITED);
+        return Rest.EDITED;
     }
 
 
     @Override
-    public ResponseEntity<?> delete(Long id) {
+    public String delete(Long id) {
+        // ID orqali bazadan Characteristic'ni izlaymiz, agar topilmasa 404 qaytaramiz
         if (!characteristicRepository.existsById(id)) {
             throw RestException.restThrow("Characteristic not found", HttpStatus.NOT_FOUND);
         }
 
         try {
             characteristicRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(Rest.DELETED);
+            return Rest.DELETED;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error while deleting characteristic {}", id, e);
             throw RestException.restThrow(Rest.ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

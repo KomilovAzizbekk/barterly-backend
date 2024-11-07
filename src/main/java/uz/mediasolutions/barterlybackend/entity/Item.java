@@ -79,9 +79,4 @@ public class Item extends AbsAuditDeleted {
     @BatchSize(size = 10)
     private List<Favorite> favorites;
 
-    @OneToMany(mappedBy = "item", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    @ToString.Exclude
-    @BatchSize(size = 10)
-    private List<ItemCategoryCharacteristic> itemCategoryCharacteristics;
-
 }

@@ -1,9 +1,5 @@
 package uz.mediasolutions.barterlybackend.controller.admin.abs;
 
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +13,11 @@ import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 public interface CharacteristicController {
 
     @GetMapping("/get-all")
-    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CharacteristicDTO.class))})
-    })
-    ResponseEntity<Page<?>> getAll(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
+    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN')")
+    ResponseEntity<Page<CharacteristicDTO>> getAll(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
                                    @RequestParam(required = false) String search,
                                    @RequestParam(required = false) Long categoryId,
+                                   @RequestParam(required = false) Long characteristicTypeId,
                                    @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
                                    @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
 

@@ -2,7 +2,7 @@ package uz.mediasolutions.barterlybackend.payload.interfaceDTO.user;
 
 import java.util.UUID;
 
-public interface ProfileDTO {
+public interface ProfileDTO2 {
 
     UUID getId();
 
@@ -15,6 +15,12 @@ public interface ProfileDTO {
     int getLevel();
 
     int getItems();
+
+    int getPoints();
+
+    int getMaxPoints();
+
+    int getOffers();
 
     int getSwaps();
 

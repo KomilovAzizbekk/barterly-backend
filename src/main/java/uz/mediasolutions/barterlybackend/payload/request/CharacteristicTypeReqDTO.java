@@ -10,12 +10,12 @@ import java.util.Map;
 @Getter
 @Setter
 @Builder
-public class CategoryCharacteristicValueReqDTO {
+public class CharacteristicTypeReqDTO {
 
-    @NotNull(message = "choose category characteristic")
-    private Long categoryCharacteristicId;
+    @NotNull
+    private Long categoryId;
 
-    @NotNull(message = "enter translations")
+    @NotNull
     private Map<String, String> translations;
 
 }

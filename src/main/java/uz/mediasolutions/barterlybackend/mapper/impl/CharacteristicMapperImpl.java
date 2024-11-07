@@ -5,34 +5,39 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import uz.mediasolutions.barterlybackend.entity.Category;
 import uz.mediasolutions.barterlybackend.entity.Characteristic;
+import uz.mediasolutions.barterlybackend.entity.CharacteristicType;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.mapper.abs.CharacteristicMapper;
 import uz.mediasolutions.barterlybackend.payload.request.CharacteristicReqDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CharacteristicResDTO;
-import uz.mediasolutions.barterlybackend.repository.CategoryCharacteristicRepository;
 import uz.mediasolutions.barterlybackend.repository.CategoryRepository;
+import uz.mediasolutions.barterlybackend.repository.CharacteristicTypeRepository;
 
 @Component
 @AllArgsConstructor
 public class CharacteristicMapperImpl implements CharacteristicMapper {
 
     private final CategoryRepository categoryRepository;
-    private final CategoryCharacteristicRepository categoryCharacteristicRepository;
+    private final CharacteristicTypeRepository characteristicTypeRepository;
 
     @Override
-    public CharacteristicResDTO toResDTO(Characteristic characteristic, Category category, String lang) {
+    public CharacteristicResDTO toResDTO(Characteristic characteristic, String lang) {
         if (characteristic == null) {
             return null;
         }
 
+        // Characteristic'ga bog'langan Categoryni olamiz
+        Category category = characteristic.getCategory();
+
         return CharacteristicResDTO.builder()
                 .id(characteristic.getId())
-                .required(characteristic.isRequired())
                 .filter(characteristic.isFilter())
                 .title(characteristic.isTitle())
                 .names(characteristic.getTranslations())
                 .categoryId(category.getId())
                 .categoryName(category.getTranslations().get(lang))
+                .characteristicTypeId(characteristic.getCharacteristicType().getId())
+                .characteristicTypeName(characteristic.getCharacteristicType().getTranslations().get(lang))
                 .build();
     }
 
@@ -46,12 +51,16 @@ public class CharacteristicMapperImpl implements CharacteristicMapper {
                 () -> RestException.restThrow("Category not found", HttpStatus.BAD_REQUEST)
         );
 
+        CharacteristicType characteristicType = characteristicTypeRepository.findById(dto.getCharacteristicTypeId()).orElseThrow(
+                () -> RestException.restThrow("Characteristic type not found", HttpStatus.BAD_REQUEST)
+        );
+
         return Characteristic.builder()
-                .required(dto.getRequired())
                 .title(dto.getTitle())
                 .filter(dto.getFilter())
                 .translations(dto.getTranslations())
                 .category(category)
+                .characteristicType(characteristicType)
                 .build();
     }
 }

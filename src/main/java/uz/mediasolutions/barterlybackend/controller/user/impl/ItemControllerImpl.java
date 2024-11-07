@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uz.mediasolutions.barterlybackend.controller.user.abs.ItemController;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.Item2DTO;
 import uz.mediasolutions.barterlybackend.payload.request.ItemEditReqDTO;
 import uz.mediasolutions.barterlybackend.payload.request.ItemReqDTO;
+import uz.mediasolutions.barterlybackend.payload.response.ItemResDTO;
 import uz.mediasolutions.barterlybackend.service.user.abs.ItemService;
 
 import java.util.UUID;
@@ -23,8 +23,8 @@ public class ItemControllerImpl implements ItemController {
     }
 
     @Override
-    public ResponseEntity<Item2DTO> getItemById(String lang, UUID itemId, boolean isActive) {
-        return ResponseEntity.ok(itemService.getById(lang, itemId, isActive));
+    public ResponseEntity<ItemResDTO> getItemById(String lang, UUID itemId) {
+        return ResponseEntity.ok(itemService.getById(lang, itemId));
     }
 
     @Override

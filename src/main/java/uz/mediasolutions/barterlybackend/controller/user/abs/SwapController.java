@@ -3,6 +3,7 @@ package uz.mediasolutions.barterlybackend.controller.user.abs;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.SwapDTO;
 import uz.mediasolutions.barterlybackend.payload.request.SwapReqDTO;
@@ -20,9 +21,11 @@ public interface SwapController {
                                                  @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<String> create(@RequestBody @Valid SwapReqDTO dto);
 
     @PutMapping("/accept/{swapId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<String> accept(@PathVariable(name = "swapId") UUID swapId,
                                   @RequestParam(name = "accept", defaultValue = "true") boolean accept);
 

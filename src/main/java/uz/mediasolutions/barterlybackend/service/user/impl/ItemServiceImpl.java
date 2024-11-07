@@ -8,10 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.mediasolutions.barterlybackend.entity.*;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.Item2DTO;
-import uz.mediasolutions.barterlybackend.payload.request.CategoryCharacteristicReqDTO2;
-import uz.mediasolutions.barterlybackend.payload.request.ItemEditReqDTO;
-import uz.mediasolutions.barterlybackend.payload.request.ItemReqDTO;
+import uz.mediasolutions.barterlybackend.payload.request.*;
+import uz.mediasolutions.barterlybackend.payload.response.CharacteristicTypeResDTO2;
+import uz.mediasolutions.barterlybackend.payload.response.ItemResDTO;
 import uz.mediasolutions.barterlybackend.repository.*;
 import uz.mediasolutions.barterlybackend.service.user.abs.ItemService;
 import uz.mediasolutions.barterlybackend.utills.CommonUtils;
@@ -20,7 +19,6 @@ import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,14 +28,10 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final ItemCharacteristicRepository itemCharacteristicRepository;
     private final CategoryRepository categoryRepository;
-    private final CategoryCharacteristicValueRepository categoryCharacteristicValueRepository;
     private final CharacteristicRepository characteristicRepository;
     private final CharacteristicValueRepository characteristicValueRepository;
     private final ItemImageRepository itemImageRepository;
-    private final CategoryCharacteristicRepository categoryCharacteristicRepository;
-    private final ItemCategoryCharacteristicRepository itemCategoryCharacteristicRepository;
-
-    private final ModelMapper modelMapper;
+    private final CharacteristicTypeRepository characteristicTypeRepository;
 
     @Transactional
     @Override
@@ -67,42 +61,6 @@ public class ItemServiceImpl implements ItemService {
                 .temporaryToDate(new Timestamp(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 1 day
                 .build();
 
-        // CategoryCharacteristics va CategoryCharacteristicValues ni oldindan olish
-        Map<Long, CategoryCharacteristic> characteristicsMap = categoryCharacteristicRepository
-                .findAllById(dto.getCategoryCharacteristics().stream()
-                        .map(CategoryCharacteristicReqDTO2::getCategoryCharacteristicId)
-                        .collect(Collectors.toList()))
-                .stream()
-                .collect(Collectors.toMap(CategoryCharacteristic::getId, Function.identity()));
-
-        Map<Long, CategoryCharacteristicValue> characteristicValuesMap = categoryCharacteristicValueRepository
-                .findAllById(dto.getCategoryCharacteristics().stream()
-                        .map(CategoryCharacteristicReqDTO2::getCategoryCharacteristicValueId)
-                        .collect(Collectors.toList()))
-                .stream()
-                .collect(Collectors.toMap(CategoryCharacteristicValue::getId, Function.identity()));
-
-        // ItemCategoryCharacteristics obyektlarini yaratish
-        List<ItemCategoryCharacteristic> itemCategoryCharacteristics = dto.getCategoryCharacteristics().stream()
-                .map(categoryCharacteristicReqDTO2 -> {
-                    CategoryCharacteristic categoryCharacteristic = characteristicsMap.get(categoryCharacteristicReqDTO2.getCategoryCharacteristicId());
-                    CategoryCharacteristicValue categoryCharacteristicValue = characteristicValuesMap.get(categoryCharacteristicReqDTO2.getCategoryCharacteristicValueId());
-
-                    if (categoryCharacteristic.isTitle()) {
-                        Map<String, String> translations = categoryCharacteristicValue.getTranslations();
-                        uz.append(translations.get("uz")).append(", ");
-                        ru.append(translations.get("ru")).append(", ");
-                        en.append(translations.get("en")).append(", ");
-                    }
-
-                    return ItemCategoryCharacteristic.builder()
-                            .title(categoryCharacteristic.isTitle())
-                            .categoryCharacteristic(categoryCharacteristic)
-                            .categoryCharacteristicValue(categoryCharacteristicValue)
-                            .item(item)
-                            .build();
-                })
-                .collect(Collectors.toList());
 
         // ItemCharacteristics obyektlarini yaratish
         List<ItemCharacteristic> itemCharacteristics = dto.getCharacteristics().stream()
@@ -145,7 +103,6 @@ public class ItemServiceImpl implements ItemService {
 
         // Barcha bog'liq obyektlarni batch saqlash
         itemRepository.save(item); // Barcha obyektlar bog'langanidan keyin saqlaymiz
-        itemCategoryCharacteristicRepository.saveAll(itemCategoryCharacteristics);
         itemCharacteristicRepository.saveAll(itemCharacteristics);
         itemImageRepository.saveAll(itemImages);
 
@@ -154,9 +111,59 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public Item2DTO getById(String lang, UUID itemId, boolean active) {
-        return itemRepository.findByIdCustom(lang, itemId, active);
+    public ItemResDTO getById(String lang, UUID itemId) {
+        // Item'ni bazadan ID bo'yicha izlaymiz, agar topilmasa 404 qaytaramiz
+        Item item = itemRepository.findByIdAndActiveIsTrue(itemId).orElseThrow(
+                () -> RestException.restThrow("Active Item not found", HttpStatus.NOT_FOUND)
+        );
+
+        // Image URL'larni olish
+        List<String> imageUrlList = item.getItemImages().stream()
+                .map(ItemImage::getUrl)
+                .collect(Collectors.toList());
+
+        // ItemCharacteristic'larni characteristicTypeId bo‘yicha guruhlab olish
+        Map<Long, List<ItemCharacteristic>> characteristicsByType = item.getItemCharacteristics().stream()
+                .collect(Collectors.groupingBy(
+                        itemCharacteristic -> itemCharacteristic.getCharacteristic().getCharacteristicType().getId()
+                ));
+
+        // Barcha characteristicTypes va har birini tegishli characteristic'lari bilan Response DTO yaratamiz
+        List<CharacteristicTypeResDTO2> characteristicTypeResDTO2List = characteristicsByType.entrySet().stream()
+                .map(entry -> {
+                    Long characteristicTypeId = entry.getKey();
+                    List<CharacteristicResDTO2> characteristics = entry.getValue().stream()
+                            .map(itemCharacteristic -> CharacteristicResDTO2.builder()
+                                    .id(itemCharacteristic.getId())
+                                    .name(itemCharacteristic.getCharacteristic().getTranslations().get(lang))
+                                    .value(itemCharacteristic.getValue() != null ?
+                                            itemCharacteristic.getValue().getTranslations().get(lang) : itemCharacteristic.getTextValue())
+                                    .build())
+                            .collect(Collectors.toList());
+
+                    String characteristicTypeName = characteristicTypeRepository.findById(characteristicTypeId)
+                            .map(type -> type.getTranslations().get(lang))
+                            .orElse("Unknown");
+
+                    return CharacteristicTypeResDTO2.builder()
+                            .id(characteristicTypeId)
+                            .name(characteristicTypeName)
+                            .characteristics(characteristics)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        // Barcha ma'lumotlarni jamlab Response DTO yaratamiz
+        return ItemResDTO.builder()
+                .id(item.getId())
+                .userId(item.getUser().getId())
+                .title(item.getTitle().get(lang))
+                .description(item.getDescription())
+                .imageUrls(imageUrlList)
+                .characteristicTypes(characteristicTypeResDTO2List)
+                .build();
     }
+
 
     @Override
     public String edit(UUID itemId, ItemEditReqDTO dto) {
@@ -185,7 +192,7 @@ public class ItemServiceImpl implements ItemService {
 
         itemRepository.save(item);
 
-        // ItemCharacteristic
+        // ItemCharacteristic null bo'lmasa bazgaahrirlash kiritamiz
         if (dto.getCharacteristics() != null) {
             List<ItemCharacteristic> itemCharacteristics = dto.getCharacteristics().stream()
                     .map(itemCharacteristicReqDTO -> {
@@ -210,6 +217,7 @@ public class ItemServiceImpl implements ItemService {
             itemCharacteristicRepository.saveAll(itemCharacteristics);
         }
 
+        // Agar image urls null bo'lmasa bazaga tahrirlash kiritamiz
         if (dto.getImageUrls() != null) {
             List<ItemImage> itemImages = dto.getImageUrls().stream()
                     .map(imageUrl -> ItemImage.builder()

@@ -12,10 +12,14 @@ public interface ItemDTO {
 
     String getCategory();
 
+    String getUpdatedTime();
+
+    Boolean getLiked();
+
     Object getImageUrls();
 
-    boolean getLiked();
+    boolean getTemporary();
 
-    Integer getSwaps();
+    boolean getPremium();
 
 }

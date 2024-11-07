@@ -9,12 +9,16 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class CategoryCharacteristicReqDTO2 {
+public class ItemCharacteristicEditDTO {
 
     @NotNull
-    private Long categoryCharacteristicId;
+    private Long id;
 
     @NotNull
-    private Long categoryCharacteristicValueId;
+    private Long characteristicId;
+
+    private Long characteristicValueId;
+
+    private String value;
 
 }

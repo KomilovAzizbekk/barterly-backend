@@ -43,19 +43,19 @@ public class Category extends AbsDate {
     @JoinColumn(name = "parent_id")
     private Category parentCategory;
 
-    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parentCategory", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @ToString.Exclude
     @BatchSize(size = 10)
     private List<Category> subCategories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    @BatchSize(size = 10)
-    private List<CategoryCharacteristic> categoryCharacteristics = new ArrayList<>();
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "category", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @ToString.Exclude
     @BatchSize(size = 10)
     private List<Characteristic> characteristics = new ArrayList<>();
+
+    @OneToMany(mappedBy = "category", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @ToString.Exclude
+    @BatchSize(size = 10)
+    private List<CharacteristicType> characteristicTypes = new ArrayList<>();
 
 }

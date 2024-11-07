@@ -6,6 +6,7 @@ import uz.mediasolutions.barterlybackend.entity.template.AbsAuditDeleted;
 import uz.mediasolutions.barterlybackend.entity.template.AbsUUID;
 import uz.mediasolutions.barterlybackend.enums.SwapStatusEnum;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -41,6 +42,8 @@ public class Swap extends AbsAuditDeleted {
 
     @Column(nullable = false, length = 300)
     private String message;
+
+    private Timestamp acceptedTime;
 
     @Column(name = "swap_status", nullable = false)
     @Enumerated(EnumType.STRING)

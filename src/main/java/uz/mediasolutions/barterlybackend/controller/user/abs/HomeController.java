@@ -2,6 +2,7 @@ package uz.mediasolutions.barterlybackend.controller.user.abs;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ItemDTO;
 import uz.mediasolutions.barterlybackend.payload.response.HeaderResDTO;
@@ -11,12 +12,14 @@ import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 public interface HomeController {
 
     @GetMapping("/header")
+    @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<HeaderResDTO> getHeaderDetails();
 
     @GetMapping("/items")
     ResponseEntity<Page<ItemDTO>> getItems(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
                                            @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
-                                           @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
+                                           @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size,
+                                           @RequestParam(defaultValue = "") Boolean premium);
 
     @GetMapping("/search")
     ResponseEntity<Page<ItemDTO>> search(@RequestParam(name = "search") String search,

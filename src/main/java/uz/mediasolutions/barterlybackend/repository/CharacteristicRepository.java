@@ -11,36 +11,25 @@ import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.Characterist
 public interface CharacteristicRepository extends JpaRepository<Characteristic, Long> {
 
     @Query(value = "SELECT ch.id,\n" +
-            "       ch.required,\n" +
             "       ch.filter,\n" +
             "       ch.title,\n" +
-            "       ch.translations ->> :lang as name,\n" +
-            "       c.id                      as categoryId,\n" +
-            "       c.translations ->> :lang  as categoryName\n" +
+            "       ch.translations ->> :lang  as name,\n" +
+            "       c.id                       as categoryId,\n" +
+            "       c.translations ->> :lang   as categoryName,\n" +
+            "       cht.id                     as characteristicTypeId,\n" +
+            "       cht.translations ->> :lang as characteristicTypeName\n" +
             "FROM characteristics ch\n" +
-            "         LEFT JOIN categories c on c.id = ch.category_id\n" +
+            "         INNER JOIN categories c on c.id = ch.category_id\n" +
+            "         INNER JOIN characteristic_types cht on ch.characteristic_type_id = cht.id\n" +
             "WHERE (:search IS NULL OR ch.translations ->> :lang ILIKE '%' || :search || '%')\n" +
             "  AND (:category_id IS NULL OR c.id = :category_id)\n" +
-            "  AND ch.translations ->> :lang IS NOT NULL\n" +
-            "  AND c.translations ->> :lang IS NOT NULL\n" +
-            "ORDER BY ch.created_at DESC", nativeQuery = true)
-    Page<CharacteristicDTO> findAllByOrderByCreatedAtDesc(@Param("lang") String lang,
+            "  AND (:characteristic_type_id IS NULL OR cht.id = :characteristic_type_id)\n" +
+            "ORDER BY ch.updated_at DESC", nativeQuery = true)
+    Page<CharacteristicDTO> findAllByOrderByUpdatedAtDesc(@Param("lang") String lang,
                                                           @Param("search") String search,
                                                           @Param("category_id") Long categoryId,
+                                                          @Param("characteristic_type_id") Long characteristicTypeId,
                                                           Pageable pageable);
 
-//    @Query(value = "SELECT ch.id,\n" +
-//            "       ch.required,\n" +
-//            "       ch.filter,\n" +
-//            "       ch.title,\n" +
-//            "       ch.translations          as names,\n" +
-//            "       c.id                     as categoryId,\n" +
-//            "       c.translations ->> :lang as categoryName\n" +
-//            "FROM characteristics ch\n" +
-//            "         LEFT JOIN categories c on c.id = ch.category_id\n" +
-//            "WHERE ch.id = :id\n" +
-//            "  AND c.translations ->> :lang IS NOT NULL", nativeQuery = true)
-//    Optional<CharacteristicDTO2> findByIdCustom(@Param("lang") String lang,
-//                                                @Param("id") Long id);
 
 }

@@ -5,11 +5,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import uz.mediasolutions.barterlybackend.entity.Role;
 import uz.mediasolutions.barterlybackend.entity.User;
-import uz.mediasolutions.barterlybackend.enums.RoleEnum;
 import uz.mediasolutions.barterlybackend.enums.UserSocketStatusEnum;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ProfileDTO;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ProfileDTO2;
 import uz.mediasolutions.barterlybackend.payload.response.AdminResDTO;
 import uz.mediasolutions.barterlybackend.payload.response.UserResDTO;
 
@@ -57,17 +56,41 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             "       u.username,\n" +
             "       u.level,\n" +
             "       u.phone_number                                      as phoneNumber,\n" +
-            "       COUNT(CASE WHEN s.swap_status_id = 1 THEN s.id END) AS offers,\n" +
-            "       COUNT(CASE WHEN s.swap_status_id = 2 THEN s.id END) AS swaps,\n" +
-            "       u.created_at                                        AS createdAt,\n" +
-            "       c.translations ->> :lang                            AS city,\n" +
-            "       n.translations ->> :lang                            AS neighborhood\n" +
+            "       COUNT(i.id)                                         as items,\n" +
+            "       COUNT(s.id)                                         as swaps,\n" +
+            "       u.created_at                                        as createdAt,\n" +
+            "       c.translations ->> :lang                            as city,\n" +
+            "       n.translations ->> :lang                            as neighborhood\n" +
             "FROM users u\n" +
             "         LEFT JOIN cities c ON u.city_id = c.id\n" +
             "         LEFT JOIN neighborhoods n ON u.neighborhood_id = n.id\n" +
-            "         LEFT JOIN swaps s ON u.id = s.responder_user_id\n" +
+            "         LEFT JOIN swaps s ON u.id = s.responder_user_id AND s.swap_status = 'ACCEPTED'\n" +
+            "         INNER JOIN items i ON u.id = i.user_id\n" +
             "WHERE u.id = :id\n" +
             "GROUP BY u.id, u.name, u.username, u.level, u.phone_number, u.created_at, c.translations, n.translations", nativeQuery = true)
     ProfileDTO getUserProfileInfo(@Param("lang") String lang,
                                   @Param("id") UUID id);
+
+    @Query(value = "SELECT u.id,\n" +
+            "       u.name,\n" +
+            "       u.username,\n" +
+            "       u.level,\n" +
+            "       u.phone_number                                            as phoneNumber,\n" +
+            "       COUNT(i.id)                                               as items,\n" +
+            "       33                                                        as points,\n" +
+            "       99                                                        as maxPoints,\n" +
+            "       COUNT(CASE WHEN s.swap_status = 'WAITING' THEN s.id END)  as offers,\n" +
+            "       COUNT(CASE WHEN s.swap_status = 'ACCEPTED' THEN s.id END) as swaps,\n" +
+            "       u.created_at                                              as createdAt,\n" +
+            "       c.translations ->> :lang                                  as city,\n" +
+            "       n.translations ->> :lang                                  as neighborhood\n" +
+            "FROM users u\n" +
+            "         LEFT JOIN cities c ON u.city_id = c.id\n" +
+            "         LEFT JOIN neighborhoods n ON u.neighborhood_id = n.id\n" +
+            "         LEFT JOIN swaps s ON u.id = s.responder_user_id\n" +
+            "         LEFT JOIN items i ON u.id = i.user_id\n" +
+            "WHERE u.id = :id\n" +
+            "GROUP BY u.id, u.name, u.username, u.level, u.phone_number, u.created_at, c.translations, n.translations", nativeQuery = true)
+    ProfileDTO2 getMyProfileInfo(@Param("lang") String lang,
+                                 @Param("id") UUID id);
 }
