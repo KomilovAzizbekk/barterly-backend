@@ -15,12 +15,6 @@ public interface HomeController {
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<HeaderResDTO> getHeaderDetails();
 
-    @GetMapping("/items")
-    ResponseEntity<Page<ItemDTO>> getItems(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
-                                           @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
-                                           @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size,
-                                           @RequestParam(defaultValue = "") Boolean premium);
-
     @GetMapping("/search")
     ResponseEntity<Page<ItemDTO>> search(@RequestParam(name = "search") String search,
                                          @RequestParam(name = "categoryId") Long categoryId);

@@ -23,6 +23,11 @@ public class SwapControllerImpl implements SwapController {
     }
 
     @Override
+    public ResponseEntity<Page<SwapDTO>> getAllMine(String lang, String status, int page, int size) {
+        return ResponseEntity.ok(swapService.getAllMine(lang, status, page, size));
+    }
+
+    @Override
     public ResponseEntity<String> create(SwapReqDTO dto) {
         return ResponseEntity.status(201).body(swapService.create(dto));
     }

@@ -20,6 +20,13 @@ public interface SwapController {
                                                  @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
                                                  @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
 
+    @GetMapping("/get/mine")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<Page<SwapDTO>> getAllMine(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
+                                 @RequestParam(required = false) String status,
+                                 @RequestParam(defaultValue = Rest.DEFAULT_PAGE_NUMBER) int page,
+                                 @RequestParam(defaultValue = Rest.DEFAULT_PAGE_SIZE) int size);
+
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<String> create(@RequestBody @Valid SwapReqDTO dto);

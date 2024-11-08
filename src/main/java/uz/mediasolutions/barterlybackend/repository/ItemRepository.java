@@ -42,6 +42,27 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
             "       i.title ->> :lang        as title,\n" +
             "       u.username,\n" +
             "       c.translations ->> :lang as category,\n" +
+            "       i.updated_at             as updatedTime,\n" +
+            "       null                     as liked,\n" +
+            "       array_agg(ii.url)        as imageUrls,\n" +
+            "       i.temporary,\n" +
+            "       i.premium\n" +
+            "FROM items i\n" +
+            "         INNER JOIN users u on i.user_id = u.id\n" +
+            "         INNER JOIN categories c on i.category_id = c.id\n" +
+            "         LEFT JOIN favorites f on i.id = f.item_id\n" +
+            "         LEFT JOIN item_images ii on i.id = ii.item_id\n" +
+            "WHERE u.id = :userId\n" +
+            "GROUP BY i.id, i.title, u.username, c.translations, i.updated_at, i.temporary, i.premium\n" +
+            "ORDER BY i.updated_at DESC", nativeQuery = true)
+    Page<ItemDTO> finsAllByUserId(@Param("userId") UUID userId,
+                                  @Param("lang") String lang,
+                                  Pageable pageable);
+
+    @Query(value = "SELECT i.id,\n" +
+            "       i.title ->> :lang        as title,\n" +
+            "       u.username,\n" +
+            "       c.translations ->> :lang as category,\n" +
             "       array_agg(ii.url)        as imageUrls,\n" +
             "       i.updated_at             as updatedTime,\n" +
             "       null                     as liked,\n" +

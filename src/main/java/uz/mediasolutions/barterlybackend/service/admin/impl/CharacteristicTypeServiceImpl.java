@@ -31,7 +31,7 @@ public class CharacteristicTypeServiceImpl implements CharacteristicTypeService 
     private final CharacteristicTypeMapper characteristicTypeMapper;
     private final CategoryRepository categoryRepository;
 
-    Logger log = LoggerFactory.getLogger(CharacteristicTypeServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(CharacteristicTypeServiceImpl.class);
 
     @Override
     public Page<CharacteristicTypeDTO> getAll(String lang, String search, Long categoryId, int page, int size) {

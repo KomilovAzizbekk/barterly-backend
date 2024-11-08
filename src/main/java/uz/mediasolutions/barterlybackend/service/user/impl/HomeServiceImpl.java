@@ -2,7 +2,6 @@ package uz.mediasolutions.barterlybackend.service.user.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -43,13 +42,6 @@ public class HomeServiceImpl implements HomeService {
                 .swaps(swap)
                 .favorites(favourite)
                 .build();
-    }
-
-    @Override
-    public Page<ItemDTO> getItems(String lang, int page, int size, Boolean premium) {
-        // Premium Boolean null bo'lsa barcha itemlarni qaytaramiz, agar true yoki false bolsa turga ajratgan holda
-        return premium == null ? itemRepository.findAllForHomeForAllUsers(lang, PageRequest.of(page, size)) :
-                itemRepository.findAllForHomeForAllUsers1(lang, premium, PageRequest.of(page, size));
     }
 
     @Override

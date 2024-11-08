@@ -1,6 +1,8 @@
 package uz.mediasolutions.barterlybackend.service.user.impl;
 
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -28,9 +30,22 @@ public class SwapServiceImpl implements SwapService {
     private final SwapRepository swapRepository;
     private final ItemRepository itemRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(SwapServiceImpl.class);
+
     @Override
     public Page<SwapDTO> getAll(String lang, UUID userId, int page, int size) {
-        return swapRepository.findAllByUserId(userId, lang, PageRequest.of(page, size));
+        return swapRepository.findAllByUserIdStatusAccepted(userId, lang, PageRequest.of(page, size));
+    }
+
+    @Override
+    public Page<SwapDTO> getAllMine(String lang, String status, int page, int size) {
+        try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return swapRepository.findAllByUserIdAndStatus(user.getId(), lang, status, PageRequest.of(page, size));
+        } catch (Exception e) {
+            log.error("Error in GetAllMine API: {}", e.getMessage());
+            throw RestException.restThrow("Unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override

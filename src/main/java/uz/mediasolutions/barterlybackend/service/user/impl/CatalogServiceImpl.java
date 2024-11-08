@@ -1,12 +1,13 @@
 package uz.mediasolutions.barterlybackend.service.user.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import uz.mediasolutions.barterlybackend.entity.Category;
-import uz.mediasolutions.barterlybackend.payload.interfaceDTO.admin.CategoryDTO;
+import uz.mediasolutions.barterlybackend.exceptions.RestException;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.CatalogDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CatalogResDTO;
+import uz.mediasolutions.barterlybackend.payload.response.CatalogResDTO2;
 import uz.mediasolutions.barterlybackend.repository.CategoryRepository;
 import uz.mediasolutions.barterlybackend.service.user.abs.CatalogService;
 
@@ -59,5 +60,34 @@ public class CatalogServiceImpl implements CatalogService {
                     .build();
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public CatalogResDTO2 getHierarchyById(String lang, Long id) {
+        // Kategoriya mavjudligini tekshirish
+        Category category = categoryRepository.findById(id).orElseThrow(
+                () -> RestException.restThrow("Category not found", HttpStatus.NOT_FOUND)
+        );
+
+        // Hierarchiya uchun list yaratamiz
+        List<Category> categories = new ArrayList<>();
+        while (category != null) {
+            categories.add(category);
+            category = category.getParentCategory();
+        }
+
+        // Kategoriya listidan CatalogResDTO2 yaratamiz
+        CatalogResDTO2 catalogResDTO = null;
+        for (Category cat : categories) {
+            catalogResDTO = CatalogResDTO2.builder()
+                    .id(cat.getId())
+                    .name(cat.getTranslations().get(lang))
+                    .catalog(catalogResDTO)
+                    .build();
+        }
+
+        // CatalogResDTO2 ni list ichiga joylab qaytaramiz
+        return catalogResDTO;
+    }
+
 
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.CatalogDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CatalogResDTO;
+import uz.mediasolutions.barterlybackend.payload.response.CatalogResDTO2;
 import uz.mediasolutions.barterlybackend.utills.constants.Rest;
 
 import java.util.List;
@@ -24,5 +25,9 @@ public interface CatalogController {
     @GetMapping("/all/{parentId}")
     ResponseEntity<List<CatalogResDTO>> getAllByParentId(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
                                                          @PathVariable Long parentId);
+
+    @GetMapping("/get/hierarchy/{id}")
+    ResponseEntity<CatalogResDTO2> getHierarchyById(@RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
+                                                    @PathVariable Long id);
 
 }

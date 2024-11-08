@@ -16,35 +16,72 @@ public interface SwapRepository extends JpaRepository<Swap, UUID> {
     Integer findCountByUserId(UUID userId);
 
     @Query(value = "(SELECT s.id,\n" +
-            "        s.swap_status AS status,\n" +
-            "        s.created_at  AS createdAt,\n" +
-            "        responder.username AS username,\n" +
-            "        (CASE WHEN i1.user_id = :userId THEN i1.title ->> :lang ELSE i2.title ->> :lang END) AS title1,\n" +
+            "        s.swap_status                                                                         AS status,\n" +
+            "        s.created_at                                                                          AS createdAt,\n" +
+            "        responder.username                                                                    AS username,\n" +
+            "        (CASE WHEN i1.user_id = :userId THEN i1.title ->> :lang ELSE i2.title ->> :lang END)  AS title1,\n" +
             "        (CASE WHEN i1.user_id != :userId THEN i1.title ->> :lang ELSE i2.title ->> :lang END) AS title2\n" +
             " FROM swaps s\n" +
             "          INNER JOIN users requester ON requester.id = s.requester_user_id\n" +
             "          INNER JOIN users responder ON responder.id = s.responder_user_id\n" +
             "          INNER JOIN items i1 ON i1.id = s.requester_item_id\n" +
             "          INNER JOIN items i2 ON i2.id = s.responder_item_id\n" +
-            " WHERE requester.id = :userId)\n" +
+            " WHERE requester.id = :userId\n" +
+            "   AND s.swap_status = 'ACCEPTED')\n" +
             "\n" +
             "UNION ALL\n" +
             "\n" +
             "(SELECT s.id,\n" +
-            "        s.swap_status AS status,\n" +
-            "        s.created_at  AS createdAt,\n" +
-            "        requester.username AS username,\n" +
-            "        (CASE WHEN i1.user_id = :userId THEN i1.title ->> :lang ELSE i2.title ->> :lang END) AS title1,\n" +
+            "        s.swap_status                                                                         AS status,\n" +
+            "        s.created_at                                                                          AS createdAt,\n" +
+            "        requester.username                                                                    AS username,\n" +
+            "        (CASE WHEN i1.user_id = :userId THEN i1.title ->> :lang ELSE i2.title ->> :lang END)  AS title1,\n" +
             "        (CASE WHEN i1.user_id != :userId THEN i1.title ->> :lang ELSE i2.title ->> :lang END) AS title2\n" +
             " FROM swaps s\n" +
             "          INNER JOIN users requester ON requester.id = s.requester_user_id\n" +
             "          INNER JOIN users responder ON responder.id = s.responder_user_id\n" +
             "          INNER JOIN items i1 ON i1.id = s.requester_item_id\n" +
             "          INNER JOIN items i2 ON i2.id = s.responder_item_id\n" +
-            " WHERE responder.id = :userId)\n" +
+            " WHERE responder.id = :userId\n" +
+            "   AND s.swap_status = 'ACCEPTED')\n" +
             "ORDER BY createdAt DESC", nativeQuery = true)
-    Page<SwapDTO> findAllByUserId(@Param("userId") UUID userId,
-                                  @Param("lang") String lang,
-                                  Pageable pageable);
+    Page<SwapDTO> findAllByUserIdStatusAccepted(@Param("userId") UUID userId,
+                                                @Param("lang") String lang,
+                                                Pageable pageable);
+
+    @Query(value = "(SELECT s.id,\n" +
+            "        s.swap_status                                                                         AS status,\n" +
+            "        s.created_at                                                                          AS createdAt,\n" +
+            "        responder.username                                                                    AS username,\n" +
+            "        (CASE WHEN i1.user_id = :userId THEN i1.title ->> :lang ELSE i2.title ->> :lang END)  AS title1,\n" +
+            "        (CASE WHEN i1.user_id != :userId THEN i1.title ->> :lang ELSE i2.title ->> :lang END) AS title2\n" +
+            " FROM swaps s\n" +
+            "          INNER JOIN users requester ON requester.id = s.requester_user_id\n" +
+            "          INNER JOIN users responder ON responder.id = s.responder_user_id\n" +
+            "          INNER JOIN items i1 ON i1.id = s.requester_item_id\n" +
+            "          INNER JOIN items i2 ON i2.id = s.responder_item_id\n" +
+            " WHERE requester.id = :userId\n" +
+            "   AND (:status IS NULL OR s.swap_status = :status))\n" +
+            "\n" +
+            "UNION ALL\n" +
+            "\n" +
+            "(SELECT s.id,\n" +
+            "        s.swap_status                                                                         AS status,\n" +
+            "        s.created_at                                                                          AS createdAt,\n" +
+            "        requester.username                                                                    AS username,\n" +
+            "        (CASE WHEN i1.user_id = :userId THEN i1.title ->> :lang ELSE i2.title ->> :lang END)  AS title1,\n" +
+            "        (CASE WHEN i1.user_id != :userId THEN i1.title ->> :lang ELSE i2.title ->> :lang END) AS title2\n" +
+            " FROM swaps s\n" +
+            "          INNER JOIN users requester ON requester.id = s.requester_user_id\n" +
+            "          INNER JOIN users responder ON responder.id = s.responder_user_id\n" +
+            "          INNER JOIN items i1 ON i1.id = s.requester_item_id\n" +
+            "          INNER JOIN items i2 ON i2.id = s.responder_item_id\n" +
+            " WHERE responder.id = :userId\n" +
+            "   AND (:status IS NULL OR s.swap_status = :status))\n" +
+            "ORDER BY createdAt DESC", nativeQuery = true)
+    Page<SwapDTO> findAllByUserIdAndStatus(@Param("userId") UUID userId,
+                                           @Param("lang") String lang,
+                                           @Param("status") String status,
+                                           Pageable pageable);
 
 }

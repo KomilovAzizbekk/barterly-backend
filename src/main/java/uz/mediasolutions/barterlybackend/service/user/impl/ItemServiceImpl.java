@@ -1,13 +1,15 @@
 package uz.mediasolutions.barterlybackend.service.user.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.mediasolutions.barterlybackend.entity.*;
 import uz.mediasolutions.barterlybackend.exceptions.RestException;
+import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.ItemDTO;
 import uz.mediasolutions.barterlybackend.payload.request.*;
 import uz.mediasolutions.barterlybackend.payload.response.CharacteristicTypeResDTO2;
 import uz.mediasolutions.barterlybackend.payload.response.ItemResDTO;
@@ -107,6 +109,13 @@ public class ItemServiceImpl implements ItemService {
         itemImageRepository.saveAll(itemImages);
 
         return Rest.CREATED;
+    }
+
+    @Override
+    public Page<ItemDTO> getItems(String lang, int page, int size, Boolean premium) {
+        // Premium Boolean null bo'lsa barcha itemlarni qaytaramiz, agar true yoki false bolsa turga ajratgan holda
+        return premium == null ? itemRepository.findAllForHomeForAllUsers(lang, PageRequest.of(page, size)) :
+                itemRepository.findAllForHomeForAllUsers1(lang, premium, PageRequest.of(page, size));
     }
 
 
@@ -228,5 +237,16 @@ public class ItemServiceImpl implements ItemService {
         }
 
         return Rest.EDITED;
+    }
+
+    @Override
+    public Page<ItemDTO> getItemsByUserId(String lang, UUID userId, int page, int size) {
+        return itemRepository.finsAllByUserId(userId, lang, PageRequest.of(page, size));
+    }
+
+    @Override
+    public Page<ItemDTO> getMyItems(String lang, int page, int size) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return itemRepository.finsAllByUserId(user.getId(), lang, PageRequest.of(page, size));
     }
 }

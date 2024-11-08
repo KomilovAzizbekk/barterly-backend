@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uz.mediasolutions.barterlybackend.controller.user.abs.CatalogController;
 import uz.mediasolutions.barterlybackend.payload.interfaceDTO.user.CatalogDTO;
 import uz.mediasolutions.barterlybackend.payload.response.CatalogResDTO;
+import uz.mediasolutions.barterlybackend.payload.response.CatalogResDTO2;
 import uz.mediasolutions.barterlybackend.service.user.abs.CatalogService;
 
 import java.util.List;
@@ -29,5 +30,10 @@ public class CatalogControllerImpl implements CatalogController {
     @Override
     public ResponseEntity<List<CatalogResDTO>> getAllByParentId(String lang, Long parentId) {
         return ResponseEntity.ok(service.getAllByParentId(lang, parentId));
+    }
+
+    @Override
+    public ResponseEntity<CatalogResDTO2> getHierarchyById(String lang, Long id) {
+        return ResponseEntity.ok(service.getHierarchyById(lang, id));
     }
 }
